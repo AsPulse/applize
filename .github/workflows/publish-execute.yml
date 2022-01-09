@@ -12,9 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          registry-url: https://npm.pkg.github.com/
+          scope: '@aspulse'
       - name: Install package
-        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
-        run: yarn --check-files --frozen-lockfile --non-interactive
+        run: yarn
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Build
+        run: yarn build
       - name: Publish
         run: npm publish
         env:

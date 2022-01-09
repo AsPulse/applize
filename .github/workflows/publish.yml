@@ -3,6 +3,8 @@ name: Publish-GitHub-NPM
 on:
   push:
     branches: [main]
+    tags-ignore: *
+  workflow_dispatch:
 
 jobs:
   build:

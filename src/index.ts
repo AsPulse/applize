@@ -1,3 +1,3 @@
-export function helloWorld() {
+expoasfrt function helloWorld() {
   return 'Hello World!';
 }

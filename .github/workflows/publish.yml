@@ -47,3 +47,4 @@ jobs:
           reviewers: AsPulse
           assignees: AsPulse
           delete-branch: true
+          token: ${{ secrets.REPO_PAT }}

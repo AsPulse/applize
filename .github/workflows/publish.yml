@@ -9,11 +9,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Setup git configuration
         run: |
           git config user.name Version-Updater
           git config user.email github-actions@github.com
-      - uses: actions/checkout@v2
       - name: Pull
         run: git pull origin main
       - uses: actions/setup-node@v2

@@ -1,10 +1,15 @@
 {
-  "name": "applize",
+  "name": "@aspulse/applize",
   "version": "1.0.0",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": ["lib"],
   "repository": "https://github.com/AsPulse/applize.git",
   "author": "AsPulse <aspulse.x@gmail.com>",
   "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "dependencies": {
     "estrella": "^1.4.1",
     "prettier": "^2.5.1",
@@ -20,6 +25,7 @@
   "scripts": {
     "lint": "prettier --write src/**.ts && eslint --fix src/**.ts",
     "lintCheckOnly": "prettier --check src/**.ts && eslint src/**.ts",
-    "build": "node ./build.js"
+    "build": "node ./build.js",
+    "prepare": "node ./build.js"
   }
 }

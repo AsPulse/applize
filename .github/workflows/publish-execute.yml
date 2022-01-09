@@ -8,7 +8,7 @@ jobs:
   build:
     name: publish-execute
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'publish'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event.push.ref == 'refs/heads/main'
+    if: ${{ !(startsWith(github.event.push.head_commit.message, 'VersionUp to '')) }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

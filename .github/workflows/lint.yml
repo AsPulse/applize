@@ -20,7 +20,7 @@ jobs:
           path: node_modules
           key: node-v16-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
       - name: Install package
+        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: yarn --check-files --frozen-lockfile --non-interactive
       - name: Run Test
-        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: yarn lintCheckOnly

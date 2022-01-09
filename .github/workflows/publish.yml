@@ -37,8 +37,13 @@ jobs:
         with:
           branch: publish
           base: main
+          commit-message: VersionUp to ${{env.newver}}
+          committer: Version-Updater <github-actions@github.com>
           body: |
             @AsPulse
             Publish GitHub NPM Registry ${{env.newver}}
           title: "Publish ${{env.newver}}"
           draft: false
+          reviewers: AsPulse
+          assignees: AsPulse
+          delete-branch: true

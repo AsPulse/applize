@@ -23,4 +23,4 @@ jobs:
         run: yarn --check-files --frozen-lockfile --non-interactive
       - name: Run Test
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
-        run: yarn lint
+        run: yarn lintCheckOnly

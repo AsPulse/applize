@@ -3,7 +3,6 @@ name: Code Lint
 on:
   # Run tests for any PRs.
   pull_request:
-    types: [opened, synchronize]
 
 jobs:
   lint:

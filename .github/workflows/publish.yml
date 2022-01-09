@@ -12,6 +12,8 @@ jobs:
     if: ${{ github.event.push.head_commit.message != 'VersionUp' }}
     steps:
       - uses: actions/checkout@v2
+      - name: Pull
+        run: git pull origin main
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
@@ -31,5 +33,4 @@ jobs:
       - name: Version Up
         run: npm version patch -m "VersionUp"
       - name: Push new Version
-        run: |
-          git push --tags
+        run: git push origin main

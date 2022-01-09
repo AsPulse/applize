@@ -1,16 +1,18 @@
 
-name: Publish-GitHub-NPM
+name: Publish-GitHubNpm-Patch
 on:
-  push:
+  workflow_dispatch:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.push.head_commit.message != 'VersionUp' }}
     steps:
+      - name: Setup git configuration
+        run: |
+          git config user.name Version-Updater
+          git config user.email github-actions@github.com
       - uses: actions/checkout@v2
       - name: Pull
         run: git pull origin main
@@ -19,18 +21,24 @@ jobs:
           node-version: '16'
           registry-url: https://npm.pkg.github.com/
           scope: '@aspulse'
-      - name: Install package
-        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
-        run: yarn --check-files --frozen-lockfile --non-interactive
-      - name: Publish
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: Setup git configuration
+      - name: Create Branch
         run: |
-          git config user.name Version-Updater
-          git config user.email github-actions@github.com
+          git checkout -b publish
+          git push --set-upstream origin publish
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Version Up
-        run: npm version patch -m "VersionUp"
-      - name: Push new Version
-        run: git push origin main
+        run: |
+          NEWVER=$(npm version patch)
+          echo "newver=$NEWVER" >> $GITHUB_ENV
+          git push
+      - name: Create Publish PR
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: publish
+          base: main
+          body: |
+            @AsPulse
+            Publish GitHub NPM Registry ${{env.newver}}
+          title: "Publish ${{env.newver}}"
+          draft: false

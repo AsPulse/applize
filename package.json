@@ -19,6 +19,7 @@
   },
   "scripts": {
     "lint": "prettier --write src/**.ts && eslint --fix src/**.ts",
-    "lintCheckOnly": "prettier --check src/**.ts && eslint src/**.ts"
+    "lintCheckOnly": "prettier --check src/**.ts && eslint src/**.ts",
+    "build": "node ./build.js"
   }
 }

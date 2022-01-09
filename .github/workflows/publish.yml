@@ -2,8 +2,10 @@
 name: Publish-GitHub-NPM
 on:
   push:
-    branches: [main]
-    tags: !*
+    branches:
+      - main
+    tags:
+      - !*
   workflow_dispatch:
 
 jobs:

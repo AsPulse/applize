@@ -1,5 +1,4 @@
 {
-  "include": ["src/**.ts"],
   "compilerOptions": {
     "target": "esnext",
     "moduleResolution": "node",
@@ -15,7 +14,6 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "pretty": true,
-    "newLine": "lf",
-    "outDir": "lib",
+    "newLine": "lf"
   }
 }

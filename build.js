@@ -15,3 +15,14 @@ build({
   tslint: true,
   plugins: [dtsPlugin()],
 }).catch(() => {});
+
+build({
+  define: { 'process.env.NODE_ENV': process.env.NODE_ENV },
+  entryPoints: [resolve(__dirname, 'src/bin/index.ts')],
+  target: 'esnext',
+  outdir: resolve(__dirname, 'bin'),
+  bundle: true,
+  minify: true,
+  sourcemap: true,
+  tslint: true,
+}).catch(() => {});

@@ -3,6 +3,8 @@ name: Publish-GitHub-NPM
 on:
   push:
     branches: [main]
+    tags-ignore: *
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,9 +23,15 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Version Up
+        run: npm version patch > version.txt
       - name: Setup git configuration
         run: |
           git config user.name Version-Updater
           git config user.email github-actions@github.com
-      - name: Version Up
-        run: npm version patch
+      - name: Commit new Version
+        run: |
+          git add package.json
+          git commit -m "VersionUp to ${cat version.txt}"
+          git tag ${cat version.txt}
+          git push --tags

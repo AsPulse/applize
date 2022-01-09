@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ !(startsWith(github.event.push.head_commit.message, 'VersionUp to ')) }}
+    if: ${{ github.event.push.head_commit.message != 'VersionUp' }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -24,15 +24,12 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - name: Version Up
-        run: npm version patch > version.txt
       - name: Setup git configuration
         run: |
           git config user.name Version-Updater
           git config user.email github-actions@github.com
-      - name: Commit new Version
+      - name: Version Up
+        run: npm version patch -m "VersionUp"
+      - name: Push new Version
         run: |
-          git add package.json
-          git commit -m "VersionUp to ${cat version.txt}"
-          git tag ${cat version.txt}
           git push --tags

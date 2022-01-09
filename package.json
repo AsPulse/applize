@@ -27,6 +27,7 @@
   "scripts": {
     "lint": "prettier --write src/**.ts && eslint --fix src/**.ts",
     "lintCheckOnly": "prettier --check src/**.ts && eslint src/**.ts",
-    "build": "node ./build.js"
+    "build": "node ./build.js",
+    "dev": "node ./build.js && node bin/index.js"
   }
 }

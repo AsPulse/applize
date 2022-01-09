@@ -1,10 +1,13 @@
 {
-  "name": "applize",
+  "name": "@aspulse/applize",
   "version": "1.0.0",
   "main": "lib/index.js",
   "repository": "https://github.com/AsPulse/applize.git",
   "author": "AsPulse <aspulse.x@gmail.com>",
   "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "dependencies": {
     "estrella": "^1.4.1",
     "prettier": "^2.5.1",

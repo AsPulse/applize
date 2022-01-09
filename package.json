@@ -1,0 +1,23 @@
+{
+  "name": "applize",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "repository": "https://github.com/AsPulse/applize.git",
+  "author": "AsPulse <aspulse.x@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "estrella": "^1.4.1",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "^5.9.0",
+    "esbuild-plugin-d.ts": "^1.1.0",
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0"
+  },
+  "scripts": {
+    "lint": "prettier --write src/**.ts && eslint --fix src/**.ts"
+  }
+}

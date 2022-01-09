@@ -1,0 +1,35 @@
+
+name: Publish-GitHub-NPM
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.push.head_commit.message != 'VersionUp' }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@aspulse'
+      - name: Install package
+        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
+        run: yarn --check-files --frozen-lockfile --non-interactive
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Setup git configuration
+        run: |
+          git config user.name Version-Updater
+          git config user.email github-actions@github.com
+      - name: Version Up
+        run: npm version patch -m "VersionUp"
+      - name: Push new Version
+        run: |
+          git push --tags

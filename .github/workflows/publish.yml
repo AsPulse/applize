@@ -29,7 +29,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Version Up
         run: |
-          NEWVER=$(npm version patch)
+          NEWVER=$(npm version patch --no-git-tag-version)
           echo "newver=$NEWVER" >> $GITHUB_ENV
           git push
       - name: Create Publish PR

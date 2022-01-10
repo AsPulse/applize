@@ -19,7 +19,9 @@ export class FileCreator {
     this.baseDir = baseDir;
     this.overrideChecker = overrideChecker;
   }
-  async createFile(path: string, content = ''): Promise<boolean> {
+
+  //既にNoEntityErrorによりディレクトリを作ろうとしてから呼び出された場合、triedMakedirがtrueになります。
+  async createFile(path: string, content = '', triedMakedir = false): Promise<boolean> {
     // flag: wx ... 既にパスが存在すれば失敗する
     try {
       await writeFile(resolve(this.baseDir, path), content, {
@@ -38,7 +40,7 @@ export class FileCreator {
           }
         case 'NoEntityError':
           await this.createDirectory(dirname(path));
-          return this.createFile(path, content);
+          return this.createFile(path, content, true);
         case 'Unknown':
         default:
           //TODO: Beautify the error message
@@ -48,6 +50,8 @@ export class FileCreator {
     }
   }
   async createDirectory(path: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    try {
+
+    }
   }
 }

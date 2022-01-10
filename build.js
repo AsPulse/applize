@@ -24,5 +24,6 @@ build({
   bundle: true,
   minify: true,
   sourcemap: true,
+  platform: 'node',
   tslint: true,
 }).catch(() => {});

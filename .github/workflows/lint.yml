@@ -12,8 +12,6 @@ jobs:
         with:
           node-version: '16'
       - uses: actions/checkout@v2
-      - name: Show commid ID
-        run: git show -s --format=%H
       - name: Cache node_modules
         id: node_modules_cache_id
         uses: actions/cache@v2

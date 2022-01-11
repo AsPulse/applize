@@ -34,3 +34,7 @@ export function decorate(
     (underlined ? `	\x1b[4m` : '')
   );
 }
+
+export function print(...args: string[]): void {
+  console.log([args, resetColor].flat().join(''));
+}

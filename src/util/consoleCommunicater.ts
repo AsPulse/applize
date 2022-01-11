@@ -25,10 +25,10 @@ export function decorate(
   return (
     resetColor +
     (foreground
-      ? `\x1b[38;2;${foreground.r};${foreground.g};${foreground.b}m]`
+      ? `\x1b[38;2;${foreground.r};${foreground.g};${foreground.b}m`
       : resetForegroundColor) +
     (background
-      ? `\x1b[48;2;${background.r};${background.g};${background.b}m]`
+      ? `\x1b[48;2;${background.r};${background.g};${background.b}m`
       : resetBackgroundColor) +
     (bold ? `\x1b[1m` : '') +
     (underlined ? `	\x1b[4m` : '')

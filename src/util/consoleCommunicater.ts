@@ -15,3 +15,22 @@ export const colors: { [key in TColorVariation]: IRGBColor } = {
   green: { r: 0, g: 217, b: 98 },
   blue: { r: 0, g: 119, b: 255 },
 };
+
+export function decorate(
+  foreground?: IRGBColor,
+  background?: IRGBColor,
+  bold = false,
+  underlined = false
+): string {
+  return (
+    resetColor +
+    (foreground
+      ? `\x1b[38;2;${foreground.r};${foreground.g};${foreground.b}m]`
+      : resetForegroundColor) +
+    (background
+      ? `\x1b[48;2;${background.r};${background.g};${background.b}m]`
+      : resetBackgroundColor) +
+    (bold ? `\x1b[1m` : '') +
+    (underlined ? `	\x1b[4m` : '')
+  );
+}

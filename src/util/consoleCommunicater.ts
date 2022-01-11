@@ -40,3 +40,39 @@ export function decorate(
 export function print(...args: string[]): void {
   console.log([args, resetColor].flat().join(''));
 }
+
+function letterLoop(target: string, count: number): string {
+  return [...new Array<void>(count)].map(() => target).join('');
+}
+
+export function filledBySpace(
+  content: string[],
+  letterMargin: number,
+  lineMargin: number,
+  decorator = ''
+): string {
+  const maxLength = content
+    .map((v) => v.length)
+    .reduce((a, b) => Math.max(a, b));
+  const shareMargin = letterLoop(' ', letterMargin);
+  const letterMargined = letterLoop(' ', maxLength + letterMargin * 2);
+  const linesMargined = [...new Array<void>(lineMargin)].map(
+    () => decorator + letterMargined + resetColor
+  );
+  return [
+    linesMargined,
+    content.map((v) =>
+      [
+        decorator,
+        shareMargin,
+        v,
+        letterLoop(' ', maxLength - v.length),
+        shareMargin,
+        resetColor,
+      ].join('')
+    ),
+    linesMargined,
+  ]
+    .flat()
+    .join('\n');
+}

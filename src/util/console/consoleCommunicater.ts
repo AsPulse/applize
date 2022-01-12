@@ -1,3 +1,5 @@
+import { renderLength } from './renderLength';
+
 // value 0 ... 255
 interface IRGBColor {
   r: number;
@@ -63,7 +65,7 @@ export function filledBySpace(
   decorator = ''
 ): string {
   const maxLength = content
-    .map((v) => v.length)
+    .map((v) => renderLength(v))
     .reduce((a, b) => Math.max(a, b));
   const shareMargin = letterLoop(' ', letterMargin);
   const letterMargined = letterLoop(' ', maxLength + letterMargin * 2);
@@ -77,7 +79,7 @@ export function filledBySpace(
         decorator,
         shareMargin,
         v,
-        letterLoop(' ', maxLength - v.length),
+        letterLoop(' ', maxLength - renderLength(v)),
         shareMargin,
         resetColor,
       ].join('')
@@ -88,13 +90,13 @@ export function filledBySpace(
     .join('\n');
 }
 
-export function outliend(
+export function outlined(
   content: string[],
   letterMargin: number,
   lineMargin: number
 ): string {
   const maxLength = content
-    .map((v) => v.length)
+    .map((v) => renderLength(v))
     .reduce((a, b) => Math.max(a, b));
   const marginSpace = letterLoop(' ', letterMargin);
   const lineMargins = [...new Array<void>(lineMargin)].map(() => '');
@@ -107,7 +109,7 @@ export function outliend(
           '│',
           marginSpace,
           v,
-          letterLoop(' ', maxLength - v.length),
+          letterLoop(' ', maxLength - renderLength(v)),
           marginSpace,
           '│',
         ].join('')

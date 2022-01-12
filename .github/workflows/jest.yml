@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  lint:
+  jest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v2

@@ -22,7 +22,7 @@ type TSymbolVariation = 'hexagon' | 'clover' | 'diamond';
 export const symbols: { [key in TSymbolVariation]: string } = {
   hexagon: '⬢',
   clover: '☘',
-  diamond: '◆'
+  diamond: '◆',
 };
 
 export function decorate(
@@ -88,17 +88,32 @@ export function filledBySpace(
     .join('\n');
 }
 
-export function outliend( content: string[], letterMargin: number, lineMargin: number): string {
+export function outliend(
+  content: string[],
+  letterMargin: number,
+  lineMargin: number
+): string {
   const maxLength = content
-  .map((v) => v.length)
-  .reduce((a, b) => Math.max(a, b));
-  const marginSpace = letterLoop(' ', letterMargin) ;
+    .map((v) => v.length)
+    .reduce((a, b) => Math.max(a, b));
+  const marginSpace = letterLoop(' ', letterMargin);
   const lineMargins = [...new Array<void>(lineMargin)].map(() => '');
   return [
-    `╭`+letterLoop('─', maxLength + letterMargin * 2)+`╮`,
-    [lineMargins, content, lineMargins].flat().map((v) => [
-      '│', marginSpace, v,letterLoop(' ', maxLength - v.length) ,marginSpace, '│'
-    ].join('')),
-    `╰`+letterLoop('─', maxLength + letterMargin * 2)+`╯`,
-  ].flat().join('\n');
+    `╭` + letterLoop('─', maxLength + letterMargin * 2) + `╮`,
+    [lineMargins, content, lineMargins]
+      .flat()
+      .map((v) =>
+        [
+          '│',
+          marginSpace,
+          v,
+          letterLoop(' ', maxLength - v.length),
+          marginSpace,
+          '│',
+        ].join('')
+      ),
+    `╰` + letterLoop('─', maxLength + letterMargin * 2) + `╯`,
+  ]
+    .flat()
+    .join('\n');
 }

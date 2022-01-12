@@ -48,6 +48,10 @@ export function print(...args: string[]): void {
   console.log([args, resetColor].flat().join(''));
 }
 
+export function printLine(): void {
+  console.log('');
+}
+
 function letterLoop(target: string, count: number): string {
   return [...new Array<void>(count)].map(() => target).join('');
 }

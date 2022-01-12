@@ -18,6 +18,13 @@ export const colors: { [key in TColorVariation]: IRGBColor } = {
   black: { r: 0, g: 0, b: 0 },
 };
 
+type TSymbolVariation = 'hexagon' | 'clover' | 'diamond';
+export const symbols: { [key in TSymbolVariation]: string } = {
+  hexagon: '⬢',
+  clover: '☘',
+  diamond: '◆'
+};
+
 export function decorate(
   foreground?: IRGBColor,
   background?: IRGBColor,

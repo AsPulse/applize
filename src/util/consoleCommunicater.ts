@@ -87,3 +87,18 @@ export function filledBySpace(
     .flat()
     .join('\n');
 }
+
+export function outliend( content: string[], letterMargin: number, lineMargin: number): string {
+  const maxLength = content
+  .map((v) => v.length)
+  .reduce((a, b) => Math.max(a, b));
+  const marginSpace = letterLoop(' ', letterMargin) ;
+  const lineMargins = [...new Array<void>(lineMargin)].map(() => '');
+  return [
+    `╭`+letterLoop('─', maxLength + letterMargin * 2)+`╮`,
+    [lineMargins, content, lineMargins].flat().map((v) => [
+      '│', marginSpace, v,letterLoop(' ', maxLength - v.length) ,marginSpace, '│'
+    ].join('')),
+    `╰`+letterLoop('─', maxLength + letterMargin * 2)+`╯`,
+  ].flat().join('\n');
+}

@@ -1,3 +1,4 @@
+import { createInterface } from 'readline';
 import { renderLength } from './renderLength';
 
 // value 0 ... 255
@@ -117,4 +118,21 @@ export function outlined(
   ]
     .flat()
     .join('\n');
+}
+
+export async function input(content: string[], validator: (input: string) => Promise<boolean> = () => Promise.resolve(true)) {
+  const reader = createInterface({ input: process.stdin });
+  print(...content);
+  return new Promise<string>(resolve => {
+    reader.on('line', line => {
+      void (async () => {
+        if (!(await validator(line))){
+          print(...content);
+          return;
+        }
+        reader.close();
+        resolve(line);
+      })();
+    });
+  });
 }

@@ -13,14 +13,14 @@ const isErrorSerializable = (
   errorObject: unknown
 ): errorObject is ISerializableError => {
   const error = errorObject as ISerializableError;
-  if ('errno' in error) return false;
-  if ('code' in error) return false;
-  if ('syscall' in error) return false;
-  if ('path' in error) return false;
-  if (typeof error.errno === 'number') return false;
-  if (typeof error.code === 'string') return false;
-  if (typeof error.syscall === 'string') return false;
-  if (typeof error.path === 'string') return false;
+  if (!('errno' in error)) return false;
+  if (!('code' in error)) return false;
+  if (!('syscall' in error)) return false;
+  if (!('path' in error)) return false;
+  if (typeof error.errno !== 'number') return false;
+  if (typeof error.code !== 'string') return false;
+  if (typeof error.syscall !== 'string') return false;
+  if (typeof error.path !== 'string') return false;
   return true;
 };
 

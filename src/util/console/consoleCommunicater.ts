@@ -46,12 +46,11 @@ export function decorate(
   );
 }
 
-export function print(...args: string[]): void {
-  console.log([args, resetColor].flat().join(''));
+export function say(...args: string[]): void {
+  print(...args, '\n');
 }
-
-export function printLine(): void {
-  console.log('');
+function print(...args: string[]): void {
+  process.stdout.write([args, resetColor].flat().join(''));
 }
 
 function letterLoop(target: string, count: number): string {

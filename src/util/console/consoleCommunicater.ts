@@ -120,13 +120,16 @@ export function outlined(
     .join('\n');
 }
 
-export async function input(content: string[], validator: (input: string) => Promise<boolean> = () => Promise.resolve(true)) {
+export async function input(
+  content: string[],
+  validator: (input: string) => Promise<boolean> = () => Promise.resolve(true)
+) {
   const reader = createInterface({ input: process.stdin });
   print(...content);
-  return new Promise<string>(resolve => {
-    reader.on('line', line => {
+  return new Promise<string>((resolve) => {
+    reader.on('line', (line) => {
       void (async () => {
-        if (!(await validator(line))){
+        if (!(await validator(line))) {
           print(...content);
           return;
         }

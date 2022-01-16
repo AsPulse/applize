@@ -1,10 +1,11 @@
 import { cwd } from 'process';
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, unlink, writeFile } from 'fs/promises';
 import { dirname, resolve } from 'path';
 import {
   FileSystemError,
   FileSystemErrorSerialize,
 } from '../../util/error/fileSystemError';
+import { colors, decorate, say } from '../../util/console/consoleCommunicater';
 
 //上書きするかの確認を取るラムダ関数 ( trueを返すと上書きする )
 type TOverrideChecker = (
@@ -32,13 +33,21 @@ export class FileCreator {
         encoding: 'utf-8',
         flag: 'wx',
       });
-      //TODO[Log]: file Created message
+      say(decorate(colors.gray), `New File: ${path}`);
       return true;
     } catch (err) {
       //新しいディレクトリをつくった時点で、同じファイルが存在する可能性もない。
       //triedMakedir = trueでココに来たら、明らかに異常系である
       if (triedMakedir) {
-        //TODO[Log]: Beautify the error message
+        //TODO[Log]: more detailed the error message
+        say();
+        say(
+          decorate(colors.white, colors.pink, true),
+          ' FATAL ',
+          decorate(),
+          ' Unknown problem with file writing...'
+        );
+        say('   ', path);
         return false;
       }
       const error = FileSystemErrorSerialize(err);
@@ -46,6 +55,7 @@ export class FileCreator {
         case 'ExistsError':
           if (await this.overrideChecker(path, error)) {
             //TODO[Log]: file Created message
+            await unlink(path);
             return this.createFile(path, content);
           } else {
             return false;
@@ -57,8 +67,14 @@ export class FileCreator {
           return this.createFile(path, content, true);
         case 'Unknown':
         default:
-          //TODO[Log]: Beautify the error message
-          console.log(error);
+          //TODO[Log]: more detailed the error message
+          say(
+            decorate(colors.white, colors.pink, true),
+            ' FATAL ',
+            decorate(),
+            ' Unknown problem with file writing...'
+          );
+          console.log(err);
           return false;
       }
     }
@@ -66,11 +82,16 @@ export class FileCreator {
   async createDirectory(path: string): Promise<boolean> {
     return mkdir(path, { recursive: true })
       .then(() => {
-        //TODO[Log]: directory maked
+        say(decorate(colors.gray), `New Directory: ${path}`);
         return true;
       })
       .catch(() => {
-        //TODO[Log]: directory make failed
+        say(
+          decorate(colors.white, colors.pink, true),
+          ' ERROR ',
+          decorate(),
+          ' Directory cannot be created'
+        );
         return false;
       });
   }

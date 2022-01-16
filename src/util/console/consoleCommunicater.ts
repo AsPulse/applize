@@ -139,3 +139,17 @@ export async function input(
     });
   });
 }
+export async function confirmInput<UnionType extends string>(
+  content: string[],
+  selections: UnionType[],
+  showSelections: boolean
+): Promise<UnionType> {
+  return <UnionType>(
+    await input(
+      [...content, showSelections ? ` (${selections.join('/')})` : '', ': '],
+      (v) => {
+        return Promise.resolve((<string[]>selections).includes(v));
+      }
+    )
+  );
+}

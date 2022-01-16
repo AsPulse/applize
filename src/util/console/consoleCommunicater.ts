@@ -153,3 +153,6 @@ export async function confirmInput<UnionType extends string>(
     )
   );
 }
+export async function confirmYesNo(content: string[]): Promise<boolean> {
+  return (await confirmInput(content, ['y', 'n'], true)) === 'y';
+}

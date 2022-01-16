@@ -1,3 +1,4 @@
+import { colors, decorate } from './consoleCommunicater';
 import { renderLength } from './renderLength';
 
 describe('renderLength', () => {
@@ -24,6 +25,10 @@ describe('renderLength', () => {
   it('halfKatakana', () => {
     expect(renderLength('ﾏｲｸﾃｽﾄ')).toBe(6);
     expect(renderLength('ﾊﾝｶｸｶﾀｶﾅ')).toBe(8);
+  });
+  it('controlletter', () => {
+    expect(renderLength(decorate(colors.white, colors.pink, true))).toBe(0);
+    expect(renderLength(decorate(colors.white, colors.pink, true) + 'あいうAbc')).toBe(9);
   });
   it('cross', () => {
     expect(renderLength('こんにちは世界！!, Yesｱｲｳｴｵ')).toBe(27);

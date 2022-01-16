@@ -22,7 +22,8 @@ say(
   filledBySpace(
     [
       decorate(colors.white, colors.pink, true) + 'Hello Applize!',
-      decorate(colors.white, colors.pink, false) + 'for TypeScript in everything...',
+      decorate(colors.white, colors.pink, false) +
+        'for TypeScript in everything...',
     ],
     3,
     1,

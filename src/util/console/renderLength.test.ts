@@ -28,7 +28,9 @@ describe('renderLength', () => {
   });
   it('controlletter', () => {
     expect(renderLength(decorate(colors.white, colors.pink, true))).toBe(0);
-    expect(renderLength(decorate(colors.white, colors.pink, true) + 'あいうAbc')).toBe(9);
+    expect(
+      renderLength(decorate(colors.white, colors.pink, true) + 'あいうAbc')
+    ).toBe(9);
   });
   it('cross', () => {
     expect(renderLength('こんにちは世界！!, Yesｱｲｳｴｵ')).toBe(27);

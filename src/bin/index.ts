@@ -5,6 +5,7 @@ import {
   decorate,
   filledBySpace,
   say,
+  symbols,
 } from '../util/console/consoleCommunicater';
 import { FileCreator } from './fileio/creator';
 
@@ -21,7 +22,7 @@ say();
 say(
   filledBySpace(
     [
-      decorate(colors.white, colors.pink, true) + 'Hello Applize!',
+      decorate(colors.white, colors.pink, true) + symbols.hexagon + ' Hello Applize!',
       decorate(colors.white, colors.pink, false) +
         'for TypeScript in everything...',
     ],
@@ -30,3 +31,4 @@ say(
     decorate(colors.white, colors.pink, true)
   )
 );
+say();

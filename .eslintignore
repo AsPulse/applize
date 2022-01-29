@@ -2,3 +2,4 @@ build.js
 jest.config.js
 /lib
 /bin
+devLaunch.js

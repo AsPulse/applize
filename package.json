@@ -35,6 +35,7 @@
     "lint": "prettier --write src/** && eslint --fix --max-warnings 0 src/**",
     "lintCheckOnly": "prettier --check src/** && eslint --max-warnings 0 src/**",
     "build": "node ./build.js",
-    "dev": "node ./build.js && node bin/index.js"
+    "dev": "node ./build.js && node bin/index.js",
+    "dev-adm": "node ./src/client/dombuilder/develop/devLaunch.js"
   }
 }

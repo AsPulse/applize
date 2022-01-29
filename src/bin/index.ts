@@ -22,7 +22,9 @@ say();
 say(
   filledBySpace(
     [
-      decorate(colors.white, colors.pink, true) + symbols.hexagon + ' Hello Applize!',
+      decorate(colors.white, colors.pink, true) +
+        symbols.hexagon +
+        ' Hello Applize!',
       decorate(colors.white, colors.pink, false) +
         'for TypeScript in everything...',
     ],

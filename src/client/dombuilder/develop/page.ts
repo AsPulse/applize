@@ -1,6 +1,7 @@
 import { IApplizeDomBuilder } from '..';
 import { DomRenderer } from '../domrenderer';
 
-((adb: IApplizeDomBuilder) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+((_adb: IApplizeDomBuilder) => {
   console.log('hello!');
 })(new DomRenderer(document.body));

@@ -2,3 +2,6 @@ build.js
 jest.config.js
 /lib
 /bin
+/src/client/dombuilder/develop/page.js
+/src/client/dombuilder/develop/index.html
+/src/client/dombuilder/develop/devLaunch.js

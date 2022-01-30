@@ -1,5 +1,10 @@
-import { HTMLTags, IApplizeDOM, IApplizeDOMBuilder, TBuilder, TNoExpose } from '.';
-
+import {
+  HTMLTags,
+  IApplizeDOM,
+  IApplizeDOMBuilder,
+  TBuilder,
+  TNoExpose,
+} from '.';
 
 export class DomRenderer implements IApplizeDOMBuilder {
   constructor(public targetElement: HTMLElement) {}
@@ -8,18 +13,20 @@ export class DomRenderer implements IApplizeDOMBuilder {
     this.targetElement.appendChild(element.element);
     return element;
   }
-  parse<T extends HTMLTags, U = TNoExpose>(...args: TBuilder<T, U>): IApplizeDOM<HTMLElementTagNameMap[T], U>{
+  parse<T extends HTMLTags, U = TNoExpose>(
+    ...args: TBuilder<T, U>
+  ): IApplizeDOM<HTMLElementTagNameMap[T], U> {
     const element = document.createElement(args[0]);
     const last = args[1];
     if (last !== undefined) {
       const expose = last(<S extends HTMLTags, K>(...args: TBuilder<S, K>) => {
-          const parsed = this.parse(...args);
-          element.appendChild(parsed.element);
-          return parsed;
+        const parsed = this.parse(...args);
+        element.appendChild(parsed.element);
+        return parsed;
       });
       return { element, expose };
     } else {
       return { element, expose: last as unknown as U };
     }
-  };
+  }
 }

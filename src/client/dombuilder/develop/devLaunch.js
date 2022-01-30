@@ -10,5 +10,6 @@ build({
   bundle: true,
   minify: true,
   format: 'esm',
+  sourcemap: true,
   tslint: true,
 }).catch(() => {});

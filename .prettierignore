@@ -1,4 +1,5 @@
 .gitignore
 /src/client/dombuilder/develop/page.js
 /src/client/dombuilder/develop/page.js.map
+/src/client/dombuilder/develop/page.min.js
 /src/client/dombuilder/develop/index.html

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         paragraph2: div('p'),
         paragraph3: div('p'),
         inner: div('div', (inner) => {
-          return { text: inner('b') };
+          return { text: inner('s', bold => bold('b')) };
         }),
       };
     });
@@ -17,6 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     data.expose.paragraph2.element.textContent = 'consectetur adipiscing elit,';
     data.expose.paragraph3.element.textContent =
       'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-    data.expose.inner.expose.text.element.textContent = 'This is inner!';
+    data.expose.inner.expose.text.expose.element.textContent = 'This is inner!';
   })(new DomRenderer(document.body));
 });

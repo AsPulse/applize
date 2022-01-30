@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         paragraph2: div('p'),
         paragraph3: div('p'),
         inner: div('div', (inner) => {
-          return { text: inner('s', bold => bold('b')) };
+          return { text: inner('s', (bold) => bold('b')) };
         }),
       };
     });

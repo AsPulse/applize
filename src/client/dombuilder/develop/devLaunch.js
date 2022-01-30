@@ -4,7 +4,6 @@ const { compiler } = require('google-closure-compiler');
 const { stat } = require('fs/promises');
 
 (async () => {
-
   const tsBuildBegin = new Date();
 
   await build({
@@ -26,13 +25,13 @@ const { stat } = require('fs/promises');
     js: resolve(__dirname, 'page.js'),
     compilation_level: 'ADVANCED',
     js_output_file: resolve(__dirname, 'page.min.js'),
-    language_out: 'ECMASCRIPT_NEXT'
+    language_out: 'ECMASCRIPT_NEXT',
   });
 
   const ClosureCompilerBegin = new Date();
 
   c.run(async (exitCode, stdout, stderr) => {
-    console.log({exitCode, stdout, stderr});
+    console.log({ exitCode, stdout, stderr });
     const finish = new Date();
 
     console.log();
@@ -40,20 +39,15 @@ const { stat } = require('fs/promises');
     const normalSize = (await stat(resolve(__dirname, 'page.js'))).size;
     const minSize = (await stat(resolve(__dirname, 'page.min.js'))).size;
     console.log(
-      `TypeScript Build: ${
-        normalSize
-      }byte(s) [${
+      `TypeScript Build: ${normalSize}byte(s) [${
         ClosureCompilerBegin.getTime() - tsBuildBegin.getTime()
       }ms]`
     );
     console.log(
-      `Closure Compile: ${
-        minSize
-      }byte(s) ${Math.round(minSize/normalSize*1000)/10}% of Original [${
-        finish.getTime() - ClosureCompilerBegin.getTime()
-      }ms]`
+      `Closure Compile: ${minSize}byte(s) ${
+        Math.round((minSize / normalSize) * 1000) / 10
+      }% of Original [${finish.getTime() - ClosureCompilerBegin.getTime()}ms]`
     );
     console.log();
   });
-
 })();

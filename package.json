@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "estrella": "^1.4.1",
+    "google-closure-compiler": "^20220104.0.0",
     "prettier": "^2.5.1",
     "typescript": "^4.5.4"
   },

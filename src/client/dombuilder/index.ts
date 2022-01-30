@@ -1,17 +1,18 @@
-export type TBuilderArgs = [string]
-export type TBuilder<U> =
-    [...TBuilderArgs, ((builder: <K>(...args: TBuilder<K>) => IApplizeDOM<K>) => U)];
+export type TBuilderArgs<T> = [T]
+export type HTMLTags = keyof HTMLElementTagNameMap;
+export type TBuilder<T extends HTMLTags, U> =
+    [...TBuilderArgs<T>, ((builder: <S extends HTMLTags, K>(...args: TBuilder<S, K>) => IApplizeDOM<HTMLElementTagNameMap[S], K>) => U)];
 
 
 export type TNoExpose = null;
-export interface IApplizeDOM<U> {
-  element: HTMLElement,
+export interface IApplizeDOM<K extends HTMLElement, U> {
+  element: K,
   expose: U
 }
 
 export interface IApplizeDOMBuilder {
   targetElement: HTMLElement;
-  build<U>(...args: TBuilder<U>): IApplizeDOM<U>;
-  parse<U>(...args: TBuilder<U>): IApplizeDOM<U>;
+  build<T extends HTMLTags, U>(...args: TBuilder<T, U>): IApplizeDOM<HTMLElementTagNameMap[T], U>;
+  parse<T extends HTMLTags, U>(...args: TBuilder<T, U>): IApplizeDOM<HTMLElementTagNameMap[T], U>;
 }
 

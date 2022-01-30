@@ -1,7 +1,7 @@
-import { IApplizeDomBuilder } from './client/dombuilder';
+import { IApplizeDOMBuilder } from './client/dombuilder';
 
 export class Applize {
-  addPage(page: (adb: IApplizeDomBuilder) => void) {
+  addPage(page: (adb: IApplizeDOMBuilder) => void) {
     console.log(page.toString());
   }
 }

@@ -1,32 +1,50 @@
-import {
-  HTMLTags,
-  IApplizeDOM,
-  IApplizeDOMBuilder,
-  TBuilder,
-  TNoExpose,
-} from '.';
+export type HTMLTags = keyof HTMLElementTagNameMap;
 
-export class DomRenderer implements IApplizeDOMBuilder {
-  constructor(public targetElement: HTMLElement) {}
-  build<T extends HTMLTags, U>(...args: TBuilder<T, U>) {
-    const element = this.parse(...args);
-    this.targetElement.appendChild(element.element);
-    return element;
+export type ElementGenerator<K extends HTMLTags, U> = (
+  tag: K
+) => IApplizeDOM<HTMLElementTagNameMap[K], U>;
+
+export type ElementGeneratorUnknown = <NewK extends HTMLTags>(
+  ...args: Parameters<ElementGenerator<NewK, null>>
+) => ReturnType<ElementGenerator<NewK, null>>;
+
+export class IApplizeDOM<K extends HTMLElement, ExposeType> {
+  constructor(public element: K, public expose: ExposeType) {}
+
+  static generate<K extends HTMLTags, U>(
+    ...args: Parameters<ElementGenerator<K, U>>
+  ) {
+    return new IApplizeDOM(document.createElement(args[0]), null);
   }
-  parse<T extends HTMLTags, U = TNoExpose>(
-    ...args: TBuilder<T, U>
-  ): IApplizeDOM<HTMLElementTagNameMap[T], U> {
-    const element = document.createElement(args[0]);
-    const last = args[1];
-    if (last !== undefined) {
-      const expose = last(<S extends HTMLTags, K>(...args: TBuilder<S, K>) => {
-        const parsed = this.parse(...args);
-        element.appendChild(parsed.element);
-        return parsed;
-      });
-      return { element, expose };
-    } else {
-      return { element, expose: last as unknown as U };
-    }
+
+  in<NewExpose>(
+    inner: (elementGenerator: ElementGeneratorUnknown) => NewExpose
+  ): IApplizeDOM<K, NewExpose> {
+    return this.setExpose(
+      inner((...args) => {
+        const dom = IApplizeDOM.generate(...args);
+        this.element.appendChild(dom.element);
+        return dom;
+      })
+    );
+  }
+
+  setExpose<NewExpose>(expose: NewExpose) {
+    return new IApplizeDOM<K, NewExpose>(this.element, expose);
+  }
+
+  //------- Property Editor
+
+  text(text: string) {
+    this.element.textContent = text;
+  }
+}
+
+export class DomRenderer {
+  constructor(public targetElement: HTMLElement) {}
+  build<K extends HTMLTags, U>(...args: Parameters<ElementGenerator<K, U>>) {
+    const dom = IApplizeDOM.generate(...args);
+    this.targetElement.appendChild(dom.element);
+    return dom;
   }
 }

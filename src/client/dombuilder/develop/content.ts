@@ -1,13 +1,13 @@
-import { IApplizeDOMBuilder } from '..';
+import { DomRenderer } from '../domrenderer';
 
-export const content = (adb: IApplizeDOMBuilder) => {
-  const data = adb.build('div', (div) => {
+export const content = (adb: DomRenderer) => {
+  const data = adb.build('div').in((v) => {
     return {
-      paragraph1: div('p'),
-      paragraph2: div('p'),
-      paragraph3: div('p'),
-      inner: div('div', (inner) => {
-        return { text: inner('s', (bold) => bold('b')) };
+      paragraph1: v('p'),
+      paragraph2: v('p'),
+      paragraph3: v('p'),
+      inner: v('div').in((v) => {
+        return { text: v('s').in((v) => v('b')) };
       }),
     };
   });

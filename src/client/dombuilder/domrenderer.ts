@@ -32,6 +32,12 @@ export class IApplizeDOM<K extends HTMLElement, ExposeType> {
   setExpose<NewExpose>(expose: NewExpose) {
     return new IApplizeDOM<K, NewExpose>(this.element, expose);
   }
+
+  //------- Property Editor
+
+  text(text: string) {
+    this.element.textContent = text;
+  }
 }
 
 export class DomRenderer {

@@ -9,7 +9,7 @@ import {
 } from '../util/console/consoleCommunicater';
 import { FileCreator } from './fileio/creator';
 
-new FileCreator((path) =>
+new FileCreator(path =>
   confirmYesNo([
     decorate(colors.green),
     'File ',

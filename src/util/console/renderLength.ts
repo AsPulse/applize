@@ -1,7 +1,7 @@
 /* eslint-disable no-control-regex */
 export function renderLength(content: string): number {
   return [...content.replace(/\x1b\[(.*)m/g, '')]
-    .map((v) => {
+    .map(v => {
       if (v.match(/^[ｦ-ﾟ]*$/)) return 1;
       if (v.match(/^[\u2700-\u2bff]+$/u)) return 1;
       if (v.match(/^[\ufe00-\uffff]+$/u)) return 2;

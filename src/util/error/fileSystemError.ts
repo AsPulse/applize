@@ -37,7 +37,7 @@ export class FileSystemError {
     this.errno = errno;
     this.syscall = syscall;
     this.path = path;
-    this.code = errorTypes.find((v) => v.code === code) ?? {
+    this.code = errorTypes.find(v => v.code === code) ?? {
       code: code,
       type: 'Unknown',
     };

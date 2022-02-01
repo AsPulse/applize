@@ -66,7 +66,7 @@ export function filledBySpace(
   decorator = ''
 ): string {
   const maxLength = content
-    .map((v) => renderLength(v))
+    .map(v => renderLength(v))
     .reduce((a, b) => Math.max(a, b));
   const shareMargin = letterLoop(' ', letterMargin);
   const letterMargined = letterLoop(' ', maxLength + letterMargin * 2);
@@ -75,7 +75,7 @@ export function filledBySpace(
   );
   return [
     linesMargined,
-    content.map((v) =>
+    content.map(v =>
       [
         decorator,
         shareMargin,
@@ -97,7 +97,7 @@ export function outlined(
   lineMargin: number
 ): string {
   const maxLength = content
-    .map((v) => renderLength(v))
+    .map(v => renderLength(v))
     .reduce((a, b) => Math.max(a, b));
   const marginSpace = letterLoop(' ', letterMargin);
   const lineMargins = [...new Array<void>(lineMargin)].map(() => '');
@@ -105,7 +105,7 @@ export function outlined(
     `╭` + letterLoop('─', maxLength + letterMargin * 2) + `╮`,
     [lineMargins, content, lineMargins]
       .flat()
-      .map((v) =>
+      .map(v =>
         [
           '│',
           marginSpace,
@@ -127,8 +127,8 @@ export async function input(
 ) {
   const reader = createInterface({ input: process.stdin });
   print(...content);
-  return new Promise<string>((resolve) => {
-    reader.on('line', (line) => {
+  return new Promise<string>(resolve => {
+    reader.on('line', line => {
       void (async () => {
         if (!(await validator(line))) {
           print(...content);
@@ -148,7 +148,7 @@ export async function confirmInput<UnionType extends string>(
   return <UnionType>(
     await input(
       [...content, showSelections ? ` (${selections.join('/')})` : '', ': '],
-      (v) => {
+      v => {
         return Promise.resolve((<string[]>selections).includes(v));
       }
     )

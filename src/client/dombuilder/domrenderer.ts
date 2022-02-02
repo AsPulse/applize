@@ -37,6 +37,7 @@ export class IApplizeDOM<K extends HTMLElement, ExposeType> {
 
   text(text: string) {
     this.element.textContent = text;
+    return this;
   }
 }
 

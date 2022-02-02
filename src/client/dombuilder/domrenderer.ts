@@ -39,6 +39,11 @@ export class IApplizeDOM<K extends HTMLElement, ExposeType> {
     this.element.textContent = text;
     return this;
   }
+
+  on(event: keyof HTMLElementEventMap, func: () => unknown) {
+    this.element.addEventListener(event, func);
+    return this;
+  }
 }
 
 export class DomRenderer {

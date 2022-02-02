@@ -3,7 +3,7 @@ import {
   HTMLTags,
   ElementGenerator,
   ElementGeneratorUnknown,
-  DOMRenderer,
+  IDOMRenderer,
 } from '.';
 
 export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
@@ -46,7 +46,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   }
 }
 
-export class DomRendererClient implements DOMRenderer {
+export class DomRendererClient implements IDOMRenderer {
   constructor(public targetElement: HTMLElement) {}
   build<K extends HTMLTags, U>(...args: Parameters<ElementGenerator<K, U>>) {
     const dom = IApplizeDOMClient.generate(...args);

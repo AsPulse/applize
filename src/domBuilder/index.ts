@@ -26,7 +26,7 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   ): IApplizeDOM<K, ExposeType>;
 }
 
-export interface DOMRenderer {
+export interface IDOMRenderer {
   targetElement: HTMLElement;
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGenerator<K, U>>

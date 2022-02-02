@@ -37,6 +37,12 @@ export class IApplizeDOM<K extends HTMLElement, ExposeType> {
 
   text(text: string) {
     this.element.textContent = text;
+    return this;
+  }
+
+  on(event: keyof HTMLElementEventMap, func: () => unknown) {
+    this.element.addEventListener(event, func);
+    return this;
   }
 }
 

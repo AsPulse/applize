@@ -1,19 +1,19 @@
 export type HTMLTags = keyof HTMLElementTagNameMap;
 
-export type ElementGenerator<K extends HTMLTags, U> = (
+export type ElementGeneratorGeneric<K extends HTMLTags, U> = (
   tag: K
 ) => IApplizeDOM<HTMLElementTagNameMap[K], U>;
 
-export type ElementGeneratorUnknown = <NewK extends HTMLTags>(
-  ...args: Parameters<ElementGenerator<NewK, null>>
-) => ReturnType<ElementGenerator<NewK, null>>;
+export type ElementGenerator = <NewK extends HTMLTags>(
+  ...args: Parameters<ElementGeneratorGeneric<NewK, null>>
+) => ReturnType<ElementGeneratorGeneric<NewK, null>>;
 
 export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   element: K;
   expose: ExposeType;
 
   in<NewExpose>(
-    inner: (elementGenerator: ElementGeneratorUnknown) => NewExpose
+    inner: (elementGenerator: ElementGenerator) => NewExpose
   ): IApplizeDOM<K, NewExpose>;
 
   setExpose<NewExpose>(expose: NewExpose): IApplizeDOM<K, NewExpose>;
@@ -29,7 +29,7 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
 export interface IDOMRenderer {
   targetElement: HTMLElement;
   build<K extends HTMLTags, U>(
-    ...args: Parameters<ElementGenerator<K, U>>
+    ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
   clone(): IDOMRenderer;
 }

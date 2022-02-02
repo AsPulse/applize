@@ -1,8 +1,8 @@
 import {
   IApplizeDOM,
   HTMLTags,
+  ElementGeneratorGeneric,
   ElementGenerator,
-  ElementGeneratorUnknown,
   IDOMRenderer,
 } from '.';
 
@@ -12,13 +12,13 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   constructor(public element: K, public expose: ExposeType) {}
 
   static generate<K extends HTMLTags, U>(
-    ...args: Parameters<ElementGenerator<K, U>>
+    ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ) {
     return new IApplizeDOMClient(document.createElement(args[0]), null);
   }
 
   in<NewExpose>(
-    inner: (elementGenerator: ElementGeneratorUnknown) => NewExpose
+    inner: (elementGenerator: ElementGenerator) => NewExpose
   ): IApplizeDOMClient<K, NewExpose> {
     return this.setExpose(
       inner((...args) => {
@@ -51,7 +51,9 @@ export class DOMRendererClient implements IDOMRenderer {
   clone(): IDOMRenderer {
     return new DOMRendererClient(this.targetElement);
   }
-  build<K extends HTMLTags, U>(...args: Parameters<ElementGenerator<K, U>>) {
+  build<K extends HTMLTags, U>(
+    ...args: Parameters<ElementGeneratorGeneric<K, U>>
+  ) {
     const dom = IApplizeDOMClient.generate(...args);
     this.targetElement.appendChild(dom.element);
     return dom;

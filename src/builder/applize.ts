@@ -1,3 +1,4 @@
+import { nodeExternalsPlugin } from 'esbuild-node-externals';
 import { build } from 'estrella';
 import { copyFile, mkdir, readdir, readFile, rm, writeFile } from 'fs/promises';
 import { extname, join, resolve } from 'path';
@@ -91,6 +92,27 @@ export function ApplizeProjectMakeUp(
       });
       return false;
     }
+    return true;
+  });
+  builder.addPhaseAsync('Build Server', async () => {
+    const result = await build({
+      entryPoints: [options.serverEntryPoint],
+      outfile: resolve(options.distDirectory, 'index.js'),
+      minify: true,
+      bundle: true,
+      sourcemap: true,
+      platform: 'node',
+      plugins: [nodeExternalsPlugin()]
+    });
+    await copyResclusive(
+      resolve(options.distDirectory, 'pages', 'tmp'),
+      options.pagesDirectory,
+      ['.ts', '.js']
+    );
+    await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
+      recursive: true,
+    });
+    if (!result) return false;
     return true;
   });
 }

@@ -94,7 +94,8 @@ export function filledBySpace(
 export function outlined(
   content: string[],
   letterMargin: number,
-  lineMargin: number
+  lineMargin: number,
+  decorator = ''
 ): string {
   const maxLength = content
     .map(v => renderLength(v))
@@ -118,6 +119,7 @@ export function outlined(
     `╰` + letterLoop('─', maxLength + letterMargin * 2) + `╯`,
   ]
     .flat()
+    .map(v => `${decorator}${v}${decorate()}`)
     .join('\n');
 }
 

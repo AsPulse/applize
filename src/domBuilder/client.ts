@@ -46,10 +46,10 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   }
 }
 
-export class DomRendererClient implements IDOMRenderer {
+export class DOMRendererClient implements IDOMRenderer {
   constructor(public targetElement: HTMLElement) {}
   clone(): IDOMRenderer {
-    return new DomRendererClient(this.targetElement);
+    return new DOMRendererClient(this.targetElement);
   }
   build<K extends HTMLTags, U>(...args: Parameters<ElementGenerator<K, U>>) {
     const dom = IApplizeDOMClient.generate(...args);

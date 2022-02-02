@@ -1,28 +1,20 @@
-export type HTMLTags = keyof HTMLElementTagNameMap;
+import { IApplizeDOM, HTMLTags, ElementGenerator, ElementGeneratorUnknown, DOMRenderer } from '.';
 
-export type ElementGenerator<K extends HTMLTags, U> = (
-  tag: K
-) => IApplizeDOM<HTMLElementTagNameMap[K], U>;
-
-export type ElementGeneratorUnknown = <NewK extends HTMLTags>(
-  ...args: Parameters<ElementGenerator<NewK, null>>
-) => ReturnType<ElementGenerator<NewK, null>>;
-
-export class IApplizeDOM<K extends HTMLElement, ExposeType> {
+export class IApplizeDOMClient<K extends HTMLElement, ExposeType> implements IApplizeDOM<K, ExposeType> {
   constructor(public element: K, public expose: ExposeType) {}
 
   static generate<K extends HTMLTags, U>(
     ...args: Parameters<ElementGenerator<K, U>>
   ) {
-    return new IApplizeDOM(document.createElement(args[0]), null);
+    return new IApplizeDOMClient(document.createElement(args[0]), null);
   }
 
   in<NewExpose>(
     inner: (elementGenerator: ElementGeneratorUnknown) => NewExpose
-  ): IApplizeDOM<K, NewExpose> {
+  ): IApplizeDOMClient<K, NewExpose> {
     return this.setExpose(
       inner((...args) => {
-        const dom = IApplizeDOM.generate(...args);
+        const dom = IApplizeDOMClient.generate(...args);
         this.element.appendChild(dom.element);
         return dom;
       })
@@ -30,7 +22,7 @@ export class IApplizeDOM<K extends HTMLElement, ExposeType> {
   }
 
   setExpose<NewExpose>(expose: NewExpose) {
-    return new IApplizeDOM<K, NewExpose>(this.element, expose);
+    return new IApplizeDOMClient<K, NewExpose>(this.element, expose);
   }
 
   //------- Property Editor
@@ -46,10 +38,10 @@ export class IApplizeDOM<K extends HTMLElement, ExposeType> {
   }
 }
 
-export class DomRenderer {
+export class DomRendererClient implements DOMRenderer {
   constructor(public targetElement: HTMLElement) {}
   build<K extends HTMLTags, U>(...args: Parameters<ElementGenerator<K, U>>) {
-    const dom = IApplizeDOM.generate(...args);
+    const dom = IApplizeDOMClient.generate(...args);
     this.targetElement.appendChild(dom.element);
     return dom;
   }

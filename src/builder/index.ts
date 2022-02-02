@@ -38,7 +38,7 @@ export class ApplizeBuilder {
       )
     );
     say();
-    await this.phases
+    const success = await this.phases
       .map<{ index: number } & IApplizeBuildPhase>((v, i) => ({
         index: i,
         ...v,
@@ -54,27 +54,38 @@ export class ApplizeBuilder {
           ' ',
           v.name
         );
-        await v.execute();
+        const result = await v.execute();
         say(
-          decorate(colors.gray),
-          '( Done in ',
+          decorate(result ? colors.gray : colors.pink, undefined, !result),
+          `( ${result ? 'Done' : 'Failed'} in `,
           `${new Date().getTime() - start}ms`,
           ' )'
         );
         say();
+        return result;
       })
       .reduce(
-        (a, b) => () => a().then(b),
-        () => Promise.resolve()
+        (a, b) => () => a().then(async v => v ? await b() : Promise.resolve(false)),
+        () => Promise.resolve(true)
       )();
-
-    say(
-      decorate(colors.white, colors.pink, true),
-      ' FINISHED ',
-      decorate(),
-      ' ',
-      'Total time: ',
-      `${new Date().getTime() - phaseStart}ms`
-    );
+    if ( success ) {
+      say(
+        decorate(colors.white, colors.pink, true),
+        ' FINISHED ',
+        decorate(),
+        ' ',
+        'Total time: ',
+        `${new Date().getTime() - phaseStart}ms`
+      );
+    } else {
+      say(
+        decorate(colors.white, colors.pink, true),
+        ' FAILED! ',
+        decorate(),
+        ' ',
+        'Total time: ',
+        `${new Date().getTime() - phaseStart}ms`
+      );
+    }
   }
 }

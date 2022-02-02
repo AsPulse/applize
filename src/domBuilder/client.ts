@@ -48,6 +48,9 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
 
 export class DomRendererClient implements IDOMRenderer {
   constructor(public targetElement: HTMLElement) {}
+  clone(): IDOMRenderer {
+    return new DomRendererClient(this.targetElement);
+  }
   build<K extends HTMLTags, U>(...args: Parameters<ElementGenerator<K, U>>) {
     const dom = IApplizeDOMClient.generate(...args);
     this.targetElement.appendChild(dom.element);

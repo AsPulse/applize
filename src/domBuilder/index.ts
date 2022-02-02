@@ -31,4 +31,5 @@ export interface IDOMRenderer {
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGenerator<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
+  clone(): IDOMRenderer
 }

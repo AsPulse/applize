@@ -3,7 +3,6 @@ import {
   decorate,
   colors,
   symbols,
-  outlined,
   filledBySpace,
 } from '../util/console/consoleCommunicater';
 
@@ -31,7 +30,7 @@ export class ApplizeBuilder {
         [
           decorate(colors.white, colors.pink, true) +
             symbols.hexagon +
-            ' ApplizeBuilder'
+            ' ApplizeBuilder',
         ],
         4,
         1,
@@ -72,7 +71,8 @@ export class ApplizeBuilder {
     say(
       decorate(colors.white, colors.pink, true),
       ' FINISHED ',
-      decorate(), ' ',
+      decorate(),
+      ' ',
       'Total time: ',
       `${new Date().getTime() - phaseStart}ms`
     );

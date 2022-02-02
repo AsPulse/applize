@@ -84,6 +84,7 @@ export function ApplizeProjectMakeUp(
         options.pagesDirectory,
         ['.ts', '.js']
       );
+      await rm(resolve(options.distDirectory, 'pages', 'tmp'), { recursive: true })
       return false;
     }
     return true;

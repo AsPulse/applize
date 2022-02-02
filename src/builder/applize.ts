@@ -39,43 +39,45 @@ export function ApplizeProjectMakeUp(
         resolve(options.distDirectory, 'pages', 'tmp'),
         ['.ts', '.js']
       );
-      const success = (await Promise.all(
-        pages
-          .map((v, i) => ({ path: v, deployFileName: `page-${i}` }))
-          .map(async v => {
-            try {
-              const originalPath = resolve(
-                v.path.directory,
-                v.path.dirent.name
-              );
-              const distPath = resolve(
-                options.distDirectory,
-                'pages',
-                `${v.deployFileName}.js`
-              );
-              const result = await build({
-                entryPoints: [originalPath],
-                minify: true,
-                bundle: true,
-                target: 'esnext',
-                outfile: distPath,
-                sourcemap: false,
-              });
-              if ( !result ) throw false;
-              await writeFile(
-                originalPath,
-                getFilenameTyper(
-                  v.deployFileName,
-                  (await readFile(originalPath)).toString()
-                )
-              );
-              return true;
-            } catch(e) {
-              return e;
-            }
-          })
-      )).filter(v => v !== true);
-      if(success.length > 0){
+      const success = (
+        await Promise.all(
+          pages
+            .map((v, i) => ({ path: v, deployFileName: `page-${i}` }))
+            .map(async v => {
+              try {
+                const originalPath = resolve(
+                  v.path.directory,
+                  v.path.dirent.name
+                );
+                const distPath = resolve(
+                  options.distDirectory,
+                  'pages',
+                  `${v.deployFileName}.js`
+                );
+                const result = await build({
+                  entryPoints: [originalPath],
+                  minify: true,
+                  bundle: true,
+                  target: 'esnext',
+                  outfile: distPath,
+                  sourcemap: false,
+                });
+                if (!result) throw false;
+                await writeFile(
+                  originalPath,
+                  getFilenameTyper(
+                    v.deployFileName,
+                    (await readFile(originalPath)).toString()
+                  )
+                );
+                return true;
+              } catch (e) {
+                return e;
+              }
+            })
+        )
+      ).filter(v => v !== true);
+      if (success.length > 0) {
         throw success[0];
       }
     } catch {
@@ -84,7 +86,9 @@ export function ApplizeProjectMakeUp(
         options.pagesDirectory,
         ['.ts', '.js']
       );
-      await rm(resolve(options.distDirectory, 'pages', 'tmp'), { recursive: true })
+      await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
+        recursive: true,
+      });
       return false;
     }
     return true;

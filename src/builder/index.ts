@@ -65,10 +65,11 @@ export class ApplizeBuilder {
         return result;
       })
       .reduce(
-        (a, b) => () => a().then(async v => v ? await b() : Promise.resolve(false)),
+        (a, b) => () =>
+          a().then(async v => (v ? await b() : Promise.resolve(false))),
         () => Promise.resolve(true)
       )();
-    if ( success ) {
+    if (success) {
       say(
         decorate(colors.white, colors.pink, true),
         ' FINISHED ',

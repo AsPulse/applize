@@ -1,6 +1,14 @@
-import { IApplizeDOM, HTMLTags, ElementGenerator, ElementGeneratorUnknown, DOMRenderer } from '.';
+import {
+  IApplizeDOM,
+  HTMLTags,
+  ElementGenerator,
+  ElementGeneratorUnknown,
+  DOMRenderer,
+} from '.';
 
-export class IApplizeDOMClient<K extends HTMLElement, ExposeType> implements IApplizeDOM<K, ExposeType> {
+export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
+  implements IApplizeDOM<K, ExposeType>
+{
   constructor(public element: K, public expose: ExposeType) {}
 
   static generate<K extends HTMLTags, U>(

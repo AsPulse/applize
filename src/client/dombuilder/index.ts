@@ -10,21 +10,25 @@ export type ElementGeneratorUnknown = <NewK extends HTMLTags>(
 
 export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   element: K;
-  expose: ExposeType
+  expose: ExposeType;
 
   in<NewExpose>(
     inner: (elementGenerator: ElementGeneratorUnknown) => NewExpose
-  ): IApplizeDOM<K, NewExpose>
+  ): IApplizeDOM<K, NewExpose>;
 
-  setExpose<NewExpose>(expose: NewExpose): IApplizeDOM<K, NewExpose>
+  setExpose<NewExpose>(expose: NewExpose): IApplizeDOM<K, NewExpose>;
 
+  text(text: string): IApplizeDOM<K, ExposeType>;
 
-  text(text: string): IApplizeDOM<K, ExposeType>
-
-  on(event: keyof HTMLElementEventMap, func: () => unknown): IApplizeDOM<K, ExposeType>
+  on(
+    event: keyof HTMLElementEventMap,
+    func: () => unknown
+  ): IApplizeDOM<K, ExposeType>;
 }
 
 export interface DOMRenderer {
   targetElement: HTMLElement;
-  build<K extends HTMLTags, U>(...args: Parameters<ElementGenerator<K, U>>): IApplizeDOM<HTMLElementTagNameMap[K], null>;
+  build<K extends HTMLTags, U>(
+    ...args: Parameters<ElementGenerator<K, U>>
+  ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
 }

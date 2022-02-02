@@ -1,2 +1,2 @@
 export type { ElementGenerator } from './domBuilder';
-export type { ApplizePage } from './page'
+export type { ApplizePage } from './page';

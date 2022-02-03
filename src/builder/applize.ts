@@ -102,7 +102,7 @@ export function ApplizeProjectMakeUp(
       bundle: true,
       sourcemap: true,
       platform: 'node',
-      plugins: [nodeExternalsPlugin()]
+      plugins: [nodeExternalsPlugin()],
     });
     await copyResclusive(
       resolve(options.distDirectory, 'pages', 'tmp'),

@@ -9,19 +9,27 @@ declare const window: { __applize: { render: IDOMRenderer } };
 export class ApplizePage {
   fileName: string | null = null;
   constructor(public router: router, public render: render) {
-    const chkFromWeb = (() => {
+    const windowA = (() => {
       try {
-        if (window !== undefined) return true;
+        if (window !== undefined) return window;
       } catch {
-        return false;
+        return undefined;
       }
-      return false;
+      return undefined;
     })();
-    if (global.fileName) {
-      this.fileName = global.fileName;
+    const globalA = (() => {
+      try {
+        if (global !== undefined) return global;
+      } catch {
+        return undefined;
+      }
+      return undefined;
+    })();
+    if (globalA?.fileName) {
+      this.fileName = globalA.fileName;
     }
-    if (chkFromWeb) {
-      render(window.__applize.render.clone());
+    if (windowA) {
+      render(windowA.__applize.render.clone());
     }
   }
 }

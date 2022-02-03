@@ -1,4 +1,4 @@
-import { colors, decorate } from './consoleCommunicater';
+import { colors, decorate, symbols } from './consoleCommunicater';
 import { renderLength } from './renderLength';
 
 describe('renderLength', () => {
@@ -34,5 +34,13 @@ describe('renderLength', () => {
   });
   it('cross', () => {
     expect(renderLength('こんにちは世界！!, Yesｱｲｳｴｵ')).toBe(27);
+    expect(
+      renderLength(
+        decorate(colors.pink, undefined, true) +
+          symbols.hexagon +
+          ' ApplizeBuilder' +
+          decorate()
+      )
+    ).toBe(16);
   });
 });

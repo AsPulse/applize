@@ -16,12 +16,15 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
+    "esbuild": "0.12",
+    "esbuild-node-externals": "^1.4.1",
     "estrella": "^1.4.1",
     "google-closure-compiler": "^20220104.0.0",
     "prettier": "^2.5.1",
     "typescript": "^4.5.4"
   },
   "devDependencies": {
+    "@types/google-closure-compiler": "^0.0.19",
     "@types/jest": "^27.4.0",
     "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.9.0",

@@ -13,6 +13,7 @@ build({
   splitting: true,
   format: 'esm',
   tslint: true,
+  platform: 'node',
   plugins: [dtsPlugin()],
 }).catch(() => {});
 

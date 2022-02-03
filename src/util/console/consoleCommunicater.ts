@@ -12,11 +12,19 @@ const resetColor = `\x1b[0m`;
 const resetForegroundColor = `\x1b[39m`;
 const resetBackgroundColor = `\x1b[49m`;
 
-type TColorVariation = 'pink' | 'green' | 'blue' | 'white' | 'black' | 'gray';
+type TColorVariation =
+  | 'pink'
+  | 'green'
+  | 'blue'
+  | 'white'
+  | 'black'
+  | 'gray'
+  | 'lightBlue';
 export const colors: { [key in TColorVariation]: IRGBColor } = {
   pink: { r: 255, g: 50, b: 125 },
   green: { r: 0, g: 217, b: 98 },
   blue: { r: 0, g: 119, b: 255 },
+  lightBlue: { r: 15, g: 147, b: 255 },
   white: { r: 255, g: 255, b: 255 },
   black: { r: 0, g: 0, b: 0 },
   gray: { r: 180, g: 180, b: 180 },
@@ -94,7 +102,8 @@ export function filledBySpace(
 export function outlined(
   content: string[],
   letterMargin: number,
-  lineMargin: number
+  lineMargin: number,
+  decorator = ''
 ): string {
   const maxLength = content
     .map(v => renderLength(v))
@@ -118,6 +127,7 @@ export function outlined(
     `╰` + letterLoop('─', maxLength + letterMargin * 2) + `╯`,
   ]
     .flat()
+    .map(v => `${decorator}${v}${decorate()}`)
     .join('\n');
 }
 

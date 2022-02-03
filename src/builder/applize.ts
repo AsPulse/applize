@@ -1,14 +1,18 @@
 import { nodeExternalsPlugin } from 'esbuild-node-externals';
 import { build } from 'estrella';
-import { copyFile, mkdir, readdir, readFile, rm, writeFile } from 'fs/promises';
+import { copyFile, mkdir, readdir, readFile, rm, stat, writeFile } from 'fs/promises';
 import { extname, join, resolve } from 'path';
 import { ApplizeBuilder } from '.';
+import { say } from '../util/console/consoleCommunicater';
 import { FileSystemErrorSerialize } from '../util/error/fileSystemError';
 
+export type ApplizePostBuilder = { name: string, compiler: ((filePath: string) => Promise<boolean>) };
 export interface IApplizeBuildOptions {
   serverEntryPoint: string;
   pagesDirectory: string;
   distDirectory: string;
+  serverPostBuilder?: ApplizePostBuilder[]
+  pagesPostBuilder?: ApplizePostBuilder[]
 }
 
 export function ApplizeProjectMakeUp(
@@ -114,6 +118,31 @@ export function ApplizeProjectMakeUp(
     });
     if (!result) return false;
     return true;
+  });
+  (options.pagesPostBuilder ?? []).forEach(v => {
+    builder.addPhaseAsync(`PostBuild ${v.name} Pages`, async () => {
+      const success = await Promise.all((await getAllFilesInDir(resolve(options.distDirectory, 'pages'), ['.js'])).map(async e => {
+        const file = resolve(e.directory, e.dirent.name);
+        const beforeSize = (await stat(file)).size;
+        const successPost = await v.compiler(file);
+        if ( !successPost ) return false;
+        const afterSize = (await stat(file)).size;
+        say(e.dirent.name, ' is finished ( ',`${beforeSize}byte -> ${afterSize}byte ${Math.round(afterSize/beforeSize*1000)/10}%`, ' )');
+        return successPost;
+      }));
+      return success.every(v => v);
+    });
+  });
+  (options.serverPostBuilder ?? []).forEach(v => {
+    builder.addPhaseAsync(`PostBuild ${v.name} Server`, async () => {
+        const file = resolve(options.distDirectory, 'index.js');
+        const beforeSize = (await stat(file)).size;
+        const successPost = await v.compiler(file);
+        if ( !successPost ) return false;
+        const afterSize = (await stat(file)).size;
+        say('index.js', ' is finished ( ',`${beforeSize}byte -> ${afterSize}byte ${Math.round(afterSize/beforeSize*1000)/10}%`, ' )');
+        return successPost;
+    });
   });
 }
 

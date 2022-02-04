@@ -1,4 +1,4 @@
-interface IEndPoint {
+export interface IEndPoint {
   url: string[];
 }
 

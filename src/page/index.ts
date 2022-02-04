@@ -19,6 +19,6 @@ export class ApplizePage {
   }
 }
 
-export class ApplizePageWithFile{
+export class ApplizePageWithFile {
   constructor(public fileName: string) {}
 }

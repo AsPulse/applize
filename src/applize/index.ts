@@ -12,7 +12,7 @@ interface IApplizeOptions {
 export class Applize {
   routes: PageRoute[] = [];
   addPageRoute(route: PageRoute | undefined) {
-    if(!route) return;
+    if (!route) return;
     this.routes.push(route);
   }
 
@@ -27,8 +27,11 @@ export class Applize {
     server.on('request', (req, res) => {
       void (async () => {
         const ep = urlParse(req.url ?? '/');
-        const route = this.routes.find(v => v.routers.some(v => v(ep))) ?? this.routes[0];
-        res.writeHead(route.returnCode, {'Content-Type': 'application/javascript'});
+        const route =
+          this.routes.find(v => v.routers.some(v => v(ep))) ?? this.routes[0];
+        res.writeHead(route.returnCode, {
+          'Content-Type': 'application/javascript',
+        });
         res.end(await readFile(resolve('pages', route.page.fileName)));
       })();
     });

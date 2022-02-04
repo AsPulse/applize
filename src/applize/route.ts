@@ -11,7 +11,7 @@ export class PageRoute {
   private constructor(public page: ApplizePageWithFile) {}
 
   static fromPage(page: ApplizePage): PageRoute | undefined {
-    if ( !page.fileName ) {
+    if (!page.fileName) {
       //TODO: warning about no filename
       return undefined;
     }

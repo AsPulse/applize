@@ -2,7 +2,7 @@ import { ApplizePage } from '..';
 
 export type TApplizeRouter = ((url: string) => Promise<boolean>);
 
-export class ApplizeRoute {
+export class PageRoute {
   routers: TApplizeRouter[] = [];
   returnCode = 200;
 

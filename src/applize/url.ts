@@ -8,3 +8,11 @@ export function urlParse(url: string): IEndPoint {
   const cutEnd = cutStart.endsWith('/') ? cutStart.slice(0,-1) : cutStart;
   return { url: cutEnd.split('/') }
 }
+
+export function equalsEndPoint(a: IEndPoint, b: IEndPoint): boolean {
+  if ( a.url.length !== b.url.length ) return false;
+  for ( let i = 0; i < a.url.length; i++ ) {
+    if ( a.url[i] !== b.url[i] ) return false;
+  }
+  return true;
+}

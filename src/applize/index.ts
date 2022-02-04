@@ -32,7 +32,11 @@ export class Applize {
         res.writeHead(route.returnCode, {
           'Content-Type': 'application/javascript',
         });
-        res.end(await readFile(resolve(__dirname, 'pages', `${route.page.fileName}.js`)));
+        res.end(
+          await readFile(
+            resolve(__dirname, 'pages', `${route.page.fileName}.js`)
+          )
+        );
       })();
     });
 

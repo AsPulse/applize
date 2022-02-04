@@ -1,6 +1,6 @@
 import { ApplizePage } from '..';
 
-export type TApplizeRouter = ((url: string) => Promise<boolean>);
+export type TApplizeRouter = (url: string) => Promise<boolean>;
 
 export class PageRoute {
   routers: TApplizeRouter[] = [];

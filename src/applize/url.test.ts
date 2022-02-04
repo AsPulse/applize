@@ -27,11 +27,13 @@ describe('equalsEndPoint', () => {
     expect(equalsEndPoint(urlParse('/a/'), urlParse('/a/'))).toBe(true);
     expect(equalsEndPoint(urlParse('/a/b'), urlParse('a/b'))).toBe(true);
     expect(equalsEndPoint(urlParse('/a/b'), urlParse('a/b/'))).toBe(true);
-    expect(equalsEndPoint(urlParse('/a/b?params=none&some=equal'), urlParse('a/b/'))).toBe(true);
+    expect(
+      equalsEndPoint(urlParse('/a/b?params=none&some=equal'), urlParse('a/b/'))
+    ).toBe(true);
   });
   it('false', () => {
     expect(equalsEndPoint(urlParse('/a'), urlParse('b'))).toBe(false);
     expect(equalsEndPoint(urlParse('/a'), urlParse('a/b'))).toBe(false);
     expect(equalsEndPoint(urlParse('a'), urlParse('/b'))).toBe(false);
-  })
+  });
 });

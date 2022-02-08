@@ -71,8 +71,16 @@ describe('urlEqualsTime', () => {
 
 describe('getParamsTime', () => {
   expect(
-    timeTest('getParamsTime', 1000, () => {
+    timeTest('getParamsTime', 200000, () => {
       getParams('https://example.com/?src=https%3A%2F%2Faaa.com', ['src']);
     })
   ).toBeLessThan(0.01);
+  expect(
+    timeTest('getParamsURITime', 200000, () => {
+      //expect(new URLSearchParams(new URL('https://example.com/?src=https%3A%2F%2Faaa.com').search).get('src')).toBe('https://aaa.com');
+      new URLSearchParams(
+        new URL('https://example.com/?src=https%3A%2F%2Faaa.com').search
+      ).get('src');
+    })
+  ).toBeLessThan(0.1);
 });

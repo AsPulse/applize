@@ -1,5 +1,5 @@
 import { timeTest } from '../util/timeTest';
-import { equalsEndPoint, urlParse } from './url';
+import { equalsEndPoint, getParams, urlParse } from './url';
 
 describe('urlParser', () => {
   it('without-parameters', () => {
@@ -36,18 +36,43 @@ describe('equalsEndPoint', () => {
     expect(equalsEndPoint(urlParse('/a'), urlParse('b'))).toBe(false);
     expect(equalsEndPoint(urlParse('/a'), urlParse('a/b'))).toBe(false);
     expect(equalsEndPoint(urlParse('a'), urlParse('/b'))).toBe(false);
-    expect(equalsEndPoint(urlParse('/normal'), urlParse('/dashboard'))).toBe(false);
+    expect(equalsEndPoint(urlParse('/normal'), urlParse('/dashboard'))).toBe(
+      false
+    );
+  });
+});
+
+describe('getParams', () => {
+  it('single parameter', () => {
+    expect(
+      getParams('https://example.com/?src=https%3A%2F%2Faaa.com', ['src'])
+    ).toStrictEqual({ src: 'https://aaa.com' });
   });
 });
 
 describe('urlParseTime', () => {
-  expect(timeTest('urlParseTime', 500000, () => {
-    urlParse('/article/some-test-article');
-  })).toBeLessThan(0.001);
+  expect(
+    timeTest('urlParseTime', 500000, () => {
+      urlParse('/article/some-test-article');
+    })
+  ).toBeLessThan(0.001);
 });
 
 describe('urlEqualsTime', () => {
-  expect(timeTest('urlEqualsTime', 500000, () => {
-    equalsEndPoint({ url: ['article', 'some-test-article'] },{ url: ['article', 'different-test-article'] })
-  })).toBeLessThan(0.0001);
+  expect(
+    timeTest('urlEqualsTime', 500000, () => {
+      equalsEndPoint(
+        { url: ['article', 'some-test-article'] },
+        { url: ['article', 'different-test-article'] }
+      );
+    })
+  ).toBeLessThan(0.0001);
+});
+
+describe('getParamsTime', () => {
+  expect(
+    timeTest('getParamsTime', 1000, () => {
+      getParams('https://example.com/?src=https%3A%2F%2Faaa.com', ['src']);
+    })
+  ).toBeLessThan(0.01);
 });

@@ -43,16 +43,29 @@ export class Applize {
   }
 }
 
-
-export async function findRoute(routes: PageRoute[], defaultValue: PageRoute, ep: IEndPoint): Promise<PageRoute> {
-  const routeDetectors = routes.map(async v =>
-    ({
-      pageRoute: v,
-      isExpected: await Promise.any(v.routers.map(async e => await e(ep) ? Promise.resolve(true) : Promise.reject(false))).catch(() => false)
-    })
-  );
+export async function findRoute(
+  routes: PageRoute[],
+  defaultValue: PageRoute,
+  ep: IEndPoint
+): Promise<PageRoute> {
+  const routeDetectors = routes.map(async v => ({
+    pageRoute: v,
+    isExpected: await Promise.any(
+      v.routers.map(async e =>
+        (await e(ep)) ? Promise.resolve(true) : Promise.reject(false)
+      )
+    ).catch(() => false),
+  }));
   try {
-    return await Promise.any(routeDetectors.map(async (v_1) => (await v_1).isExpected ? Promise.resolve((await v_1).pageRoute) : Promise.reject()));
+    return await Promise.any(
+      routeDetectors.map(async v_1 =>
+        (
+          await v_1
+        ).isExpected
+          ? Promise.resolve((await v_1).pageRoute)
+          : Promise.reject()
+      )
+    );
   } catch {
     return defaultValue;
   }

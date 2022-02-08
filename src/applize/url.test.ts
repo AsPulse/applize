@@ -35,5 +35,6 @@ describe('equalsEndPoint', () => {
     expect(equalsEndPoint(urlParse('/a'), urlParse('b'))).toBe(false);
     expect(equalsEndPoint(urlParse('/a'), urlParse('a/b'))).toBe(false);
     expect(equalsEndPoint(urlParse('a'), urlParse('/b'))).toBe(false);
+    expect(equalsEndPoint(urlParse('/normal'), urlParse('/dashboard'))).toBe(false);
   });
 });

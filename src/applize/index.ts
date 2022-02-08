@@ -1,6 +1,6 @@
 import { PageRoute } from './route';
 import http from 'http';
-import { urlParse } from './url';
+import { IEndPoint, urlParse } from './url';
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 
@@ -18,7 +18,7 @@ export class Applize {
 
   run(options: Partial<IApplizeOptions>) {
     const server = http.createServer();
-
+    console.log(this.routes);
     const renderedOption: IApplizeOptions = {
       port: options.port ?? 8080,
       trailingSlash: options.trailingSlash ?? 'NoChange',
@@ -27,8 +27,7 @@ export class Applize {
     server.on('request', (req, res) => {
       void (async () => {
         const ep = urlParse(req.url ?? '/');
-        const route =
-          this.routes.find(v => v.routers.some(v => v(ep))) ?? this.routes[0];
+        const route = await findRoute(this.routes, this.routes[0], ep);
         res.writeHead(route.returnCode, {
           'Content-Type': 'application/javascript',
         });
@@ -41,5 +40,20 @@ export class Applize {
     });
 
     server.listen(renderedOption.port);
+  }
+}
+
+
+export async function findRoute(routes: PageRoute[], defaultValue: PageRoute, ep: IEndPoint): Promise<PageRoute> {
+  const routeDetectors = routes.map(async v =>
+    ({
+      pageRoute: v,
+      isExpected: await Promise.any(v.routers.map(async e => await e(ep) ? Promise.resolve(true) : Promise.reject(false))).catch(() => false)
+    })
+  );
+  try {
+    return await Promise.any(routeDetectors.map(async (v_1) => (await v_1).isExpected ? Promise.resolve((await v_1).pageRoute) : Promise.reject()));
+  } catch {
+    return defaultValue;
   }
 }

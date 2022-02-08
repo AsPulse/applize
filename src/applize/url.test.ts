@@ -1,3 +1,4 @@
+import { timeTest } from '../util/timeTest';
 import { equalsEndPoint, urlParse } from './url';
 
 describe('urlParser', () => {
@@ -37,4 +38,16 @@ describe('equalsEndPoint', () => {
     expect(equalsEndPoint(urlParse('a'), urlParse('/b'))).toBe(false);
     expect(equalsEndPoint(urlParse('/normal'), urlParse('/dashboard'))).toBe(false);
   });
+});
+
+describe('urlParseTime', () => {
+  expect(timeTest('urlParseTime', 500000, () => {
+    urlParse('/article/some-test-article');
+  })).toBeLessThan(0.001);
+});
+
+describe('urlEqualsTime', () => {
+  expect(timeTest('urlEqualsTime', 500000, () => {
+    equalsEndPoint({ url: ['article', 'some-test-article'] },{ url: ['article', 'different-test-article'] })
+  })).toBeLessThan(0.0001);
 });

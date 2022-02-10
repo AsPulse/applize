@@ -1,12 +1,12 @@
 import { PageRoute } from './route';
 import http from 'http';
-import { IEndPoint, urlParse } from './url';
-import { readFile } from 'fs/promises';
-import { resolve } from 'path';
+import { IEndPoint } from './url';
+import { serve } from './server';
 
-interface IApplizeOptions {
+export interface IApplizeOptions {
   port: number;
   trailingSlash: 'RedirectWithSlash' | 'RedirectWithoutSlash' | 'NoChange';
+  rootEndPoint: IEndPoint;
 }
 
 export class Applize {
@@ -18,24 +18,16 @@ export class Applize {
 
   run(options: Partial<IApplizeOptions>) {
     const server = http.createServer();
-    console.log(this.routes);
     const renderedOption: IApplizeOptions = {
       port: options.port ?? 8080,
       trailingSlash: options.trailingSlash ?? 'NoChange',
+      rootEndPoint: options.rootEndPoint ?? { url: ['applize'] },
     };
 
     server.on('request', (req, res) => {
       void (async () => {
-        const ep = urlParse(req.url ?? '/');
-        const route = await findRoute(this.routes, this.routes[0], ep);
-        res.writeHead(route.returnCode, {
-          'Content-Type': 'application/javascript',
-        });
-        res.end(
-          await readFile(
-            resolve(__dirname, 'pages', `${route.page.fileName}.js`)
-          )
-        );
+        if (!req.url) return;
+        await serve(req.url, res, renderedOption, this.routes);
       })();
     });
 

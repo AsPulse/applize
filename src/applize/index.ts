@@ -2,11 +2,13 @@ import { PageRoute } from './route';
 import http from 'http';
 import { IEndPoint } from './url';
 import { serve } from './server';
+import { cwd } from 'process';
 
 export interface IApplizeOptions {
   port: number;
   trailingSlash: 'RedirectWithSlash' | 'RedirectWithoutSlash' | 'NoChange';
   rootEndPoint: IEndPoint;
+  distRoot: string;
 }
 
 export class Applize {
@@ -22,6 +24,7 @@ export class Applize {
       port: options.port ?? 8080,
       trailingSlash: options.trailingSlash ?? 'NoChange',
       rootEndPoint: options.rootEndPoint ?? { url: ['applize'] },
+      distRoot: options.distRoot ?? cwd(),
     };
 
     server.on('request', (req, res) => {

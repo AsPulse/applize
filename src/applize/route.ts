@@ -1,5 +1,5 @@
-import { ApplizePage } from '..';
-import { ApplizePageWithFile } from '../page';
+import { ApplizePage } from '../page/index';
+import { ApplizePageWithFile } from '../page/index';
 import { IEndPoint } from './url';
 
 export type TApplizeRouter = (url: IEndPoint) => Promise<boolean>;

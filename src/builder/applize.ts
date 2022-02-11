@@ -43,11 +43,16 @@ export function ApplizeProjectMakeUp(
     }
     await mkdir(resolve(options.distDirectory, 'pages'), { recursive: true });
     await mkdir(resolve(options.distDirectory, 'entry'), { recursive: true });
-    await mkdir(resolve(options.distDirectory, 'pages', 'tmp'), { recursive: true });
+    await mkdir(resolve(options.distDirectory, 'pages', 'tmp'), {
+      recursive: true,
+    });
     return true;
   });
   builder.addPhaseAsync('Build Entry', async () => {
-    await copyFile(options.entryHTML, resolve(options.distDirectory, 'entry', 'index.html'));
+    await copyFile(
+      options.entryHTML,
+      resolve(options.distDirectory, 'entry', 'index.html')
+    );
     await build({
       entryPoints: [options.entryTS],
       minify: true,
@@ -198,13 +203,15 @@ export async function copyResclusive(
   extensionExcludes?: string[]
 ) {
   return Promise.all(
-    (await getAllFilesInJoin(original, extensions, extensionExcludes)).map(async v => {
-      await mkdir(resolve(dist, v.directory), { recursive: true });
-      return copyFile(
-        resolve(v.basePath, v.directory, v.dirent.name),
-        resolve(dist, v.directory, v.dirent.name)
-      );
-    })
+    (await getAllFilesInJoin(original, extensions, extensionExcludes)).map(
+      async v => {
+        await mkdir(resolve(dist, v.directory), { recursive: true });
+        return copyFile(
+          resolve(v.basePath, v.directory, v.dirent.name),
+          resolve(dist, v.directory, v.dirent.name)
+        );
+      }
+    )
   );
 }
 
@@ -214,7 +221,11 @@ export function getFilenameTyper(fileName: string, original: string) {
   return [before, original, after].join('\n');
 }
 
-export async function getAllFilesInJoin(path: string, extension: string[], extensionsExclude?: string[]) {
+export async function getAllFilesInJoin(
+  path: string,
+  extension: string[],
+  extensionsExclude?: string[]
+) {
   let files = (await readdir(path, { withFileTypes: true })).map(v => ({
     directory: '',
     dirent: v,
@@ -240,8 +251,14 @@ export async function getAllFilesInJoin(path: string, extension: string[], exten
     ).flat();
   }
   return files
-    .filter(v => extension.length > 0 ? extension.includes(extname(v.dirent.name)) : true)
-    .filter(v => extensionsExclude ? !extensionsExclude.includes(extname(v.dirent.name)) : true);
+    .filter(v =>
+      extension.length > 0 ? extension.includes(extname(v.dirent.name)) : true
+    )
+    .filter(v =>
+      extensionsExclude
+        ? !extensionsExclude.includes(extname(v.dirent.name))
+        : true
+    );
 }
 export async function getAllFilesInDir(path: string, extension: string[]) {
   return (await getAllFilesInJoin(path, extension)).map(v => ({

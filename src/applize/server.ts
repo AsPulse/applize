@@ -5,7 +5,6 @@ import { findRoute, IApplizeOptions } from '.';
 import { PageRoute } from './route';
 import { equalsEndPoint, getParams, urlParse } from './url';
 
-
 export async function serve(
   url: string,
   res: ServerResponse,
@@ -16,7 +15,6 @@ export async function serve(
   await serveExecute(url, res, option, routes);
   const finish = performance.now();
   console.log(`Served! ${finish - start}ms: ${url}`);
-
 }
 
 export async function serveExecute(
@@ -33,8 +31,7 @@ export async function serveExecute(
   }
 
   if (equalsEndPoint(ep, option.rootEndPoint)) {
-
-    if(getParams(url, ['entry']).entry) {
+    if (getParams(url, ['entry']).entry) {
       res.writeHead(200, {
         'Content-Type': 'text/javascript',
       });
@@ -58,8 +55,6 @@ export async function serveExecute(
   res.writeHead(200, {
     'Content-Type': 'text/html',
   });
-  res.end(
-    await readFile(resolve(__dirname, 'entry', `index.html`))
-  );
+  res.end(await readFile(resolve(__dirname, 'entry', `index.html`)));
   return;
 }

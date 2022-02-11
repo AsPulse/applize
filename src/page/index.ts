@@ -1,7 +1,7 @@
 import type { ServerAPISchema } from '../api/schema';
 import { IDOMRenderer } from '../domBuilder';
 
-export type render = (adb: IDOMRenderer<Record<never, never>>) => void;
+export type render<K extends ServerAPISchema> = (adb: IDOMRenderer<K>) => void;
 
 declare const global: { fileName?: string };
 declare const window: {
@@ -10,7 +10,7 @@ declare const window: {
 
 export class ApplizePage<K extends ServerAPISchema> {
   fileName: string | null = null;
-  constructor(public render: render) {
+  constructor(public render: render<K>) {
     const windowA = typeof window === 'object' ? window : undefined;
     const globalA = typeof global === 'object' ? global : undefined;
     if (globalA?.fileName) {

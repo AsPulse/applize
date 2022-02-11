@@ -51,11 +51,16 @@ export async function serveExecute(
             if (!api) resolve(true);
             const impl = apiImplementation.find(v => v.name === api);
             if (!impl) {
-              res.statusCode = 501;
-              res.end();
+              res.writeHead(501, {
+                'Content-Type': '	application/json',
+              });
+              res.end('{}');
               resolve(true);
               return;
             }
+            res.writeHead(200, {
+              'Content-Type': '	application/json',
+            });
             res.end(JSON.stringify(await impl.executor(input as JSONStyle)));
             resolve(true);
             return;

@@ -1,11 +1,11 @@
 import type { IDOMRenderer } from '../domBuilder';
 import { DOMRendererClient } from '../domBuilder/client';
 
-declare const window: { __applize?: { render?: IDOMRenderer } };
+declare const window: { __applize?: { render?: IDOMRenderer<Record<never, never>> } };
 
-export function ClientInitialize() {
+export function ClientInitialize(applizeRoot: string) {
   window.__applize = {
-    render: new DOMRendererClient(document.body),
+    render: new DOMRendererClient<Record<never, never>>(document.body, applizeRoot),
   };
 
   const pageScript = document.createElement('script');

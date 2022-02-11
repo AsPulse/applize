@@ -1,7 +1,7 @@
 import { ServerAPISchema } from '../api/schema';
 import { ApplizePage } from '../page/index';
 import { ApplizePageWithFile } from '../page/index';
-import { IEndPoint } from './url';
+import { equalsEndPoint, IEndPoint, urlParse } from './url';
 
 export type TApplizeRouter = (url: IEndPoint) => Promise<boolean>;
 
@@ -24,6 +24,10 @@ export class PageRoute {
   route(router: TApplizeRouter) {
     this.routers.push(router);
     return this;
+  }
+
+  urlRoute(url: string) {
+    return this.route(v => Promise.resolve(equalsEndPoint(v, urlParse(url))));
   }
 
   code(code: number) {

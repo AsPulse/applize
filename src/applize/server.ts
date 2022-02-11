@@ -1,29 +1,63 @@
 import { readFile } from 'fs/promises';
-import { ServerResponse } from 'http';
+import { IncomingMessage, ServerResponse } from 'http';
 import { resolve } from 'path';
 import { findRoute, IApplizeOptions } from '.';
+import { JSONStyle } from '../api/schema';
 import { PageRoute } from './route';
 import { equalsEndPoint, getParams, urlParse } from './url';
 
 export async function serve(
-  url: string,
+  req: IncomingMessage,
   res: ServerResponse,
   option: IApplizeOptions,
-  routes: PageRoute[]
+  routes: PageRoute[],
+  apiImplementation: { name: string, executor: (input: JSONStyle) => Promise<JSONStyle> }[]
 ) {
   const start = performance.now();
-  await serveExecute(url, res, option, routes);
+  await serveExecute(req, res, option, routes, apiImplementation);
   const finish = performance.now();
-  console.log(`Served! ${finish - start}ms: ${url}`);
+  console.log(`Served! ${finish - start}ms: ${req.url?? ''}`);
 }
 
 export async function serveExecute(
-  url: string,
+  req: IncomingMessage,
   res: ServerResponse,
   option: IApplizeOptions,
-  routes: PageRoute[]
+  routes: PageRoute[],
+  apiImplementation: { name: string, executor: (input: JSONStyle) => Promise<JSONStyle> }[]
 ) {
+  if(!req.url) return;
+  const url = req.url;
   const ep = urlParse(url ?? '/');
+
+  const processPost = new Promise(resolve => {
+    if (req.method === 'POST') {
+      let data = '';
+      req.on('data', chunk => { data += chunk; }).on('end', () => {
+        void (async () => {
+          //TODO: type check need!
+          const input = JSON.parse(data) as unknown;
+          const api = getParams(url, ['api']).api;
+          if(!api) resolve(true);
+          const impl = apiImplementation.find(v => v.name === api);
+          if(!impl) {
+            res.statusCode = 501;
+            res.end();
+            resolve(true);
+            return;
+          }
+          res.end(JSON.stringify(await impl.executor(input as JSONStyle)));
+          resolve(true);
+          return;
+        })();
+      })
+    }
+    resolve(false);
+  });
+
+  if(await processPost) {
+    return;
+  }
 
   if (equalsEndPoint(ep, { url: ['favicon.ico'] })) {
     res.end();

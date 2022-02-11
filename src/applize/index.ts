@@ -3,6 +3,7 @@ import http from 'http';
 import { IEndPoint } from './url';
 import { serve } from './server';
 import { cwd } from 'process';
+import type { JSONStyle, ServerAPISchema } from '../api/schema';
 
 export interface IApplizeOptions {
   port: number;
@@ -11,11 +12,20 @@ export interface IApplizeOptions {
   distRoot: string;
 }
 
-export class Applize {
+export class Applize<APIType extends ServerAPISchema> {
   routes: PageRoute[] = [];
+  apiImplementation: { name: string, executor: (input: JSONStyle) => Promise<JSONStyle>}[] = [];
+
   addPageRoute(route: PageRoute | undefined) {
     if (!route) return;
     this.routes.push(route);
+  }
+
+  implementsAPI<ImplementingAPI extends keyof APIType>(
+    name: ImplementingAPI,
+    executor: (input: APIType[ImplementingAPI]['input']) => Promise<APIType[ImplementingAPI]['output']>
+  ) {
+    this.apiImplementation.push({ name: name.toString() , executor });
   }
 
   run(options: Partial<IApplizeOptions>) {
@@ -30,7 +40,7 @@ export class Applize {
     server.on('request', (req, res) => {
       void (async () => {
         if (!req.url) return;
-        await serve(req.url, res, renderedOption, this.routes);
+        await serve(req, res, renderedOption, this.routes, this.apiImplementation);
       })();
     });
 

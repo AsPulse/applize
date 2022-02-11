@@ -16,6 +16,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
+    "chokidar": "^3.5.3",
     "esbuild": "0.12",
     "esbuild-node-externals": "^1.4.1",
     "estrella": "^1.4.1",

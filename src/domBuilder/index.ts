@@ -28,7 +28,6 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   ): IApplizeDOM<K, ExposeType>;
 }
 
-
 export interface IDOMRenderer<APISchema extends ServerAPISchema> {
   targetElement: HTMLElement;
   applizeRoot: string;

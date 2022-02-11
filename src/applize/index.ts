@@ -14,7 +14,10 @@ export interface IApplizeOptions {
 
 export class Applize<APIType extends ServerAPISchema> {
   routes: PageRoute[] = [];
-  apiImplementation: { name: string, executor: (input: JSONStyle) => Promise<JSONStyle>}[] = [];
+  apiImplementation: {
+    name: string;
+    executor: (input: JSONStyle) => Promise<JSONStyle>;
+  }[] = [];
 
   addPageRoute(route: PageRoute | undefined) {
     if (!route) return;
@@ -23,9 +26,11 @@ export class Applize<APIType extends ServerAPISchema> {
 
   implementsAPI<ImplementingAPI extends keyof APIType>(
     name: ImplementingAPI,
-    executor: (input: APIType[ImplementingAPI]['input']) => Promise<APIType[ImplementingAPI]['output']>
+    executor: (
+      input: APIType[ImplementingAPI]['input']
+    ) => Promise<APIType[ImplementingAPI]['output']>
   ) {
-    this.apiImplementation.push({ name: name.toString() , executor });
+    this.apiImplementation.push({ name: name.toString(), executor });
   }
 
   run(options: Partial<IApplizeOptions>) {
@@ -40,7 +45,13 @@ export class Applize<APIType extends ServerAPISchema> {
     server.on('request', (req, res) => {
       void (async () => {
         if (!req.url) return;
-        await serve(req, res, renderedOption, this.routes, this.apiImplementation);
+        await serve(
+          req,
+          res,
+          renderedOption,
+          this.routes,
+          this.apiImplementation
+        );
       })();
     });
 

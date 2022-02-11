@@ -7,7 +7,10 @@ declare const window: {
 
 export function ClientInitialize(applizeRoot: string) {
   window.__applize = {
-    render: new DOMRendererClient<Record<never, never>>(document.body, applizeRoot),
+    render: new DOMRendererClient<Record<never, never>>(
+      document.body,
+      applizeRoot
+    ),
   };
 
   const pageScript = document.createElement('script');

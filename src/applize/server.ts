@@ -11,12 +11,15 @@ export async function serve(
   res: ServerResponse,
   option: IApplizeOptions,
   routes: PageRoute[],
-  apiImplementation: { name: string, executor: (input: JSONStyle) => Promise<JSONStyle> }[]
+  apiImplementation: {
+    name: string;
+    executor: (input: JSONStyle) => Promise<JSONStyle>;
+  }[]
 ) {
   const start = performance.now();
   await serveExecute(req, res, option, routes, apiImplementation);
   const finish = performance.now();
-  console.log(`Served! ${finish - start}ms: ${req.url?? ''}`);
+  console.log(`Served! ${finish - start}ms: ${req.url ?? ''}`);
 }
 
 export async function serveExecute(
@@ -24,38 +27,45 @@ export async function serveExecute(
   res: ServerResponse,
   option: IApplizeOptions,
   routes: PageRoute[],
-  apiImplementation: { name: string, executor: (input: JSONStyle) => Promise<JSONStyle> }[]
+  apiImplementation: {
+    name: string;
+    executor: (input: JSONStyle) => Promise<JSONStyle>;
+  }[]
 ) {
-  if(!req.url) return;
+  if (!req.url) return;
   const url = req.url;
   const ep = urlParse(url ?? '/');
 
   const processPost = new Promise(resolve => {
     if (req.method === 'POST') {
       let data = '';
-      req.on('data', chunk => { data += chunk; }).on('end', () => {
-        void (async () => {
-          //TODO: type check need!
-          const input = JSON.parse(data) as unknown;
-          const api = getParams(url, ['api']).api;
-          if(!api) resolve(true);
-          const impl = apiImplementation.find(v => v.name === api);
-          if(!impl) {
-            res.statusCode = 501;
-            res.end();
+      req
+        .on('data', chunk => {
+          data += chunk;
+        })
+        .on('end', () => {
+          void (async () => {
+            //TODO: type check need!
+            const input = JSON.parse(data) as unknown;
+            const api = getParams(url, ['api']).api;
+            if (!api) resolve(true);
+            const impl = apiImplementation.find(v => v.name === api);
+            if (!impl) {
+              res.statusCode = 501;
+              res.end();
+              resolve(true);
+              return;
+            }
+            res.end(JSON.stringify(await impl.executor(input as JSONStyle)));
             resolve(true);
             return;
-          }
-          res.end(JSON.stringify(await impl.executor(input as JSONStyle)));
-          resolve(true);
-          return;
-        })();
-      })
+          })();
+        });
     }
     resolve(false);
   });
 
-  if(await processPost) {
+  if (await processPost) {
     return;
   }
 

@@ -60,8 +60,10 @@ export class DOMRendererClient<APISchema extends ServerAPISchema>
       xhr.open('POST', `${this.applizeRoot}?api=${name.toString()}`);
       xhr.send(JSON.stringify(input));
       xhr.onload = () => {
-        if( xhr.status == 200 || xhr.status == 304 ) {
-          resolve(JSON.parse(xhr.responseText) as APISchema[CallingAPIName]['output']);
+        if (xhr.status == 200 || xhr.status == 304) {
+          resolve(
+            JSON.parse(xhr.responseText) as APISchema[CallingAPIName]['output']
+          );
         } else {
           reject(xhr.status);
         }
@@ -70,7 +72,10 @@ export class DOMRendererClient<APISchema extends ServerAPISchema>
   }
 
   clone<newAPISchema extends ServerAPISchema>(): IDOMRenderer<newAPISchema> {
-    return new DOMRendererClient<newAPISchema>(this.targetElement, this.applizeRoot);
+    return new DOMRendererClient<newAPISchema>(
+      this.targetElement,
+      this.applizeRoot
+    );
   }
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>

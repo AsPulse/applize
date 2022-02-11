@@ -24,7 +24,7 @@ export class Applize {
       port: options.port ?? 8080,
       trailingSlash: options.trailingSlash ?? 'NoChange',
       rootEndPoint: options.rootEndPoint ?? { url: ['applize'] },
-      distRoot: options.distRoot ?? cwd()
+      distRoot: options.distRoot ?? cwd(),
     };
 
     server.on('request', (req, res) => {

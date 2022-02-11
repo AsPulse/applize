@@ -136,7 +136,7 @@ export function ApplizeProjectMakeUp(
       bundle: true,
       sourcemap: true,
       platform: 'node',
-      external: ['estrella', ...options.additionExternals ?? []]
+      external: ['estrella', ...(options.additionExternals ?? [])],
     });
     await copyResclusive(
       resolve(options.distDirectory, 'pages', 'tmp'),

@@ -66,8 +66,9 @@ export async function serveExecute(
             return;
           })();
         });
+    } else {
+      resolve(false);
     }
-    resolve(false);
   });
 
   if (await processPost) {

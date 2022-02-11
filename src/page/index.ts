@@ -18,3 +18,7 @@ export class ApplizePage {
     }
   }
 }
+
+export class ApplizePageWithFile {
+  constructor(public fileName: string) {}
+}

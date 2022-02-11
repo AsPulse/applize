@@ -1,1 +1,1 @@
-export { ClientInitialize } from './clientPage';
+export { ClientInitialize } from './clientBase';

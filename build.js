@@ -4,7 +4,7 @@ const { dtsPlugin } = require('esbuild-plugin-d.ts');
 const { nodeExternalsPlugin } = require('esbuild-node-externals');
 build({
   define: { 'process.env.NODE_ENV': process.env.NODE_ENV },
-  entryPoints: [resolve(__dirname, 'src/index.ts'), resolve(__dirname, 'src/client/index.ts')],
+  entryPoints: [resolve(__dirname, 'src/index.ts'), resolve(__dirname, 'src/clientPage.ts'), resolve(__dirname, 'src/clientInitialize.ts')],
   target: 'esnext',
   outdir: resolve(__dirname, 'lib'),
   bundle: true,

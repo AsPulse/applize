@@ -1,12 +1,14 @@
-import type { IAPISchema } from '../api/schema';
+import type { ServerAPISchema } from '../api/schema';
 import { IDOMRenderer } from '../domBuilder';
 
-export type render = (adb: IDOMRenderer<[]>) => void;
+export type render = (adb: IDOMRenderer<Record<never, never>>) => void;
 
 declare const global: { fileName?: string };
-declare const window: { __applize?: { render?: IDOMRenderer<[]> } };
+declare const window: {
+  __applize?: { render?: IDOMRenderer<Record<never, never>> };
+};
 
-export class ApplizePage<K extends IAPISchema[]> {
+export class ApplizePage<K extends ServerAPISchema> {
   fileName: string | null = null;
   constructor(public render: render) {
     const windowA = typeof window === 'object' ? window : undefined;

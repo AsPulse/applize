@@ -1,4 +1,4 @@
-import { IAPISchema } from '../api/schema';
+import { ServerAPISchema } from '../api/schema';
 
 export type HTMLTags = keyof HTMLElementTagNameMap;
 
@@ -28,10 +28,17 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   ): IApplizeDOM<K, ExposeType>;
 }
 
-export interface IDOMRenderer<APISchema extends IAPISchema[]> {
+
+export interface IDOMRenderer<APISchema extends ServerAPISchema> {
   targetElement: HTMLElement;
+  applizeRoot: string;
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
-  clone<APISchema extends IAPISchema[]>(): IDOMRenderer<APISchema>;
+  clone<newAPISchema extends ServerAPISchema>(): IDOMRenderer<newAPISchema>;
+
+  api<CallingAPIName extends keyof APISchema>(
+    name: CallingAPIName,
+    input: APISchema[CallingAPIName]['input']
+  ): Promise<APISchema[CallingAPIName]['output']>;
 }

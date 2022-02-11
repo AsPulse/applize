@@ -1,3 +1,4 @@
+import { ServerAPISchema } from '../api/schema';
 import { ApplizePage } from '../page/index';
 import { ApplizePageWithFile } from '../page/index';
 import { IEndPoint } from './url';
@@ -10,7 +11,9 @@ export class PageRoute {
 
   private constructor(public page: ApplizePageWithFile) {}
 
-  static fromPage(page: ApplizePage): PageRoute | undefined {
+  static fromPage<K extends ServerAPISchema>(
+    page: ApplizePage<K>
+  ): PageRoute | undefined {
     if (!page.fileName) {
       //TODO: warning about no filename
       return undefined;

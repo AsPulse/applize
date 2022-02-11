@@ -80,7 +80,7 @@ export class FileCreator {
     }
   }
   async createDirectory(path: string): Promise<boolean> {
-    return mkdir(path, { recursive: true })
+    return mkdir(resolve(this.baseDir, path), { recursive: true })
       .then(() => {
         say(decorate(colors.gray), `New Directory: ${path}`);
         return true;

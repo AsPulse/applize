@@ -15,7 +15,7 @@ export function ClientInitialize(applizeRoot: string) {
 
   const pageScript = document.createElement('script');
   pageScript.type = 'text/javascript';
-  pageScript.src = `/applize?page=${location.pathname}`;
+  pageScript.src = `/${applizeRoot}?page=${location.pathname}`;
 
   document.head.appendChild(pageScript);
 }

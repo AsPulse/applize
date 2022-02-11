@@ -1,11 +1,14 @@
+import type { ServerAPISchema } from '../api/schema';
 import { IDOMRenderer } from '../domBuilder';
 
-export type render = (adb: IDOMRenderer) => void;
+export type render = (adb: IDOMRenderer<Record<never, never>>) => void;
 
 declare const global: { fileName?: string };
-declare const window: { __applize?: { render?: IDOMRenderer } };
+declare const window: {
+  __applize?: { render?: IDOMRenderer<Record<never, never>> };
+};
 
-export class ApplizePage {
+export class ApplizePage<K extends ServerAPISchema> {
   fileName: string | null = null;
   constructor(public render: render) {
     const windowA = typeof window === 'object' ? window : undefined;
@@ -14,7 +17,7 @@ export class ApplizePage {
       this.fileName = globalA.fileName;
     }
     if (windowA?.__applize?.render) {
-      render(windowA.__applize.render.clone());
+      render(windowA.__applize.render.clone<K>());
     }
   }
 }

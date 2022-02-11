@@ -17,7 +17,6 @@ import { fileIndexts } from './data/file-indexts';
 import { filePageIndexts } from './data/file-pagesIndexTs';
 import { FileCreator } from './fileio/creator';
 
-
 say();
 say(
   filledBySpace(
@@ -37,15 +36,20 @@ say();
 
 void (async () => {
   say('Your current-directory: ', cwd());
-  const root = await input(['Root directory ( default is current-directory ): '], () => Promise.resolve(true));
+  const root = await input(
+    ['Root directory ( default is current-directory ): '],
+    () => Promise.resolve(true)
+  );
 
-  const fc = new FileCreator(path =>
-    confirmYesNo([
-      decorate(colors.green),
-      'File ',
-      path,
-      ' is already exists. Override?',
-    ]), root
+  const fc = new FileCreator(
+    path =>
+      confirmYesNo([
+        decorate(colors.green),
+        'File ',
+        path,
+        ' is already exists. Override?',
+      ]),
+    root
   );
   await fc.createDirectory('./src');
   await fc.createDirectory('./pages');

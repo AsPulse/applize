@@ -45,6 +45,11 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
     this.element.addEventListener(event, func);
     return this;
   }
+
+  empty() {
+    this.element.innerHTML = '';
+    return this;
+  }
 }
 
 export class DOMRendererClient<APISchema extends ServerAPISchema>

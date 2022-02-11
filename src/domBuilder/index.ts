@@ -26,6 +26,11 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
     event: keyof HTMLElementEventMap,
     func: () => unknown
   ): IApplizeDOM<K, ExposeType>;
+
+  empty(
+    event: keyof HTMLElementEventMap,
+    func: () => unknown
+  ): IApplizeDOM<K, ExposeType>;
 }
 
 export interface IDOMRenderer<APISchema extends ServerAPISchema> {

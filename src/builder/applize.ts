@@ -1,4 +1,3 @@
-import { nodeExternalsPlugin } from 'esbuild-node-externals';
 import { build } from 'estrella';
 import {
   copyFile,
@@ -136,7 +135,6 @@ export function ApplizeProjectMakeUp(
       bundle: true,
       sourcemap: true,
       platform: 'node',
-      plugins: [nodeExternalsPlugin()],
     });
     await copyResclusive(
       resolve(options.distDirectory, 'pages', 'tmp'),

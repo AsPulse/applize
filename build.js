@@ -1,7 +1,7 @@
 const { build } = require('estrella');
 const { resolve } = require('path');
 const { dtsPlugin } = require('esbuild-plugin-d.ts');
-
+const { nodeExternalsPlugin } = require('esbuild-node-externals');
 build({
   define: { 'process.env.NODE_ENV': process.env.NODE_ENV },
   entryPoints: [resolve(__dirname, 'src/index.ts')],
@@ -13,7 +13,7 @@ build({
   format: "cjs",
   tslint: true,
   platform: 'node',
-  plugins: [dtsPlugin()],
+  plugins: [nodeExternalsPlugin(), dtsPlugin()],
 }).catch(() => {});
 
 build({

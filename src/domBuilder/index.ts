@@ -1,3 +1,5 @@
+import { IAPISchema } from '../api/schema';
+
 export type HTMLTags = keyof HTMLElementTagNameMap;
 
 export type ElementGeneratorGeneric<K extends HTMLTags, U> = (
@@ -26,10 +28,10 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   ): IApplizeDOM<K, ExposeType>;
 }
 
-export interface IDOMRenderer {
+export interface IDOMRenderer<APISchema extends IAPISchema[]> {
   targetElement: HTMLElement;
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
-  clone(): IDOMRenderer;
+  clone<APISchema extends IAPISchema[]>(): IDOMRenderer<APISchema>;
 }

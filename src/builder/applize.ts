@@ -25,6 +25,7 @@ export interface IApplizeBuildOptions {
   distDirectory: string;
   serverPostBuilder?: ApplizePostBuilder[];
   pagesPostBuilder?: ApplizePostBuilder[];
+  additionExternals?: string[];
 }
 
 export function ApplizeProjectMakeUp(
@@ -135,6 +136,7 @@ export function ApplizeProjectMakeUp(
       bundle: true,
       sourcemap: true,
       platform: 'node',
+      external: ['estrella', ...options.additionExternals ?? []]
     });
     await copyResclusive(
       resolve(options.distDirectory, 'pages', 'tmp'),

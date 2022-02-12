@@ -4,7 +4,7 @@ import { DOMRendererClient } from '../domBuilder/client';
 declare const window: {
   __applize?: {
     render?: IDOMRenderer<Record<never, never>>;
-    pageMove?: (pathname: string, targetElement: HTMLElement) => void;
+    pageMove?: (pathname: string, targetElement?: HTMLElement) => void;
   };
 };
 
@@ -16,7 +16,7 @@ export function ClientInitialize(applizeRoot: string) {
 
     window.__applize.pageMove = (
       pathname: string,
-      targetElement: HTMLElement
+      targetElement: HTMLElement = content
     ) => {
       const targetFile = `${applizeRoot}?page=${pathname}`;
       if (progress) progress.style.width = '0%';

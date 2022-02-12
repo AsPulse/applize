@@ -137,7 +137,7 @@ export async function endWithStaticFile(
     'Content-Type': contentType,
     ETag: file.hash,
   });
-  if ( cached ) {
+  if (cached) {
     res.end();
   } else {
     res.end(file.data);

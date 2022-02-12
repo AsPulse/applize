@@ -3,6 +3,9 @@ name: TypeScript Build
 on:
   # Run tests for any PRs.
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   ts-build:

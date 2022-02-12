@@ -84,7 +84,14 @@ export async function serveExecute(
 
   if (equalsEndPoint(ep, option.rootEndPoint)) {
     if (getParams(url, ['entry']).entry) {
-      await endWithStaticFile(resolve(__dirname, 'entry', 'index.js'), 200, 'text/javascript', req, res, sfm);
+      await endWithStaticFile(
+        resolve(__dirname, 'entry', 'index.js'),
+        200,
+        'text/javascript',
+        req,
+        res,
+        sfm
+      );
       return;
     }
     const route = await findRoute(
@@ -93,21 +100,42 @@ export async function serveExecute(
       urlParse(getParams(url, ['page']).page ?? '')
     );
 
-    await endWithStaticFile(resolve(__dirname, 'pages', `${route.page.fileName}.js`), route.returnCode, 'text/javascript', req, res, sfm);
+    await endWithStaticFile(
+      resolve(__dirname, 'pages', `${route.page.fileName}.js`),
+      route.returnCode,
+      'text/javascript',
+      req,
+      res,
+      sfm
+    );
     return;
   }
 
-  await endWithStaticFile(resolve(__dirname, 'entry', `index.html`), 200, 'text/html', req, res, sfm);
+  await endWithStaticFile(
+    resolve(__dirname, 'entry', `index.html`),
+    200,
+    'text/html',
+    req,
+    res,
+    sfm
+  );
   return;
 }
 
-export async function endWithStaticFile(path: string, returnCode: number, contentType: string, req: IncomingMessage, res: ServerResponse, sfm: StaticFileManager): Promise<void> {
+export async function endWithStaticFile(
+  path: string,
+  returnCode: number,
+  contentType: string,
+  req: IncomingMessage,
+  res: ServerResponse,
+  sfm: StaticFileManager
+): Promise<void> {
   const etag = req.headers['if-none-match'];
   const file = await sfm.readFile(path);
   const cached = etag === file.hash;
   res.writeHead(cached ? 304 : returnCode, {
     'Content-Type': contentType,
-    'ETag': file.hash
+    ETag: file.hash,
   });
   res.end(file.data);
 }

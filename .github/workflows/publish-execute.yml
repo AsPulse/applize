@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
+          cache: 'npm'
           registry-url: https://npm.pkg.github.com/
           scope: '@aspulse'
       - name: Install package

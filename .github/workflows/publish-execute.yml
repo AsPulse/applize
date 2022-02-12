@@ -15,9 +15,12 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
-          cache: 'npm'
           registry-url: https://npm.pkg.github.com/
           scope: '@aspulse'
+      - uses: actions/cache@v2
+        with:
+          path: ${YARN_CACHE_FOLDER}
+          key: ${{ runner.os }}-yarn-cache-v1
       - name: Install package
         run: yarn
         env:

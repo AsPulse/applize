@@ -30,10 +30,14 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   empty(): IApplizeDOM<K, ExposeType>;
 }
 
+export interface IDomRenderFinished {
+  title: string;
+}
+
 export interface IDOMRenderer<APISchema extends ServerAPISchema> {
   targetElement: HTMLElement | DocumentFragment;
   applizeRoot: string;
-  finish: () => void;
+  finish: (finished: IDomRenderFinished) => void;
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;

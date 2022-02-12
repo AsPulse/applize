@@ -4,6 +4,7 @@ import {
   ElementGeneratorGeneric,
   ElementGenerator,
   IDOMRenderer,
+  IDomRenderFinished,
 } from '.';
 import { ServerAPISchema } from '../api/schema';
 
@@ -65,7 +66,7 @@ export class DOMRendererClient<APISchema extends ServerAPISchema>
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     public applizeRoot: string,
-    public finish: () => void
+    public finish: (finished: IDomRenderFinished) => void
   ) {}
   pageMove(pathname: string, targetElement?: HTMLElement): void {
     if (window.__applize?.pageMove) {

@@ -4,9 +4,13 @@ import { DOMRendererClient } from '../domBuilder/client';
 declare const window: {
   __applize?: {
     render?: IDOMRenderer<Record<never, never>>;
-    pageMove?: (pathname: string, targetElement?: HTMLElement | 'root') => void;
+    pageMove?: (
+      pathname: string,
+      targetElement?: HTMLElement | 'root',
+      stateStyle?: 'none' | 'replace' | 'push'
+    ) => void;
   };
-};
+} & Window;
 
 export function ClientInitialize(applizeRoot: string) {
   const content = () => document.getElementById('applize_content');
@@ -16,7 +20,8 @@ export function ClientInitialize(applizeRoot: string) {
 
     window.__applize.pageMove = (
       pathname: string,
-      targetElement: HTMLElement | 'root' = 'root'
+      targetElement: HTMLElement | 'root' = 'root',
+      stateStyle: 'none' | 'replace' | 'push' = 'push'
     ) => {
       const targetFile = `${applizeRoot}?page=${pathname}`;
       if (progress) progress.style.width = '0%';
@@ -48,9 +53,16 @@ export function ClientInitialize(applizeRoot: string) {
           window.__applize.render = new DOMRendererClient<Record<never, never>>(
             fragment,
             applizeRoot,
-            () => {
+            finish => {
               cloned.appendChild(fragment);
               renderedTarget.replaceWith(cloned);
+              if (stateStyle === 'replace') {
+                history.replaceState({}, finish.title, pathname);
+              }
+              if (stateStyle === 'push') {
+                history.pushState({}, finish.title, pathname);
+              }
+              document.title = finish.title;
             }
           );
 
@@ -61,7 +73,11 @@ export function ClientInitialize(applizeRoot: string) {
       });
     };
 
-    window.__applize.pageMove(location.pathname, 'root');
+    window.__applize.pageMove(location.pathname, 'root', 'replace');
+    window.addEventListener('popstate', () => {
+      if (window.__applize?.pageMove)
+        window.__applize.pageMove(location.pathname, 'root', 'none');
+    });
   } else {
     console.log('#applize_content not found');
   }

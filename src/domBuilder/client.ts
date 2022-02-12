@@ -52,10 +52,26 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   }
 }
 
+declare const window: {
+  __applize?: {
+    render?: IDOMRenderer<Record<never, never>>;
+    pageMove?: (pathname: string, targetElement: HTMLElement) => void;
+  };
+};
+
 export class DOMRendererClient<APISchema extends ServerAPISchema>
   implements IDOMRenderer<APISchema>
 {
-  constructor(public targetElement: HTMLElement, public applizeRoot: string) {}
+  constructor(
+    public targetElement: HTMLElement | DocumentFragment,
+    public applizeRoot: string,
+    public finish: () => void
+  ) {}
+  pageMove(pathname: string, targetElement: HTMLElement): void {
+    if (window.__applize?.pageMove) {
+      window.__applize.pageMove(pathname, targetElement);
+    }
+  }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,
     input: APISchema[CallingAPIName]['input']
@@ -79,7 +95,8 @@ export class DOMRendererClient<APISchema extends ServerAPISchema>
   clone<newAPISchema extends ServerAPISchema>(): IDOMRenderer<newAPISchema> {
     return new DOMRendererClient<newAPISchema>(
       this.targetElement,
-      this.applizeRoot
+      this.applizeRoot,
+      this.finish
     );
   }
   build<K extends HTMLTags, U>(

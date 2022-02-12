@@ -53,15 +53,22 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
 }
 
 declare const window: {
-  __applize?: { render?: IDOMRenderer<Record<never, never>>, pageMove?: (pathname: string, targetElement: HTMLElement) => void };
+  __applize?: {
+    render?: IDOMRenderer<Record<never, never>>;
+    pageMove?: (pathname: string, targetElement: HTMLElement) => void;
+  };
 };
 
 export class DOMRendererClient<APISchema extends ServerAPISchema>
   implements IDOMRenderer<APISchema>
 {
-  constructor(public targetElement: HTMLElement | DocumentFragment, public applizeRoot: string, public finish: () => void) {}
+  constructor(
+    public targetElement: HTMLElement | DocumentFragment,
+    public applizeRoot: string,
+    public finish: () => void
+  ) {}
   pageMove(pathname: string, targetElement: HTMLElement): void {
-    if(  window.__applize?.pageMove ) {
+    if (window.__applize?.pageMove) {
       window.__applize.pageMove(pathname, targetElement);
     }
   }

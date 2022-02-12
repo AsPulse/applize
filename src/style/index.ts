@@ -44,7 +44,6 @@ export type Length = `${number}${CSSAbsoluteUnits | CSSRelativeUnits | '%'}`;
 export type ratio = `${number}` | `${number}%`;
 
 export class Cardinal<T> {
-  ident = 'cardinal';
   constructor(
     public topValue: T | undefined,
     public bottomValue: T | undefined,
@@ -76,7 +75,6 @@ export class Cardinal<T> {
 }
 
 export class XY<T> {
-  ident = 'xy';
   constructor(public xValue: T | undefined, public yValue: T | undefined) {}
   static fromAll<K>(value: K | undefined) {
     return new XY<K>(value, value);
@@ -141,7 +139,7 @@ type OptionalPrefix<Prefix extends string, Content extends string> =
   | Content
   | `${Prefix} ${Content};`;
 
-interface Border {
+export interface Border {
   width: Length;
   color: Color;
   style:
@@ -419,7 +417,6 @@ export interface CSSKeyValue {
   justifyItems: CSSNotImplemented;
   justifySelf: CSSNotImplemented;
   left: CSSNotImplemented;
-  readonly length: number;
   letterSpacing: CSSNotImplemented;
   lightingColor: CSSNotImplemented;
   lineBreak: CSSNotImplemented;
@@ -484,7 +481,6 @@ export interface CSSKeyValue {
   pageBreakBefore: CSSNotImplemented;
   pageBreakInside: CSSNotImplemented;
   paintOrder: CSSNotImplemented;
-  readonly parentRule: CSSRule | null;
   perspective: CSSNotImplemented;
   perspectiveOrigin: CSSNotImplemented;
   placeContent: CSSNotImplemented;
@@ -723,6 +719,6 @@ export interface CSSKeyValue {
   zIndex: CSSNotImplemented;
 }
 
-export type CSSdefault = {
+export type ApplizeCSS = {
   [P in keyof CSSKeyValue]: CSSKeyValue[P] | CSSGlobal;
 };

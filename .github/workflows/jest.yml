@@ -4,6 +4,9 @@ on:
   # Run tests for any PRs.
   pull_request:
 
+env:
+  YARN_CACHE_FOLDER: .cache/yarn
+
 jobs:
   jest:
     runs-on: ubuntu-latest
@@ -17,6 +20,6 @@ jobs:
           path: ${YARN_CACHE_FOLDER}
           key: ${{ runner.os }}-yarn-cache-v1
       - name: Install package
-        run: yarn --check-files --frozen-lockfile --non-interactive
+        run: yarn
       - name: Run Test
         run: yarn jest

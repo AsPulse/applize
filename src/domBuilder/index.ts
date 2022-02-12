@@ -31,8 +31,9 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
 }
 
 export interface IDOMRenderer<APISchema extends ServerAPISchema> {
-  targetElement: HTMLElement;
+  targetElement: HTMLElement | DocumentFragment;
   applizeRoot: string;
+  finish: () => void;
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;

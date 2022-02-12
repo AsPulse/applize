@@ -55,7 +55,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
 export class DOMRendererClient<APISchema extends ServerAPISchema>
   implements IDOMRenderer<APISchema>
 {
-  constructor(public targetElement: HTMLElement, public applizeRoot: string) {}
+  constructor(public targetElement: HTMLElement | DocumentFragment, public applizeRoot: string, public finish: () => void) {}
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,
     input: APISchema[CallingAPIName]['input']
@@ -79,7 +79,8 @@ export class DOMRendererClient<APISchema extends ServerAPISchema>
   clone<newAPISchema extends ServerAPISchema>(): IDOMRenderer<newAPISchema> {
     return new DOMRendererClient<newAPISchema>(
       this.targetElement,
-      this.applizeRoot
+      this.applizeRoot,
+      this.finish
     );
   }
   build<K extends HTMLTags, U>(

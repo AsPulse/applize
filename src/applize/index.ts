@@ -4,6 +4,7 @@ import { IEndPoint } from './url';
 import { serve } from './server';
 import { cwd } from 'process';
 import type { JSONStyle, ServerAPISchema } from '../api/schema';
+import { StaticFileManager } from './staticfile';
 
 export interface IApplizeOptions {
   port: number;
@@ -18,6 +19,7 @@ export class Applize<APIType extends ServerAPISchema> {
     name: string;
     executor: (input: JSONStyle) => Promise<JSONStyle>;
   }[] = [];
+  sfm = new StaticFileManager();
 
   addPageRoute(route: PageRoute | undefined) {
     if (!route) return;
@@ -50,7 +52,8 @@ export class Applize<APIType extends ServerAPISchema> {
           res,
           renderedOption,
           this.routes,
-          this.apiImplementation
+          this.apiImplementation,
+          this.sfm
         );
       })();
     });

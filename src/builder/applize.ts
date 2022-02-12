@@ -26,6 +26,7 @@ export interface IApplizeBuildOptions {
   serverPostBuilder?: ApplizePostBuilder[];
   pagesPostBuilder?: ApplizePostBuilder[];
   additionExternals?: string[];
+  treeShaking?: boolean;
 }
 
 export function ApplizeProjectMakeUp(
@@ -96,6 +97,7 @@ export function ApplizeProjectMakeUp(
                   target: 'esnext',
                   outfile: distPath,
                   sourcemap: false,
+                  treeShaking: options.treeShaking === true ? true : undefined
                 });
                 if (!result) throw false;
                 await writeFile(

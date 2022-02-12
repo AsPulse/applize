@@ -31,10 +31,13 @@ export function ClientInitialize(applizeRoot: string) {
       });
       xhr.addEventListener('load', () => {
         if (progress) progress.style.width = '100%';
-        if (progress) progress.style.opacity = '0';
+
+        setTimeout(() => {
+          if (progress) progress.style.opacity = '0';
+        }, 300);
         setTimeout(() => {
           if (progress) progress.style.width = '0%';
-        }, 500);
+        }, 800);
 
         const cloned = targetElement.cloneNode(false);
         const fragment = document.createDocumentFragment();

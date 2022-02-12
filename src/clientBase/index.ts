@@ -10,7 +10,7 @@ declare const window: {
       stateStyle?: 'none' | 'replace' | 'push'
     ) => void;
   };
-};
+} & Window;
 
 export function ClientInitialize(applizeRoot: string) {
   const content = () => document.getElementById('applize_content');
@@ -73,6 +73,10 @@ export function ClientInitialize(applizeRoot: string) {
     };
 
     window.__applize.pageMove(location.pathname, 'root', 'replace');
+    window.addEventListener('popstate', () => {
+      if (window.__applize?.pageMove)
+        window.__applize.pageMove(location.pathname, 'root', 'none');
+    });
   } else {
     console.log('#applize_content not found');
   }

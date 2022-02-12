@@ -97,7 +97,7 @@ export function ApplizeProjectMakeUp(
                   target: 'esnext',
                   outfile: distPath,
                   sourcemap: false,
-                  treeShaking: options.treeShaking === true ? true : undefined
+                  treeShaking: options.treeShaking === true ? true : undefined,
                 });
                 if (!result) throw false;
                 await writeFile(

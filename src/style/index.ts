@@ -1,11 +1,30 @@
 export type CSSAbsoluteUnits = 'cm' | 'mm' | 'Q' | 'in' | 'pc' | 'pt' | 'px';
-export type CSSRelativeUnits = 'em' | 'ex' | 'ch' | 'rem' | 'lh' | 'vw' | 'vh' | 'vmin' | 'vmax';
+export type CSSRelativeUnits =
+  | 'em'
+  | 'ex'
+  | 'ch'
+  | 'rem'
+  | 'lh'
+  | 'vw'
+  | 'vh'
+  | 'vmin'
+  | 'vmax';
 export type CSSGlobal = 'unset' | 'initial' | 'inherit';
 
 export class Color {
-  constructor(public r: number, public g: number, public b: number, public a: number){}
+  constructor(
+    public r: number,
+    public g: number,
+    public b: number,
+    public a: number
+  ) {}
   static fromHex(string: `#${string}`) {
-    return new Color(parseInt(string[1] + string[2], 16), parseInt(string[3] + string[4], 16), parseInt(string[5] + string[6], 16), 255)
+    return new Color(
+      parseInt(string[1] + string[2], 16),
+      parseInt(string[3] + string[4], 16),
+      parseInt(string[5] + string[6], 16),
+      255
+    );
   }
   static fromRGB(r: number, g: number, b: number) {
     return new Color(r, g, b, 255);
@@ -21,12 +40,17 @@ export class Color {
   }
 }
 
-export type Length = `${number}${CSSAbsoluteUnits | CSSRelativeUnits | '%'}`
-export type ratio = `${number}` | `${number}%`
+export type Length = `${number}${CSSAbsoluteUnits | CSSRelativeUnits | '%'}`;
+export type ratio = `${number}` | `${number}%`;
 
 export class Cardinal<T> {
   ident = 'cardinal';
-  constructor(public topValue: T | undefined, public bottomValue: T | undefined, public leftValue: T | undefined, public rightValue: T | undefined){}
+  constructor(
+    public topValue: T | undefined,
+    public bottomValue: T | undefined,
+    public leftValue: T | undefined,
+    public rightValue: T | undefined
+  ) {}
   static fromAll<K>(value: K | undefined) {
     return new Cardinal<K>(value, value, value, value);
   }
@@ -69,7 +93,12 @@ export class XY<T> {
 
 export class Quattuor<T> {
   ident = 'quattuor';
-  constructor(public topLeftValue: T | undefined, public topRightValue: T | undefined, public bottomLeftValue: T | undefined, public bottomRightValue: T | undefined){}
+  constructor(
+    public topLeftValue: T | undefined,
+    public topRightValue: T | undefined,
+    public bottomLeftValue: T | undefined,
+    public bottomRightValue: T | undefined
+  ) {}
   static fromAll<K>(value: K | undefined) {
     return new Quattuor<K>(value, value, value, value);
   }
@@ -100,43 +129,114 @@ export class Quattuor<T> {
 type CSSNotImplemented = string;
 
 type baselinePosition = 'baseline';
-type contentDistribution = 'space-between' | 'space-around' | 'space-evenly' | 'stretch';
+type contentDistribution =
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly'
+  | 'stretch';
 type overflowPosition = 'unsafe' | 'safe';
 type contentPosition = 'center' | 'start' | 'end' | 'flex-start' | 'flex-end';
 type selfPosition = contentPosition | 'self-start' | 'self-end';
-type OptionalPrefix<Prefix extends string, Content extends string> = Content | `${Prefix} ${Content};`
+type OptionalPrefix<Prefix extends string, Content extends string> =
+  | Content
+  | `${Prefix} ${Content};`;
 
 interface Border {
   width: Length;
   color: Color;
-  style: 'none' | 'hidden' | 'solid' | 'double' | 'groove' | 'ridge' | 'inset' | 'outset' | 'dotted' | 'dashed';
+  style:
+    | 'none'
+    | 'hidden'
+    | 'solid'
+    | 'double'
+    | 'groove'
+    | 'ridge'
+    | 'inset'
+    | 'outset'
+    | 'dotted'
+    | 'dashed';
 }
 
 type RandomOrder3<A extends string, B extends string, C extends string> =
-  `${A} ${B} ${C}` | `${A} ${C} ${B}` |
-  `${B} ${A} ${C}` | `${B} ${C} ${A}` |
-  `${C} ${A} ${B}` | `${C} ${B} ${A}`;
+  | `${A} ${B} ${C}`
+  | `${A} ${C} ${B}`
+  | `${B} ${A} ${C}`
+  | `${B} ${C} ${A}`
+  | `${C} ${A} ${B}`
+  | `${C} ${B} ${A}`;
 
-type RandomOrder2<A extends string, B extends string> = `${A} ${B}` | `${B} ${A}`;
+type RandomOrder2<A extends string, B extends string> =
+  | `${A} ${B}`
+  | `${B} ${A}`;
 
-type OptionalRandomOrder<A extends string, B extends string, Optional extends string>
-  = RandomOrder3<A, B, Optional> | RandomOrder2<A, B>;
+type OptionalRandomOrder<
+  A extends string,
+  B extends string,
+  Optional extends string
+> = RandomOrder3<A, B, Optional> | RandomOrder2<A, B>;
 
-type RandomOrderPartial<A extends string, B extends string> = RandomOrder2<A, B> | A | B;
+type RandomOrderPartial<A extends string, B extends string> =
+  | RandomOrder2<A, B>
+  | A
+  | B;
 
 type displayOutside = 'block' | 'inline' | 'run-in';
 type displayInside = 'flow' | 'flow-root' | 'table' | 'flex' | 'grid' | 'ruby';
-type displayListItem = OptionalRandomOrder<'flow' | 'flow-root', 'list-item', displayOutside>;
-type displayInternal = 'table-row-group' | 'table-header-group' | 'table-footer-group' | 'table-row' | 'table-cell' | 'table-column-group' | 'table-column' | 'table-caption' | 'ruby-base' | 'ruby-text' | 'ruby-base-container' | 'ruby-text-container';
+type displayListItem = OptionalRandomOrder<
+  'flow' | 'flow-root',
+  'list-item',
+  displayOutside
+>;
+type displayInternal =
+  | 'table-row-group'
+  | 'table-header-group'
+  | 'table-footer-group'
+  | 'table-row'
+  | 'table-cell'
+  | 'table-column-group'
+  | 'table-column'
+  | 'table-caption'
+  | 'ruby-base'
+  | 'ruby-text'
+  | 'ruby-base-container'
+  | 'ruby-text-container';
 type displayBox = 'contents' | 'none';
-
 
 export interface CSSKeyValue {
   accentColor: Color;
-  alignContent: 'normal' | OptionalPrefix<'first' | 'last', baselinePosition> | contentDistribution | `${overflowPosition} ${contentPosition}` | contentPosition;
-  alignItems: 'normal' | 'stretch' | baselinePosition | OptionalPrefix<overflowPosition, selfPosition>;
-  alignSelf: 'auto' | 'normal' | 'stretch' | baselinePosition | OptionalPrefix<overflowPosition, selfPosition>;
-  alignmentBaseline: 'auto' | 'baseline' | 'before-edge' | 'text-before-edge' | 'middle' | 'central' | 'after-edge' | 'text-after-edge' | 'ideographic' | 'alphabetic' | 'hanging' | 'mathematical' | 'top' | 'center' | 'bottom';
+  alignContent:
+    | 'normal'
+    | OptionalPrefix<'first' | 'last', baselinePosition>
+    | contentDistribution
+    | `${overflowPosition} ${contentPosition}`
+    | contentPosition;
+  alignItems:
+    | 'normal'
+    | 'stretch'
+    | baselinePosition
+    | OptionalPrefix<overflowPosition, selfPosition>;
+  alignSelf:
+    | 'auto'
+    | 'normal'
+    | 'stretch'
+    | baselinePosition
+    | OptionalPrefix<overflowPosition, selfPosition>;
+  alignmentBaseline:
+    | 'auto'
+    | 'baseline'
+    | 'before-edge'
+    | 'text-before-edge'
+    | 'middle'
+    | 'central'
+    | 'after-edge'
+    | 'text-after-edge'
+    | 'ideographic'
+    | 'alphabetic'
+    | 'hanging'
+    | 'mathematical'
+    | 'top'
+    | 'center'
+    | 'bottom';
   all: CSSNotImplemented;
   animation: CSSNotImplemented;
   animationDelay: CSSNotImplemented;
@@ -238,7 +338,11 @@ export interface CSSKeyValue {
   cssText: CSSNotImplemented;
   cursor: CSSNotImplemented;
   direction: CSSNotImplemented;
-  display: RandomOrderPartial<displayOutside, displayInside> | displayListItem | displayInternal | displayBox;
+  display:
+    | RandomOrderPartial<displayOutside, displayInside>
+    | displayListItem
+    | displayInternal
+    | displayBox;
   dominantBaseline: CSSNotImplemented;
   emptyCells: CSSNotImplemented;
   fill: CSSNotImplemented;
@@ -619,4 +723,6 @@ export interface CSSKeyValue {
   zIndex: CSSNotImplemented;
 }
 
-export type CSSdefault = { [P in keyof CSSKeyValue]: CSSKeyValue[P] | CSSGlobal };
+export type CSSdefault = {
+  [P in keyof CSSKeyValue]: CSSKeyValue[P] | CSSGlobal;
+};

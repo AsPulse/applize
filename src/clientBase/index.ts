@@ -4,7 +4,11 @@ import { DOMRendererClient } from '../domBuilder/client';
 declare const window: {
   __applize?: {
     render?: IDOMRenderer<Record<never, never>>;
-    pageMove?: (pathname: string, targetElement?: HTMLElement | 'root') => void;
+    pageMove?: (
+      pathname: string,
+      targetElement?: HTMLElement | 'root',
+      stateStyle?: 'none' | 'replace' | 'push'
+    ) => void;
   };
 };
 
@@ -16,7 +20,8 @@ export function ClientInitialize(applizeRoot: string) {
 
     window.__applize.pageMove = (
       pathname: string,
-      targetElement: HTMLElement | 'root' = 'root'
+      targetElement: HTMLElement | 'root' = 'root',
+      stateStyle: 'none' | 'replace' | 'push' = 'push'
     ) => {
       const targetFile = `${applizeRoot}?page=${pathname}`;
       if (progress) progress.style.width = '0%';
@@ -51,6 +56,12 @@ export function ClientInitialize(applizeRoot: string) {
             () => {
               cloned.appendChild(fragment);
               renderedTarget.replaceWith(cloned);
+              if (stateStyle === 'replace') {
+                history.replaceState({}, '', pathname);
+              }
+              if (stateStyle === 'push') {
+                history.pushState({}, '', pathname);
+              }
             }
           );
 
@@ -61,7 +72,7 @@ export function ClientInitialize(applizeRoot: string) {
       });
     };
 
-    window.__applize.pageMove(location.pathname, 'root');
+    window.__applize.pageMove(location.pathname, 'root', 'replace');
   } else {
     console.log('#applize_content not found');
   }

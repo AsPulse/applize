@@ -3,9 +3,6 @@ name: Jest Test
 on:
   # Run tests for any PRs.
   pull_request:
-  push:
-    branches:
-      - main
 
 jobs:
   jest:

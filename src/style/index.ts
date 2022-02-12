@@ -11,118 +11,11 @@ export type CSSRelativeUnits =
   | 'vmax';
 export type CSSGlobal = 'unset' | 'initial' | 'inherit';
 
-export class Color {
-  constructor(
-    public r: number,
-    public g: number,
-    public b: number,
-    public a: number
-  ) {}
-  static fromHex(string: `#${string}`) {
-    return new Color(
-      parseInt(string[1] + string[2], 16),
-      parseInt(string[3] + string[4], 16),
-      parseInt(string[5] + string[6], 16),
-      255
-    );
-  }
-  static fromRGB(r: number, g: number, b: number) {
-    return new Color(r, g, b, 255);
-  }
-  static fromRGBA(r: number, g: number, b: number, a: number) {
-    return new Color(r, g, b, a);
-  }
-  alpha(alpha: number): Color {
-    return new Color(this.r, this.g, this.b, alpha);
-  }
-  toRGB(): string {
-    return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
-  }
-}
+type Color = string;
 
 export type Length = `${number}${CSSAbsoluteUnits | CSSRelativeUnits | '%'}`;
 export type ratio = `${number}` | `${number}%`;
 
-export class Cardinal<T> {
-  constructor(
-    public topValue: T | undefined,
-    public bottomValue: T | undefined,
-    public leftValue: T | undefined,
-    public rightValue: T | undefined
-  ) {}
-  static fromAll<K>(value: K | undefined) {
-    return new Cardinal<K>(value, value, value, value);
-  }
-  static fromVH<K>(UpAndDown: K | undefined, LeftAndRight: K | undefined) {
-    return new Cardinal<K>(UpAndDown, UpAndDown, LeftAndRight, LeftAndRight);
-  }
-  top(value: T) {
-    this.topValue = value;
-    return this;
-  }
-  left(value: T) {
-    this.leftValue = value;
-    return this;
-  }
-  right(value: T) {
-    this.rightValue = value;
-    return this;
-  }
-  bottom(value: T) {
-    this.bottomValue = value;
-    return this;
-  }
-}
-
-export class XY<T> {
-  constructor(public xValue: T | undefined, public yValue: T | undefined) {}
-  static fromAll<K>(value: K | undefined) {
-    return new XY<K>(value, value);
-  }
-  x(value: T) {
-    this.xValue = value;
-    return this;
-  }
-  y(value: T) {
-    this.yValue = value;
-    return this;
-  }
-}
-
-export class Quattuor<T> {
-  ident = 'quattuor';
-  constructor(
-    public topLeftValue: T | undefined,
-    public topRightValue: T | undefined,
-    public bottomLeftValue: T | undefined,
-    public bottomRightValue: T | undefined
-  ) {}
-  static fromAll<K>(value: K | undefined) {
-    return new Quattuor<K>(value, value, value, value);
-  }
-  static fromTopAndBottom<K>(top: K | undefined, bottom: K | undefined) {
-    return new Quattuor<K>(top, top, bottom, bottom);
-  }
-  static fromLeftAndRight<K>(left: K | undefined, right: K | undefined) {
-    return new Quattuor<K>(left, right, left, right);
-  }
-  topLeft(value: T) {
-    this.topLeftValue = value;
-    return this;
-  }
-  bottomLeft(value: T) {
-    this.bottomLeftValue = value;
-    return this;
-  }
-  bottomRight(value: T) {
-    this.bottomRightValue = value;
-    return this;
-  }
-  topRight(value: T) {
-    this.topRightValue = value;
-    return this;
-  }
-}
 
 type CSSNotImplemented = string;
 
@@ -252,7 +145,7 @@ export interface CSSKeyValue {
   backgroundAttachment: CSSNotImplemented;
   backgroundBlendMode: CSSNotImplemented;
   backgroundClip: CSSNotImplemented;
-  backgroundColor: Color;
+  backgroundColor: CSSNotImplemented;
   backgroundImage: CSSNotImplemented;
   backgroundOrigin: CSSNotImplemented;
   backgroundPosition: CSSNotImplemented;
@@ -262,7 +155,7 @@ export interface CSSKeyValue {
   backgroundSize: CSSNotImplemented;
   baselineShift: CSSNotImplemented;
   blockSize: CSSNotImplemented;
-  border: Cardinal<Border>;
+  border: CSSNotImplemented;
   borderBlock: CSSNotImplemented;
   borderBlockColor: CSSNotImplemented;
   borderBlockEnd: CSSNotImplemented;
@@ -275,7 +168,14 @@ export interface CSSKeyValue {
   borderBlockStartWidth: CSSNotImplemented;
   borderBlockStyle: CSSNotImplemented;
   borderBlockWidth: CSSNotImplemented;
+  borderBottom: CSSNotImplemented;
+  borderBottomColor: CSSNotImplemented;
+  borderBottomLeftRadius: CSSNotImplemented;
+  borderBottomRightRadius: CSSNotImplemented;
+  borderBottomStyle: CSSNotImplemented;
+  borderBottomWidth: CSSNotImplemented;
   borderCollapse: CSSNotImplemented;
+  borderColor: CSSNotImplemented;
   borderEndEndRadius: CSSNotImplemented;
   borderEndStartRadius: CSSNotImplemented;
   borderImage: CSSNotImplemented;
@@ -296,10 +196,26 @@ export interface CSSKeyValue {
   borderInlineStartWidth: CSSNotImplemented;
   borderInlineStyle: CSSNotImplemented;
   borderInlineWidth: CSSNotImplemented;
-  borderRadius: Quattuor<Length>;
+  borderLeft: CSSNotImplemented;
+  borderLeftColor: CSSNotImplemented;
+  borderLeftStyle: CSSNotImplemented;
+  borderLeftWidth: CSSNotImplemented;
+  borderRadius: CSSNotImplemented;
+  borderRight: CSSNotImplemented;
+  borderRightColor: CSSNotImplemented;
+  borderRightStyle: CSSNotImplemented;
+  borderRightWidth: CSSNotImplemented;
   borderSpacing: CSSNotImplemented;
   borderStartEndRadius: CSSNotImplemented;
   borderStartStartRadius: CSSNotImplemented;
+  borderStyle: CSSNotImplemented;
+  borderTop: CSSNotImplemented;
+  borderTopColor: CSSNotImplemented;
+  borderTopLeftRadius: CSSNotImplemented;
+  borderTopRightRadius: CSSNotImplemented;
+  borderTopStyle: CSSNotImplemented;
+  borderTopWidth: CSSNotImplemented;
+  borderWidth: CSSNotImplemented;
   bottom: CSSNotImplemented;
   boxShadow: CSSNotImplemented;
   boxSizing: CSSNotImplemented;
@@ -313,7 +229,7 @@ export interface CSSKeyValue {
   clip: CSSNotImplemented;
   clipPath: CSSNotImplemented;
   clipRule: CSSNotImplemented;
-  color: Color;
+  color: CSSNotImplemented;
   colorInterpolation: CSSNotImplemented;
   colorInterpolationFilters: CSSNotImplemented;
   colorScheme: CSSNotImplemented;
@@ -425,13 +341,17 @@ export interface CSSKeyValue {
   listStyleImage: CSSNotImplemented;
   listStylePosition: CSSNotImplemented;
   listStyleType: CSSNotImplemented;
-  margin: Cardinal<Length>;
+  margin: CSSNotImplemented;
   marginBlock: CSSNotImplemented;
   marginBlockEnd: CSSNotImplemented;
   marginBlockStart: CSSNotImplemented;
+  marginBottom: CSSNotImplemented;
   marginInline: CSSNotImplemented;
   marginInlineEnd: CSSNotImplemented;
   marginInlineStart: CSSNotImplemented;
+  marginLeft: CSSNotImplemented;
+  marginRight: CSSNotImplemented;
+  marginTop: CSSNotImplemented;
   marker: CSSNotImplemented;
   markerEnd: CSSNotImplemented;
   markerMid: CSSNotImplemented;
@@ -462,21 +382,27 @@ export interface CSSKeyValue {
   outlineOffset: CSSNotImplemented;
   outlineStyle: CSSNotImplemented;
   outlineWidth: CSSNotImplemented;
-  overflow: XY<Length>;
+  overflow: CSSNotImplemented;
   overflowAnchor: CSSNotImplemented;
   overflowWrap: CSSNotImplemented;
+  overflowX: CSSNotImplemented;
+  overflowY: CSSNotImplemented;
   overscrollBehavior: CSSNotImplemented;
   overscrollBehaviorBlock: CSSNotImplemented;
   overscrollBehaviorInline: CSSNotImplemented;
   overscrollBehaviorX: CSSNotImplemented;
   overscrollBehaviorY: CSSNotImplemented;
-  padding: Cardinal<Length>;
+  padding: CSSNotImplemented;
   paddingBlock: CSSNotImplemented;
   paddingBlockEnd: CSSNotImplemented;
   paddingBlockStart: CSSNotImplemented;
+  paddingBottom: CSSNotImplemented;
   paddingInline: CSSNotImplemented;
   paddingInlineEnd: CSSNotImplemented;
   paddingInlineStart: CSSNotImplemented;
+  paddingLeft: CSSNotImplemented;
+  paddingRight: CSSNotImplemented;
+  paddingTop: CSSNotImplemented;
   pageBreakAfter: CSSNotImplemented;
   pageBreakBefore: CSSNotImplemented;
   pageBreakInside: CSSNotImplemented;
@@ -719,6 +645,8 @@ export interface CSSKeyValue {
   zIndex: CSSNotImplemented;
 }
 
-export type ApplizeCSS = {
+export type ApplizeDeclaredCSS = {
   [P in keyof CSSKeyValue]: CSSKeyValue[P] | CSSGlobal;
 };
+
+export type ApplizeCSS = Partial<ApplizeDeclaredCSS>;

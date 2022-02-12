@@ -36,8 +36,9 @@ export function ClientInitialize(applizeRoot: string) {
           if (progress) progress.style.width = '0%';
         }, 500);
 
-        const renderedTarget = targetElement === 'root' ? content() : targetElement;
-        if ( !renderedTarget ) return;
+        const renderedTarget =
+          targetElement === 'root' ? content() : targetElement;
+        if (!renderedTarget) return;
         const cloned = renderedTarget.cloneNode(false);
         const fragment = document.createDocumentFragment();
         if (window.__applize)
@@ -47,7 +48,6 @@ export function ClientInitialize(applizeRoot: string) {
             () => {
               cloned.appendChild(fragment);
               renderedTarget.replaceWith(cloned);
-
             }
           );
 

@@ -4,19 +4,19 @@ import { DOMRendererClient } from '../domBuilder/client';
 declare const window: {
   __applize?: {
     render?: IDOMRenderer<Record<never, never>>;
-    pageMove?: (pathname: string, targetElement?: HTMLElement) => void;
+    pageMove?: (pathname: string, targetElement?: HTMLElement | 'root') => void;
   };
 };
 
 export function ClientInitialize(applizeRoot: string) {
-  const content = document.getElementById('applize_content');
+  const content = () => document.getElementById('applize_content');
   const progress = document.getElementById('applize_spa_progress');
-  if (content) {
+  if (content()) {
     window.__applize = {};
 
     window.__applize.pageMove = (
       pathname: string,
-      targetElement: HTMLElement = content
+      targetElement: HTMLElement | 'root' = 'root'
     ) => {
       const targetFile = `${applizeRoot}?page=${pathname}`;
       if (progress) progress.style.width = '0%';
@@ -36,7 +36,9 @@ export function ClientInitialize(applizeRoot: string) {
           if (progress) progress.style.width = '0%';
         }, 500);
 
-        const cloned = targetElement.cloneNode(false);
+        const renderedTarget = targetElement === 'root' ? content() : targetElement;
+        if ( !renderedTarget ) return;
+        const cloned = renderedTarget.cloneNode(false);
         const fragment = document.createDocumentFragment();
         if (window.__applize)
           window.__applize.render = new DOMRendererClient<Record<never, never>>(
@@ -44,7 +46,8 @@ export function ClientInitialize(applizeRoot: string) {
             applizeRoot,
             () => {
               cloned.appendChild(fragment);
-              targetElement.replaceWith(cloned);
+              renderedTarget.replaceWith(cloned);
+
             }
           );
 
@@ -55,7 +58,7 @@ export function ClientInitialize(applizeRoot: string) {
       });
     };
 
-    window.__applize.pageMove(location.pathname, content);
+    window.__applize.pageMove(location.pathname, 'root');
   } else {
     console.log('#applize_content not found');
   }

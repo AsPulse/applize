@@ -43,4 +43,6 @@ export interface IDOMRenderer<APISchema extends ServerAPISchema> {
     name: CallingAPIName,
     input: APISchema[CallingAPIName]['input']
   ): Promise<APISchema[CallingAPIName]['output']>;
+
+  pageMove(pathname: string, targetElement: HTMLElement): void;
 }

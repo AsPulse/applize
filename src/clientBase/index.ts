@@ -53,15 +53,16 @@ export function ClientInitialize(applizeRoot: string) {
           window.__applize.render = new DOMRendererClient<Record<never, never>>(
             fragment,
             applizeRoot,
-            () => {
+            finish => {
               cloned.appendChild(fragment);
               renderedTarget.replaceWith(cloned);
               if (stateStyle === 'replace') {
-                history.replaceState({}, '', pathname);
+                history.replaceState({}, finish.title, pathname);
               }
               if (stateStyle === 'push') {
-                history.pushState({}, '', pathname);
+                history.pushState({}, finish.title, pathname);
               }
+              document.title = finish.title;
             }
           );
 

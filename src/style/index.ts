@@ -16,7 +16,6 @@ type Color = string;
 export type Length = `${number}${CSSAbsoluteUnits | CSSRelativeUnits | '%'}`;
 export type ratio = `${number}` | `${number}%`;
 
-
 type CSSNotImplemented = string;
 
 type baselinePosition = 'baseline';

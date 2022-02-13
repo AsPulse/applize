@@ -1,4 +1,4 @@
-import { ServerAPISchema } from '../api/schema';
+import { ServerAPIGeneralSchema } from '../api/schema';
 import { ApplizePage } from '../page/index';
 import { ApplizePageWithFile } from '../page/index';
 import { equalsEndPoint, IEndPoint, urlParse } from './url';
@@ -11,7 +11,7 @@ export class PageRoute {
 
   private constructor(public page: ApplizePageWithFile) {}
 
-  static fromPage<K extends ServerAPISchema>(
+  static fromPage<K extends ServerAPIGeneralSchema>(
     page: ApplizePage<K>
   ): PageRoute | undefined {
     if (!page.fileName) {

@@ -6,7 +6,7 @@ import {
   IDOMRenderer,
   IDomRenderFinished,
 } from '.';
-import { ServerAPISchema } from '../api/schema';
+import { ServerAPIGeneralSchema } from '../api/schema';
 import { ApplizeCSS } from '../style';
 import { renderCSS } from '../style/render';
 
@@ -67,7 +67,7 @@ declare const window: {
   };
 };
 
-export class DOMRendererClient<APISchema extends ServerAPISchema>
+export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   implements IDOMRenderer<APISchema>
 {
   constructor(
@@ -100,7 +100,9 @@ export class DOMRendererClient<APISchema extends ServerAPISchema>
     });
   }
 
-  clone<newAPISchema extends ServerAPISchema>(): IDOMRenderer<newAPISchema> {
+  clone<
+    newAPISchema extends ServerAPIGeneralSchema
+  >(): IDOMRenderer<newAPISchema> {
     return new DOMRendererClient<newAPISchema>(
       this.targetElement,
       this.applizeRoot,

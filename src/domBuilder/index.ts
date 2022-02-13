@@ -1,4 +1,4 @@
-import { ServerAPISchema } from '../api/schema';
+import { ServerAPIGeneralSchema } from '../api/schema';
 import { ApplizeCSS } from '../style';
 
 export type HTMLTags = keyof HTMLElementTagNameMap;
@@ -37,14 +37,16 @@ export interface IDomRenderFinished {
   title: string;
 }
 
-export interface IDOMRenderer<APISchema extends ServerAPISchema> {
+export interface IDOMRenderer<APISchema extends ServerAPIGeneralSchema> {
   targetElement: HTMLElement | DocumentFragment;
   applizeRoot: string;
   finish: (finished: IDomRenderFinished) => void;
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
-  clone<newAPISchema extends ServerAPISchema>(): IDOMRenderer<newAPISchema>;
+  clone<
+    newAPISchema extends ServerAPIGeneralSchema
+  >(): IDOMRenderer<newAPISchema>;
 
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,

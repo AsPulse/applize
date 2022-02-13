@@ -8,4 +8,7 @@ export interface IAPISchema {
   output: JSONStyle;
 }
 
-export type ServerAPISchema = { [key: string]: IAPISchema };
+export type ServerAPIGeneralSchema = {
+  [key: string]: { input: JSONStyle; output: JSONStyle };
+};
+export type ServerAPISchema<T extends ServerAPIGeneralSchema> = T;

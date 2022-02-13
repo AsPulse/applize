@@ -3,7 +3,7 @@ import http from 'http';
 import { IEndPoint } from './url';
 import { serve } from './server';
 import { cwd } from 'process';
-import type { JSONStyle, ServerAPISchema } from '../api/schema';
+import type { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
 import { StaticFileManager } from './staticfile';
 
 export interface IApplizeOptions {
@@ -13,7 +13,7 @@ export interface IApplizeOptions {
   distRoot: string;
 }
 
-export class Applize<APIType extends ServerAPISchema> {
+export class Applize<APIType extends ServerAPIGeneralSchema> {
   routes: PageRoute[] = [];
   apiImplementation: {
     name: string;

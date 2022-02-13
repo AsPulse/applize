@@ -11,7 +11,7 @@ export function applizeWatch(
     persistent: true,
   });
 
-  let process = spawn(`node ${target}`);
+  let process = spawn('node', [target]);;
   process.stdout.on('data', data => {
     console.log((<{ toString: () => string }>data).toString());
   });
@@ -23,7 +23,7 @@ export function applizeWatch(
           if (error) exit(1);
           console.log(stdout);
           process.kill();
-          process = spawn(`node ${target}`);
+          process = spawn('node', [target]);
           process.stdout.on('data', data => {
             console.log((<{ toString: () => string }>data).toString());
           });

@@ -1,4 +1,5 @@
 import { ServerAPISchema } from '../api/schema';
+import { ApplizeCSS } from '../style';
 
 export type HTMLTags = keyof HTMLElementTagNameMap;
 
@@ -28,6 +29,8 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   ): IApplizeDOM<K, ExposeType>;
 
   empty(): IApplizeDOM<K, ExposeType>;
+
+  style(css: ApplizeCSS): IApplizeDOM<K, ExposeType>;
 }
 
 export interface IDomRenderFinished {

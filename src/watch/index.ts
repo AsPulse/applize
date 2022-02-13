@@ -11,7 +11,7 @@ export function applizeWatch(
     persistent: true,
   });
 
-  let process = spawn('node', [target]);;
+  let process = spawn('node', [target]);
   process.stdout.on('data', data => {
     console.log((<{ toString: () => string }>data).toString());
   });

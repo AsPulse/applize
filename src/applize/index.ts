@@ -14,19 +14,19 @@ export interface IApplizeOptions {
 }
 
 export class Applize<APIType extends ServerAPIGeneralSchema> {
-  routes: PageRoute[] = [];
-  apiImplementation: {
+  private routes: PageRoute[] = [];
+  private apiImplementation: {
     name: string;
     executor: (input: JSONStyle) => Promise<JSONStyle>;
   }[] = [];
-  sfm = new StaticFileManager();
+  private sfm = new StaticFileManager();
 
   addPageRoute(route: PageRoute | undefined) {
     if (!route) return;
     this.routes.push(route);
   }
 
-  implementsAPI<ImplementingAPI extends keyof APIType>(
+  implementAPI<ImplementingAPI extends keyof APIType>(
     name: ImplementingAPI,
     executor: (
       input: APIType[ImplementingAPI]['input']

@@ -77,9 +77,12 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     public onFinish: (finished: IDomRenderFinished) => void
   ) {}
   finish(finished: IDOMRendererFinishedInput) {
-    this.onFinish({...finished, onLeave: () => {
-      if(finished.onLeave) finished.onLeave();
-    }});
+    this.onFinish({
+      ...finished,
+      onLeave: () => {
+        if (finished.onLeave) finished.onLeave();
+      },
+    });
   }
   pageMove(pathname: string, targetElement?: HTMLElement): void {
     if (window.__applize?.pageMove) {

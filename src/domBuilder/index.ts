@@ -35,9 +35,12 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
 
 export interface IDomRenderFinished {
   title: string;
-  onLeave: () => void
+  onLeave: () => void;
 }
-export type IDOMRendererFinishedInput = Partial<Pick<IDomRenderFinished, 'onLeave'>> & Omit<IDomRenderFinished, 'onLeave'>;
+export type IDOMRendererFinishedInput = Partial<
+  Pick<IDomRenderFinished, 'onLeave'>
+> &
+  Omit<IDomRenderFinished, 'onLeave'>;
 
 export interface IDOMRenderer<APISchema extends ServerAPIGeneralSchema> {
   targetElement: HTMLElement | DocumentFragment;

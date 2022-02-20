@@ -74,6 +74,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     public applizeRoot: string,
+    public pageUnique: string,
     public onFinish: (finished: IDomRenderFinished) => void
   ) {}
   finish(finished: IDOMRendererFinishedInput) {
@@ -115,6 +116,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     return new DOMRendererClient<newAPISchema>(
       this.targetElement,
       this.applizeRoot,
+      this.pageUnique,
       this.onFinish
     );
   }

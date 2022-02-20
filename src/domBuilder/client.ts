@@ -8,8 +8,6 @@ import {
   IDOMRendererFinishedInput,
 } from '.';
 import { ServerAPIGeneralSchema } from '../api/schema';
-import { ApplizeCSS } from '../style';
-import { renderCSS } from '../style/render';
 
 export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   implements IApplizeDOM<K, ExposeType>
@@ -52,11 +50,6 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
 
   empty() {
     this.element.innerHTML = '';
-    return this;
-  }
-
-  style(css: ApplizeCSS) {
-    renderCSS(this.element, css);
     return this;
   }
 

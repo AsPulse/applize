@@ -12,6 +12,13 @@ declare const window: {
   };
 } & Window;
 
+interface IPageLoading {
+  script: HTMLScriptElement;
+  targetElement: Node;
+  onLeave: () => void;
+}
+let pageLoadings: IPageLoading[] = [];
+
 export function ClientInitialize(applizeRoot: string) {
   const content = () => document.getElementById('applize_content');
   const progress = document.getElementById('applize_spa_progress');
@@ -47,8 +54,21 @@ export function ClientInitialize(applizeRoot: string) {
         const renderedTarget =
           targetElement === 'root' ? content() : targetElement;
         if (!renderedTarget) return;
+
+        pageLoadings = pageLoadings.filter(v => {
+          if (renderedTarget.contains(v.targetElement)) {
+            v.onLeave();
+            v.script.remove();
+            return false;
+          }
+          return true;
+        });
+
         const cloned = renderedTarget.cloneNode(false);
         const fragment = document.createDocumentFragment();
+
+        const pageScript = document.createElement('script');
+        pageScript.type = 'text/javascript';
         if (window.__applize)
           window.__applize.render = new DOMRendererClient<Record<never, never>>(
             fragment,
@@ -63,11 +83,13 @@ export function ClientInitialize(applizeRoot: string) {
                 history.pushState({}, finish.title, pathname);
               }
               document.title = finish.title;
+              pageLoadings.push({
+                script: pageScript,
+                targetElement: cloned,
+                onLeave: finish.onLeave,
+              });
             }
           );
-
-        const pageScript = document.createElement('script');
-        pageScript.type = 'text/javascript';
         pageScript.src = targetFile;
         document.head.appendChild(pageScript);
       });

@@ -5,6 +5,7 @@ import {
   ElementGenerator,
   IDOMRenderer,
   IDomRenderFinished,
+  IDOMRendererFinishedInput,
 } from '.';
 import { ServerAPIGeneralSchema } from '../api/schema';
 import { ApplizeCSS } from '../style';
@@ -73,8 +74,16 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     public applizeRoot: string,
-    public finish: (finished: IDomRenderFinished) => void
+    public onFinish: (finished: IDomRenderFinished) => void
   ) {}
+  finish(finished: IDOMRendererFinishedInput) {
+    this.onFinish({
+      ...finished,
+      onLeave: () => {
+        if (finished.onLeave) finished.onLeave();
+      },
+    });
+  }
   pageMove(pathname: string, targetElement?: HTMLElement): void {
     if (window.__applize?.pageMove) {
       window.__applize.pageMove(pathname, targetElement);
@@ -106,7 +115,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     return new DOMRendererClient<newAPISchema>(
       this.targetElement,
       this.applizeRoot,
-      this.finish
+      this.onFinish
     );
   }
   build<K extends HTMLTags, U>(

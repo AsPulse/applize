@@ -109,7 +109,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
       this.styleElement = document.createElement('style');
       document.head.appendChild(this.styleElement);
     }
-    this.styleElement.sheet?.insertRule(`${selector}{${style.join(';')}}`);
+    this.styleElement.sheet?.insertRule(`.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`);
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,

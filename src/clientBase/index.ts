@@ -18,7 +18,7 @@ interface IPageLoading {
   onLeave: () => void;
 }
 let pageLoadings: IPageLoading[] = [];
-let pageUnique = 1;
+let pageUnique = -1;
 export function ClientInitialize(applizeRoot: string) {
   const content = () => document.getElementById('applize_content');
   const progress = document.getElementById('applize_spa_progress');
@@ -61,12 +61,16 @@ export function ClientInitialize(applizeRoot: string) {
 
         const pageScript = document.createElement('script');
         pageScript.type = 'text/javascript';
+        const pageUniqueTurn = ++pageUnique;
         if (window.__applize)
           window.__applize.render = new DOMRendererClient<Record<never, never>>(
             fragment,
             applizeRoot,
-            `${pageUnique++}`,
+            `${pageUniqueTurn}`,
             finish => {
+              if(cloned instanceof HTMLElement) {
+                cloned.classList.add(`style-page-${pageUniqueTurn}`);
+              }
               cloned.appendChild(fragment);
               renderedTarget.replaceWith(cloned);
               if (stateStyle === 'replace') {

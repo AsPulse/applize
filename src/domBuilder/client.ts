@@ -59,6 +59,16 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
     renderCSS(this.element, css);
     return this;
   }
+
+  classAdd(...name: string[]) {
+    this.element.classList.add(...name);
+    return this;
+  }
+
+  classRemove(...name: string[]) {
+    this.element.classList.remove(...name);
+    return this;
+  }
 }
 
 declare const window: {
@@ -71,17 +81,21 @@ declare const window: {
 export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   implements IDOMRenderer<APISchema>
 {
+  styleElement: HTMLStyleElement | null;
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     public applizeRoot: string,
     public pageUnique: string,
     public onFinish: (finished: IDomRenderFinished) => void
-  ) {}
+  ) {
+    this.styleElement = null;
+  }
   finish(finished: IDOMRendererFinishedInput) {
     this.onFinish({
       ...finished,
       onLeave: () => {
         if (finished.onLeave) finished.onLeave();
+        if (this.styleElement) this.styleElement.remove();
       },
     });
   }
@@ -89,6 +103,15 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     if (window.__applize?.pageMove) {
       window.__applize.pageMove(pathname, targetElement);
     }
+  }
+  style(selector: string, ...style: string[]) {
+    if (this.styleElement === null) {
+      this.styleElement = document.createElement('style');
+      document.head.appendChild(this.styleElement);
+    }
+    this.styleElement.sheet?.insertRule(
+      `.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`
+    );
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,

@@ -30,6 +30,10 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
 
   empty(): IApplizeDOM<K, ExposeType>;
 
+  classAdd(...name: string[]): IApplizeDOM<K, ExposeType>;
+
+  classRemove(...name: string[]): IApplizeDOM<K, ExposeType>;
+
   style(css: ApplizeCSS): IApplizeDOM<K, ExposeType>;
 }
 
@@ -59,6 +63,6 @@ export interface IDOMRenderer<APISchema extends ServerAPIGeneralSchema> {
     name: CallingAPIName,
     input: APISchema[CallingAPIName]['input']
   ): Promise<APISchema[CallingAPIName]['output']>;
-
+  style(selector: string, ...style: string[]): void;
   pageMove(pathname: string, targetElement?: HTMLElement): void;
 }

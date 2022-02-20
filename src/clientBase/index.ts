@@ -55,14 +55,6 @@ export function ClientInitialize(applizeRoot: string) {
           targetElement === 'root' ? content() : targetElement;
         if (!renderedTarget) return;
 
-        pageLoadings = pageLoadings.filter(v => {
-          if (renderedTarget.contains(v.targetElement)) {
-            v.onLeave();
-            v.script.remove();
-            return false;
-          }
-          return true;
-        });
 
         const cloned = renderedTarget.cloneNode(false);
         const fragment = document.createDocumentFragment();
@@ -84,6 +76,14 @@ export function ClientInitialize(applizeRoot: string) {
                 history.pushState({}, finish.title, pathname);
               }
               document.title = finish.title;
+              pageLoadings = pageLoadings.filter(v => {
+                if (renderedTarget.contains(v.targetElement)) {
+                  v.onLeave();
+                  v.script.remove();
+                  return false;
+                }
+                return true;
+              });
               pageLoadings.push({
                 script: pageScript,
                 targetElement: cloned,

@@ -81,22 +81,21 @@ declare const window: {
 export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   implements IDOMRenderer<APISchema>
 {
-  styleElement: HTMLStyleElement;
+  styleElement: HTMLStyleElement | null;
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     public applizeRoot: string,
     public pageUnique: string,
     public onFinish: (finished: IDomRenderFinished) => void
   ) {
-    this.styleElement = document.createElement('style');
-    document.head.appendChild(this.styleElement);
+    this.styleElement = null;
   }
   finish(finished: IDOMRendererFinishedInput) {
     this.onFinish({
       ...finished,
       onLeave: () => {
         if (finished.onLeave) finished.onLeave();
-        this.styleElement.remove();
+        if(this.styleElement) this.styleElement.remove();
       },
     });
   }
@@ -106,6 +105,10 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     }
   }
   style(selector: string, ...style: string[]) {
+    if ( this.styleElement === null ) {
+      this.styleElement = document.createElement('style');
+      document.head.appendChild(this.styleElement);
+    }
     this.styleElement.sheet?.insertRule(`${selector}{${style.join(';')}}`);
   }
   api<CallingAPIName extends keyof APISchema>(

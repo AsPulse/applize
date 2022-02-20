@@ -19,8 +19,6 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
     inner: (elementGenerator: ElementGenerator) => NewExpose
   ): IApplizeDOM<K, NewExpose>;
 
-  setExpose<NewExpose>(expose: NewExpose): IApplizeDOM<K, NewExpose>;
-
   text(text: string): IApplizeDOM<K, ExposeType>;
 
   on(

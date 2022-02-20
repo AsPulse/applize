@@ -34,7 +34,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
     );
   }
 
-  setExpose<NewExpose>(expose: NewExpose) {
+  private setExpose<NewExpose>(expose: NewExpose) {
     return new IApplizeDOMClient<K, NewExpose>(this.element, expose);
   }
 

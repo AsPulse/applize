@@ -12,6 +12,12 @@ declare const window: {
   };
 } & Window;
 
+interface IPageLoading {
+  title: string,
+  targetElement: Node,
+  onLeave: () => void;
+}let pageLoadings: IPageLoading[] = [];
+
 export function ClientInitialize(applizeRoot: string) {
   const content = () => document.getElementById('applize_content');
   const progress = document.getElementById('applize_spa_progress');
@@ -47,6 +53,17 @@ export function ClientInitialize(applizeRoot: string) {
         const renderedTarget =
           targetElement === 'root' ? content() : targetElement;
         if (!renderedTarget) return;
+
+        pageLoadings = pageLoadings.filter(v => {
+          if ( renderedTarget.contains(v.targetElement) ) {
+            v.onLeave();
+            console.log('Page leaved: ' + v.title);
+            return false;
+          }
+          return true;
+        });
+
+
         const cloned = renderedTarget.cloneNode(false);
         const fragment = document.createDocumentFragment();
         if (window.__applize)
@@ -63,6 +80,11 @@ export function ClientInitialize(applizeRoot: string) {
                 history.pushState({}, finish.title, pathname);
               }
               document.title = finish.title;
+              pageLoadings.push({
+                title: finish.title,
+                targetElement: cloned,
+                onLeave: () => undefined
+              });
             }
           );
 

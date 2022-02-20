@@ -61,8 +61,8 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   }
 
   classAdd(...name: string[]) {
-      this.element.classList.add(...name);
-      return this;
+    this.element.classList.add(...name);
+    return this;
   }
 
   classRemove(...name: string[]) {
@@ -95,7 +95,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
       ...finished,
       onLeave: () => {
         if (finished.onLeave) finished.onLeave();
-        if(this.styleElement) this.styleElement.remove();
+        if (this.styleElement) this.styleElement.remove();
       },
     });
   }
@@ -105,11 +105,13 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     }
   }
   style(selector: string, ...style: string[]) {
-    if ( this.styleElement === null ) {
+    if (this.styleElement === null) {
       this.styleElement = document.createElement('style');
       document.head.appendChild(this.styleElement);
     }
-    this.styleElement.sheet?.insertRule(`.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`);
+    this.styleElement.sheet?.insertRule(
+      `.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`
+    );
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,

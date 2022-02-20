@@ -55,7 +55,6 @@ export function ClientInitialize(applizeRoot: string) {
           targetElement === 'root' ? content() : targetElement;
         if (!renderedTarget) return;
 
-
         const cloned = renderedTarget.cloneNode(false);
         const fragment = document.createDocumentFragment();
 
@@ -68,7 +67,7 @@ export function ClientInitialize(applizeRoot: string) {
             applizeRoot,
             `${pageUniqueTurn}`,
             finish => {
-              if(cloned instanceof HTMLElement) {
+              if (cloned instanceof HTMLElement) {
                 cloned.classList.add(`style-page-${pageUniqueTurn}`);
               }
               cloned.appendChild(fragment);

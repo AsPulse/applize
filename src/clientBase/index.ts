@@ -13,7 +13,7 @@ declare const window: {
 } & Window;
 
 interface IPageLoading {
-  title: string,
+  script: HTMLScriptElement,
   targetElement: Node,
   onLeave: () => void;
 }let pageLoadings: IPageLoading[] = [];
@@ -57,7 +57,7 @@ export function ClientInitialize(applizeRoot: string) {
         pageLoadings = pageLoadings.filter(v => {
           if ( renderedTarget.contains(v.targetElement) ) {
             v.onLeave();
-            console.log('Page leaved: ' + v.title);
+            v.script.remove();
             return false;
           }
           return true;
@@ -66,6 +66,9 @@ export function ClientInitialize(applizeRoot: string) {
 
         const cloned = renderedTarget.cloneNode(false);
         const fragment = document.createDocumentFragment();
+
+        const pageScript = document.createElement('script');
+        pageScript.type = 'text/javascript';
         if (window.__applize)
           window.__applize.render = new DOMRendererClient<Record<never, never>>(
             fragment,
@@ -81,15 +84,12 @@ export function ClientInitialize(applizeRoot: string) {
               }
               document.title = finish.title;
               pageLoadings.push({
-                title: finish.title,
+                script: pageScript,
                 targetElement: cloned,
-                onLeave: () => undefined
+                onLeave: finish.onLeave
               });
             }
           );
-
-        const pageScript = document.createElement('script');
-        pageScript.type = 'text/javascript';
         pageScript.src = targetFile;
         document.head.appendChild(pageScript);
       });

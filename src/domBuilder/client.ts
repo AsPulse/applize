@@ -34,7 +34,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
     );
   }
 
-  setExpose<NewExpose>(expose: NewExpose) {
+  private setExpose<NewExpose>(expose: NewExpose) {
     return new IApplizeDOMClient<K, NewExpose>(this.element, expose);
   }
 
@@ -84,9 +84,9 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   styleElement: HTMLStyleElement | null;
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
-    public applizeRoot: string,
-    public pageUnique: string,
-    public onFinish: (finished: IDomRenderFinished) => void
+    private applizeRoot: string,
+    private pageUnique: string,
+    private onFinish: (finished: IDomRenderFinished) => void
   ) {
     this.styleElement = null;
   }

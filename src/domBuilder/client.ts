@@ -81,17 +81,22 @@ declare const window: {
 export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   implements IDOMRenderer<APISchema>
 {
+  styleElement: HTMLStyleElement;
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     public applizeRoot: string,
     public pageUnique: string,
     public onFinish: (finished: IDomRenderFinished) => void
-  ) {}
+  ) {
+    this.styleElement = document.createElement('style');
+    document.head.appendChild(this.styleElement);
+  }
   finish(finished: IDOMRendererFinishedInput) {
     this.onFinish({
       ...finished,
       onLeave: () => {
         if (finished.onLeave) finished.onLeave();
+        this.styleElement.remove();
       },
     });
   }
@@ -99,6 +104,9 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     if (window.__applize?.pageMove) {
       window.__applize.pageMove(pathname, targetElement);
     }
+  }
+  style(selector: string, ...style: string[]) {
+    this.styleElement.sheet?.insertRule(`${selector}{${style.join(';')}}`);
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,

@@ -30,6 +30,10 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
 
   empty(): IApplizeDOM<K, ExposeType>;
 
+  classAdd(...name: string[]): IApplizeDOM<K, ExposeType>;
+
+  classRemove(...name: string[]): IApplizeDOM<K, ExposeType>;
+
   style(css: ApplizeCSS): IApplizeDOM<K, ExposeType>;
 }
 

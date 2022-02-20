@@ -59,6 +59,16 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
     renderCSS(this.element, css);
     return this;
   }
+
+  classAdd(...name: string[]) {
+      this.element.classList.add(...name);
+      return this;
+  }
+
+  classRemove(...name: string[]) {
+    this.element.classList.remove(...name);
+    return this;
+  }
 }
 
 declare const window: {

@@ -86,9 +86,9 @@ interface IComponentStyle {
 export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   implements IDOMRenderer<APISchema>
 {
-  styleElement: HTMLStyleElement | null;
-  styleUnique: number;
-  styleComponenets: IComponentStyle[];
+  private styleElement: HTMLStyleElement | null;
+  private styleUnique: number;
+  private styleComponenets: IComponentStyle[];
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     private applizeRoot: string,

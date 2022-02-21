@@ -6,20 +6,24 @@ import {
   IDOMRenderer,
   IDomRenderFinished,
   IDOMRendererFinishedInput,
+  ElementGeneratorRoot,
 } from '.';
 import { ServerAPIGeneralSchema } from '../api/schema';
-import { ApplizeCSS } from '../style';
-import { renderCSS } from '../style/render';
 
 export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   implements IApplizeDOM<K, ExposeType>
 {
-  constructor(public element: K, public expose: ExposeType) {}
+  constructor(
+    public element: K,
+    public expose: ExposeType,
+    public root: ElementGeneratorRoot
+  ) {}
 
   static generate<K extends HTMLTags, U>(
+    root: ElementGeneratorRoot,
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ) {
-    return new IApplizeDOMClient(document.createElement(args[0]), null);
+    return new IApplizeDOMClient(document.createElement(args[0]), null, root);
   }
 
   in<NewExpose>(
@@ -27,7 +31,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   ): IApplizeDOMClient<K, NewExpose> {
     return this.setExpose(
       inner((...args) => {
-        const dom = IApplizeDOMClient.generate(...args);
+        const dom = IApplizeDOMClient.generate(this.root, ...args);
         this.element.appendChild(dom.element);
         return dom;
       })
@@ -35,7 +39,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   }
 
   private setExpose<NewExpose>(expose: NewExpose) {
-    return new IApplizeDOMClient<K, NewExpose>(this.element, expose);
+    return new IApplizeDOMClient<K, NewExpose>(this.element, expose, this.root);
   }
 
   //------- Property Editor
@@ -52,11 +56,6 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
 
   empty() {
     this.element.innerHTML = '';
-    return this;
-  }
-
-  style(css: ApplizeCSS) {
-    renderCSS(this.element, css);
     return this;
   }
 
@@ -78,10 +77,17 @@ declare const window: {
   };
 };
 
+interface IComponentStyle {
+  unique: string;
+  style: (selector: string) => string;
+}
+
 export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   implements IDOMRenderer<APISchema>
 {
-  styleElement: HTMLStyleElement | null;
+  private styleElement: HTMLStyleElement | null;
+  private styleUnique: number;
+  private styleComponenets: IComponentStyle[];
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     private applizeRoot: string,
@@ -89,6 +95,8 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     private onFinish: (finished: IDomRenderFinished) => void
   ) {
     this.styleElement = null;
+    this.styleUnique = -1;
+    this.styleComponenets = [];
   }
   finish(finished: IDOMRendererFinishedInput) {
     this.onFinish({
@@ -104,12 +112,15 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
       window.__applize.pageMove(pathname, targetElement);
     }
   }
-  style(selector: string, ...style: string[]) {
+  private appendStyle(data: string) {
     if (this.styleElement === null) {
       this.styleElement = document.createElement('style');
       document.head.appendChild(this.styleElement);
     }
-    this.styleElement.sheet?.insertRule(
+    this.styleElement.sheet?.insertRule(data);
+  }
+  style(selector: string, ...style: string[]) {
+    this.appendStyle(
       `.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`
     );
   }
@@ -146,7 +157,34 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ) {
-    const dom = IApplizeDOMClient.generate(...args);
+    const dom = IApplizeDOMClient.generate(
+      {
+        styleDefine: (v: { [key: string]: string[] }) => {
+          const style = (unique: string) =>
+            Object.entries(v)
+              .map(
+                ([key, value]) =>
+                  `${key.replace(/&/g, unique)}{${value.join(';')}}`
+              )
+              .join('');
+          const component = this.styleComponenets.find(
+            v => v.style('&') === style('&')
+          );
+          if (component) {
+            return component.unique;
+          } else {
+            const unique = `component-${++this.styleUnique}`;
+            this.styleComponenets.push({
+              unique,
+              style,
+            });
+            this.appendStyle(style(`.style-page-${this.pageUnique} ${unique}`));
+            return unique;
+          }
+        },
+      },
+      ...args
+    );
     this.targetElement.appendChild(dom.element);
     return dom;
   }

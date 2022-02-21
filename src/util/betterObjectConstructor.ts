@@ -3,5 +3,8 @@ export declare interface BetterObjectConstructor extends ObjectConstructor {
     entries: Iterable<readonly [U, T]>
   ): { [P in U]: T };
 
-  entries<T extends string, U>(object: { [P in T]?: U }): [T, U][];
+  entries<T extends string | number | symbol, U>(object: { [P in T]?: U }): [
+    T,
+    U
+  ][];
 }

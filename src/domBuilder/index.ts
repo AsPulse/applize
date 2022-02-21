@@ -1,5 +1,4 @@
 import { ServerAPIGeneralSchema } from '../api/schema';
-import { ApplizeCSS } from '../style';
 
 export type HTMLTags = keyof HTMLElementTagNameMap;
 
@@ -14,6 +13,7 @@ export type ElementGenerator = <NewK extends HTMLTags>(
 export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   element: K;
   expose: ExposeType;
+  root: ElementGeneratorRoot;
 
   in<NewExpose>(
     inner: (elementGenerator: ElementGenerator) => NewExpose
@@ -31,8 +31,6 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   classAdd(...name: string[]): IApplizeDOM<K, ExposeType>;
 
   classRemove(...name: string[]): IApplizeDOM<K, ExposeType>;
-
-  style(css: ApplizeCSS): IApplizeDOM<K, ExposeType>;
 }
 
 export interface IDomRenderFinished {
@@ -60,4 +58,8 @@ export interface IDOMRenderer<APISchema extends ServerAPIGeneralSchema> {
   ): Promise<APISchema[CallingAPIName]['output']>;
   style(selector: string, ...style: string[]): void;
   pageMove(pathname: string, targetElement?: HTMLElement): void;
+}
+
+export interface ElementGeneratorRoot {
+  styleDefine: (style: { [key: string]: string[] }) => string;
 }

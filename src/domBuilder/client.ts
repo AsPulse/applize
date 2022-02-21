@@ -178,7 +178,9 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
               unique,
               style,
             });
-            this.appendStyle(style(`.style-page-${this.pageUnique} ${unique}`));
+            this.appendStyle(
+              style(`.style-page-${this.pageUnique} .${unique}`)
+            );
             return unique;
           }
         },

@@ -77,10 +77,18 @@ declare const window: {
   };
 };
 
+
+interface IComponentStyle {
+  unique: string;
+  style: (selector: string) => string;
+}
+
 export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   implements IDOMRenderer<APISchema>
 {
   styleElement: HTMLStyleElement | null;
+  styleUnique: number;
+  styleComponenets: IComponentStyle[];
   constructor(
     public targetElement: HTMLElement | DocumentFragment,
     private applizeRoot: string,
@@ -88,6 +96,8 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     private onFinish: (finished: IDomRenderFinished) => void
   ) {
     this.styleElement = null;
+    this.styleUnique = -1;
+    this.styleComponenets = [];
   }
   finish(finished: IDOMRendererFinishedInput) {
     this.onFinish({
@@ -103,12 +113,17 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
       window.__applize.pageMove(pathname, targetElement);
     }
   }
-  style(selector: string, ...style: string[]) {
+  private appendStyle(data: string) {
     if (this.styleElement === null) {
       this.styleElement = document.createElement('style');
       document.head.appendChild(this.styleElement);
     }
     this.styleElement.sheet?.insertRule(
+      data
+    );
+  }
+  style(selector: string, ...style: string[]) {
+    this.appendStyle(
       `.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`
     );
   }
@@ -147,8 +162,23 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   ) {
     const dom = IApplizeDOMClient.generate(
       {
-        styleDefine: v => {
-          return '';
+        styleDefine: (v: { [key: string]: string[] }) => {
+          const style = (unique: string) =>
+            Object.entries(v).map(([key, value]) =>
+              `${key.replace(/&/g, unique)}{${value.join(';')}}`
+            ).join('');
+          const component = this.styleComponenets.find(v => v.style('&') === style('&'));
+          if ( component ) {
+            return component.unique;
+          } else {
+            const unique = `component-${++this.styleUnique}`;
+            this.styleComponenets.push({
+              unique,
+              style
+            });
+            this.appendStyle(style(`.style-page-${this.pageUnique} ${unique}`))
+            return unique;
+          }
         },
       },
       ...args

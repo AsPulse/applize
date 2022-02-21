@@ -77,7 +77,6 @@ declare const window: {
   };
 };
 
-
 interface IComponentStyle {
   unique: string;
   style: (selector: string) => string;
@@ -118,9 +117,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
       this.styleElement = document.createElement('style');
       document.head.appendChild(this.styleElement);
     }
-    this.styleElement.sheet?.insertRule(
-      data
-    );
+    this.styleElement.sheet?.insertRule(data);
   }
   style(selector: string, ...style: string[]) {
     this.appendStyle(
@@ -164,19 +161,24 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
       {
         styleDefine: (v: { [key: string]: string[] }) => {
           const style = (unique: string) =>
-            Object.entries(v).map(([key, value]) =>
-              `${key.replace(/&/g, unique)}{${value.join(';')}}`
-            ).join('');
-          const component = this.styleComponenets.find(v => v.style('&') === style('&'));
-          if ( component ) {
+            Object.entries(v)
+              .map(
+                ([key, value]) =>
+                  `${key.replace(/&/g, unique)}{${value.join(';')}}`
+              )
+              .join('');
+          const component = this.styleComponenets.find(
+            v => v.style('&') === style('&')
+          );
+          if (component) {
             return component.unique;
           } else {
             const unique = `component-${++this.styleUnique}`;
             this.styleComponenets.push({
               unique,
-              style
+              style,
             });
-            this.appendStyle(style(`.style-page-${this.pageUnique} ${unique}`))
+            this.appendStyle(style(`.style-page-${this.pageUnique} ${unique}`));
             return unique;
           }
         },

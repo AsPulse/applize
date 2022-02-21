@@ -6,18 +6,24 @@ import {
   IDOMRenderer,
   IDomRenderFinished,
   IDOMRendererFinishedInput,
+  ElementGeneratorRoot,
 } from '.';
 import { ServerAPIGeneralSchema } from '../api/schema';
 
 export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   implements IApplizeDOM<K, ExposeType>
 {
-  constructor(public element: K, public expose: ExposeType) {}
+  constructor(
+    public element: K,
+    public expose: ExposeType,
+    public root: ElementGeneratorRoot
+  ) {}
 
   static generate<K extends HTMLTags, U>(
+    root: ElementGeneratorRoot,
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ) {
-    return new IApplizeDOMClient(document.createElement(args[0]), null);
+    return new IApplizeDOMClient(document.createElement(args[0]), null, root);
   }
 
   in<NewExpose>(
@@ -25,7 +31,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   ): IApplizeDOMClient<K, NewExpose> {
     return this.setExpose(
       inner((...args) => {
-        const dom = IApplizeDOMClient.generate(...args);
+        const dom = IApplizeDOMClient.generate(this.root, ...args);
         this.element.appendChild(dom.element);
         return dom;
       })
@@ -33,7 +39,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   }
 
   private setExpose<NewExpose>(expose: NewExpose) {
-    return new IApplizeDOMClient<K, NewExpose>(this.element, expose);
+    return new IApplizeDOMClient<K, NewExpose>(this.element, expose, this.root);
   }
 
   //------- Property Editor
@@ -139,7 +145,14 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ) {
-    const dom = IApplizeDOMClient.generate(...args);
+    const dom = IApplizeDOMClient.generate(
+      {
+        styleDefine: v => {
+          return '';
+        },
+      },
+      ...args
+    );
     this.targetElement.appendChild(dom.element);
     return dom;
   }

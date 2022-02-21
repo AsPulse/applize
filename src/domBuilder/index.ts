@@ -13,6 +13,7 @@ export type ElementGenerator = <NewK extends HTMLTags>(
 export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   element: K;
   expose: ExposeType;
+  root: ElementGeneratorRoot;
 
   in<NewExpose>(
     inner: (elementGenerator: ElementGenerator) => NewExpose
@@ -57,4 +58,8 @@ export interface IDOMRenderer<APISchema extends ServerAPIGeneralSchema> {
   ): Promise<APISchema[CallingAPIName]['output']>;
   style(selector: string, ...style: string[]): void;
   pageMove(pathname: string, targetElement?: HTMLElement): void;
+}
+
+export interface ElementGeneratorRoot {
+  styleDefine: (style: { [key: string]: string[] }) => string;
 }

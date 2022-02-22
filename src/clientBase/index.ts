@@ -56,6 +56,11 @@ export function ClientInitialize(applizeRoot: string) {
         if (!renderedTarget) return;
 
         const cloned = renderedTarget.cloneNode(false);
+        if (cloned instanceof HTMLElement) {
+          [...cloned.classList]
+            .filter(v => /^style-page-([0-9]+)$/.test(v))
+            .map(v => cloned.classList.remove(v));
+        }
         const fragment = document.createDocumentFragment();
 
         const pageScript = document.createElement('script');

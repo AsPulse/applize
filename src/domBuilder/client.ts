@@ -87,7 +87,7 @@ declare const window: {
 
 interface IComponentStyle {
   unique: string;
-  style: (selector: string) => string;
+  style: (selector: string) => string[];
 }
 
 export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
@@ -120,17 +120,18 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
       window.__applize.pageMove(pathname, targetElement);
     }
   }
-  private appendStyle(data: string) {
+  private appendStyle(data: string[]) {
     if (this.styleElement === null) {
       this.styleElement = document.createElement('style');
       document.head.appendChild(this.styleElement);
     }
-    this.styleElement.sheet?.insertRule(data);
+    const se = this.styleElement;
+    data.forEach(v => se.sheet?.insertRule(v));
   }
   style(selector: string, ...style: string[]) {
-    this.appendStyle(
-      `.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`
-    );
+    this.appendStyle([
+      `.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`,
+    ]);
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,
@@ -169,14 +170,12 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
       {
         styleDefine: (v: { [key: string]: string[] }) => {
           const style = (unique: string) =>
-            Object.entries(v)
-              .map(
-                ([key, value]) =>
-                  `${key.replace(/&/g, unique)}{${value.join(';')}}`
-              )
-              .join('');
+            Object.entries(v).map(
+              ([key, value]) =>
+                `${key.replace(/&/g, unique)}{${value.join(';')}}`
+            );
           const component = this.styleComponenets.find(
-            v => v.style('&') === style('&')
+            v => v.style('&').join('') === style('&').join('')
           );
           if (component) {
             return component.unique;

@@ -30,10 +30,13 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
     inner: (elementGenerator: ElementGenerator) => NewExpose
   ): IApplizeDOMClient<K, NewExpose> {
     return this.setExpose(
-      inner((...args) => {
+      inner(<NewK extends HTMLTags>(...args: Parameters<ElementGeneratorGeneric<NewK, null>> | []): ReturnType<ElementGeneratorGeneric<NewK, null>> & ElementGeneratorRoot => {
+        if ( args.length === 0 ) {
+          return this.root as never;
+        }
         const dom = IApplizeDOMClient.generate(this.root, ...args);
         this.element.appendChild(dom.element);
-        return dom;
+        return dom as never;
       })
     );
   }

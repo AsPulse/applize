@@ -6,9 +6,12 @@ export type ElementGeneratorGeneric<K extends HTMLTags, U> = (
   tag: K
 ) => IApplizeDOM<HTMLElementTagNameMap[K], U>;
 
-export type ElementGenerator = <NewK extends HTMLTags>(
+export type ElementGenerator = {
+  <NewK extends HTMLTags>(
   ...args: Parameters<ElementGeneratorGeneric<NewK, null>>
-) => ReturnType<ElementGeneratorGeneric<NewK, null>>;
+  ): ReturnType<ElementGeneratorGeneric<NewK, null>>;
+  (): ElementGeneratorRoot
+};
 
 export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   element: K;

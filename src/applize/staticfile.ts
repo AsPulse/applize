@@ -5,9 +5,9 @@ import { brotliCompress, gzip } from 'zlib';
 interface IStaticFile {
   path: string;
   data: {
-    original: Buffer,
-    brotli: Buffer,
-    gzip: Buffer,
+    original: Buffer;
+    brotli: Buffer;
+    gzip: Buffer;
   };
   hash: string;
 }
@@ -23,7 +23,7 @@ export class StaticFileManager {
     const data = {
       original,
       brotli: await brotliCompressAsync(original),
-      gzip: await gzipCompressAsync(original)
+      gzip: await gzipCompressAsync(original),
     };
 
     const hash = createHash('sha256').update(data.original).digest('hex');

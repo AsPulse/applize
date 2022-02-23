@@ -132,7 +132,10 @@ export async function endWithStaticFile(
 ): Promise<void> {
   const etag = req.headers['if-none-match'];
   const acceptEncodingRaw = req.headers['accept-encoding'];
-  const acceptEncoding = typeof acceptEncodingRaw === 'string' ? acceptEncodingRaw.split(',').map(v => v.trim()) : [];
+  const acceptEncoding =
+    typeof acceptEncodingRaw === 'string'
+      ? acceptEncodingRaw.split(',').map(v => v.trim())
+      : [];
   const file = await sfm.readFile(path);
   const cached = etag === file.hash;
   if (cached) {
@@ -142,7 +145,7 @@ export async function endWithStaticFile(
     });
     res.end();
   } else {
-    if ( acceptEncoding.includes('br') ) {
+    if (acceptEncoding.includes('br')) {
       res.writeHead(cached ? 304 : returnCode, {
         'Content-Type': contentType,
         'Content-Encoding': 'br',
@@ -151,7 +154,7 @@ export async function endWithStaticFile(
       res.end(file.data.brotli);
       return;
     }
-    if ( acceptEncoding.includes('gzip') ) {
+    if (acceptEncoding.includes('gzip')) {
       res.writeHead(cached ? 304 : returnCode, {
         'Content-Type': contentType,
         'Content-Encoding': 'gzip',

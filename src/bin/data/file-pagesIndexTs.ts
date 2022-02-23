@@ -3,5 +3,6 @@ import { APISchema } from "../src/apiSchema";
 
 export const index = new ApplizePage<APISchema>(adb => {
     adb.build('h1').text('Hello World!');
+    adb.finish({ title: 'Hello World!' });
 });
 `;

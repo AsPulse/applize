@@ -1,8 +1,5 @@
 # Hello Applize
-私が考えたさいつよのWebアプリケーション用パッケージ。
+Applizeは、Web開発に必要なHTML, CSS, JavaScriptを**全てTypeScriptで記述することができる**フレームワークです。
 
-My idea of a package for SAITUYO web applications.  
-(*SAITUYO means "most excellent" in Japanese.)
-
-**注意: 開発途中です、ろくに使えません!!**  
-**Note: This is a work in progress, it is not usable!**
+## チュートリアル ( Web開発者の方々へ )
+[このリンク](docs/tutorial/index.md)からチュートリアルへ進めます。

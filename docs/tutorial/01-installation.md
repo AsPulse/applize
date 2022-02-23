@@ -44,7 +44,8 @@ node dist/index.js
 現時点では、起動時のログが何も表示されません( [#147](https://github.com/AsPulse/applize/issues/147) )が、エラーがなければ正常に起動できています。  
 http://localhost:8080/ にアクセスしてみましょう。
 
-![image](https://user-images.githubusercontent.com/84216737/155281135-7d903df3-0e34-4fe2-bd01-eca96270e142.png)
+![image](https://user-images.githubusercontent.com/84216737/155284091-d34fb432-1c70-4f31-9f8d-ca2f7ae87a1f.png)
+
 
 このようなページが立ち上がればOK！
 

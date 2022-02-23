@@ -131,15 +131,42 @@ export async function endWithStaticFile(
   sfm: StaticFileManager
 ): Promise<void> {
   const etag = req.headers['if-none-match'];
+  const acceptEncodingRaw = req.headers['accept-encoding'];
+  const acceptEncoding =
+    typeof acceptEncodingRaw === 'string'
+      ? acceptEncodingRaw.split(',').map(v => v.trim())
+      : [];
   const file = await sfm.readFile(path);
   const cached = etag === file.hash;
-  res.writeHead(cached ? 304 : returnCode, {
-    'Content-Type': contentType,
-    ETag: file.hash,
-  });
   if (cached) {
+    res.writeHead(cached ? 304 : returnCode, {
+      'Content-Type': contentType,
+      ETag: file.hash,
+    });
     res.end();
   } else {
-    res.end(file.data);
+    if (acceptEncoding.includes('br')) {
+      res.writeHead(cached ? 304 : returnCode, {
+        'Content-Type': contentType,
+        'Content-Encoding': 'br',
+        ETag: file.hash,
+      });
+      res.end(file.data.brotli);
+      return;
+    }
+    if (acceptEncoding.includes('gzip')) {
+      res.writeHead(cached ? 304 : returnCode, {
+        'Content-Type': contentType,
+        'Content-Encoding': 'gzip',
+        ETag: file.hash,
+      });
+      res.end(file.data.gzip);
+      return;
+    }
+    res.writeHead(cached ? 304 : returnCode, {
+      'Content-Type': contentType,
+      ETag: file.hash,
+    });
+    res.end(file.data.original);
   }
 }

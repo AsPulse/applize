@@ -13,37 +13,57 @@ export interface IApplizeOptions {
   distRoot: string;
 }
 
-export class Applize<APIType extends ServerAPIGeneralSchema, PluginType extends Record<string, unknown> = Record<string, never>> {
+export class Applize<
+  APIType extends ServerAPIGeneralSchema,
+  PluginType extends Record<string, unknown> = Record<string, never>
+> {
   private routes: PageRoute[] = [];
   private apiImplementation: {
     name: string;
-    executor: (input: JSONStyle, plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>) => Promise<JSONStyle>
+    executor: (
+      input: JSONStyle,
+      plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>
+    ) => Promise<JSONStyle>;
   }[] = [];
   private sfm = new StaticFileManager();
 
   //Plugins-----
-  private plugins: Partial<{ [P in keyof PluginType]: { promise: Promise<PluginType[P]>, resolver: (data: PluginType[P]) => void } }> = {};
-  pluginReady<T extends keyof PluginType>(name: T, func: () => Promise<PluginType[T]>) {
-    if ( !(name in this.plugins) ) {
+  private plugins: Partial<{
+    [P in keyof PluginType]: {
+      promise: Promise<PluginType[P]>;
+      resolver: (data: PluginType[P]) => void;
+    };
+  }> = {};
+  pluginReady<T extends keyof PluginType>(
+    name: T,
+    func: () => Promise<PluginType[T]>
+  ) {
+    if (!(name in this.plugins)) {
       let resolver: (data: PluginType[T]) => void = () => undefined;
-      const promise = new Promise<PluginType[T]>(resolve => resolver = resolve);
+      const promise = new Promise<PluginType[T]>(
+        resolve => (resolver = resolve)
+      );
       this.plugins[name] = {
-        promise, resolver
+        promise,
+        resolver,
       };
     }
     void (async () => {
       this.plugins[name]?.resolver(await func());
     })();
   }
-  private plugin = <T extends keyof PluginType>(name: T): Promise<PluginType[T]> => {
+  private plugin = <T extends keyof PluginType>(
+    name: T
+  ): Promise<PluginType[T]> => {
     const d = this.plugins[name];
-    if ( d !== undefined ) {
-      return d.promise
+    if (d !== undefined) {
+      return d.promise;
     }
     let resolver: (data: PluginType[T]) => void = () => undefined;
-    const promise = new Promise<PluginType[T]>(resolve => resolver = resolve);
+    const promise = new Promise<PluginType[T]>(resolve => (resolver = resolve));
     this.plugins[name] = {
-      promise, resolver
+      promise,
+      resolver,
     };
     return promise;
   };
@@ -53,8 +73,8 @@ export class Applize<APIType extends ServerAPIGeneralSchema, PluginType extends 
       apiImplementation: this.apiImplementation,
       routes: this.routes,
       sfm: this.sfm,
-      plugin: this.plugin
-    }
+      plugin: this.plugin,
+    };
   }
 
   addPageRoute(route: PageRoute | undefined) {
@@ -65,7 +85,8 @@ export class Applize<APIType extends ServerAPIGeneralSchema, PluginType extends 
   implementAPI<ImplementingAPI extends keyof APIType>(
     name: ImplementingAPI,
     executor: (
-      input: APIType[ImplementingAPI]['input'], plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>
+      input: APIType[ImplementingAPI]['input'],
+      plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>
     ) => Promise<APIType[ImplementingAPI]['output']>
   ) {
     this.apiImplementation.push({ name: name.toString(), executor });
@@ -83,12 +104,7 @@ export class Applize<APIType extends ServerAPIGeneralSchema, PluginType extends 
     server.on('request', (req, res) => {
       void (async () => {
         if (!req.url) return;
-        await serve(
-          req,
-          res,
-          renderedOption,
-          this
-        );
+        await serve(req, res, renderedOption, this);
       })();
     });
 

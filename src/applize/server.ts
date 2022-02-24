@@ -5,7 +5,10 @@ import { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
 import { StaticFileManager } from './staticfile';
 import { equalsEndPoint, getParams, urlParse } from './url';
 
-export async function serve<T extends ServerAPIGeneralSchema, U extends Record<string, unknown>>(
+export async function serve<
+  T extends ServerAPIGeneralSchema,
+  U extends Record<string, unknown>
+>(
   req: IncomingMessage,
   res: ServerResponse,
   option: IApplizeOptions,
@@ -17,7 +20,10 @@ export async function serve<T extends ServerAPIGeneralSchema, U extends Record<s
   console.log(`Served! ${finish - start}ms: ${req.url ?? ''}`);
 }
 
-export async function serveExecute<T extends ServerAPIGeneralSchema, U extends Record<string, unknown>>(
+export async function serveExecute<
+  T extends ServerAPIGeneralSchema,
+  U extends Record<string, unknown>
+>(
   req: IncomingMessage,
   res: ServerResponse,
   option: IApplizeOptions,
@@ -40,7 +46,9 @@ export async function serveExecute<T extends ServerAPIGeneralSchema, U extends R
             const input = JSON.parse(data) as unknown;
             const api = getParams(url, ['api']).api;
             if (!api) resolve(true);
-            const impl = instance.privates().apiImplementation.find(v => v.name === api);
+            const impl = instance
+              .privates()
+              .apiImplementation.find(v => v.name === api);
             if (!impl) {
               res.writeHead(501, {
                 'Content-Type': '	application/json',
@@ -52,7 +60,14 @@ export async function serveExecute<T extends ServerAPIGeneralSchema, U extends R
             res.writeHead(200, {
               'Content-Type': '	application/json',
             });
-            res.end(JSON.stringify(await impl.executor(input as JSONStyle, instance.privates().plugin)));
+            res.end(
+              JSON.stringify(
+                await impl.executor(
+                  input as JSONStyle,
+                  instance.privates().plugin
+                )
+              )
+            );
             resolve(true);
             return;
           })();

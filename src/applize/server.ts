@@ -1,38 +1,33 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { resolve } from 'path';
-import { findRoute, IApplizeOptions } from '.';
-import { JSONStyle } from '../api/schema';
-import { PageRoute } from './route';
+import { Applize, findRoute, IApplizeOptions } from '.';
+import { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
 import { StaticFileManager } from './staticfile';
 import { equalsEndPoint, getParams, urlParse } from './url';
 
-export async function serve(
+export async function serve<
+  T extends ServerAPIGeneralSchema,
+  U extends Record<string, unknown>
+>(
   req: IncomingMessage,
   res: ServerResponse,
   option: IApplizeOptions,
-  routes: PageRoute[],
-  apiImplementation: {
-    name: string;
-    executor: (input: JSONStyle) => Promise<JSONStyle>;
-  }[],
-  sfm: StaticFileManager
+  instance: Applize<T, U>
 ) {
   const start = performance.now();
-  await serveExecute(req, res, option, routes, apiImplementation, sfm);
+  await serveExecute(req, res, option, instance);
   const finish = performance.now();
   console.log(`Served! ${finish - start}ms: ${req.url ?? ''}`);
 }
 
-export async function serveExecute(
+export async function serveExecute<
+  T extends ServerAPIGeneralSchema,
+  U extends Record<string, unknown>
+>(
   req: IncomingMessage,
   res: ServerResponse,
   option: IApplizeOptions,
-  routes: PageRoute[],
-  apiImplementation: {
-    name: string;
-    executor: (input: JSONStyle) => Promise<JSONStyle>;
-  }[],
-  sfm: StaticFileManager
+  instance: Applize<T, U>
 ) {
   if (!req.url) return;
   const url = req.url;
@@ -51,7 +46,9 @@ export async function serveExecute(
             const input = JSON.parse(data) as unknown;
             const api = getParams(url, ['api']).api;
             if (!api) resolve(true);
-            const impl = apiImplementation.find(v => v.name === api);
+            const impl = instance
+              .privates()
+              .apiImplementation.find(v => v.name === api);
             if (!impl) {
               res.writeHead(501, {
                 'Content-Type': '	application/json',
@@ -63,7 +60,14 @@ export async function serveExecute(
             res.writeHead(200, {
               'Content-Type': '	application/json',
             });
-            res.end(JSON.stringify(await impl.executor(input as JSONStyle)));
+            res.end(
+              JSON.stringify(
+                await impl.executor(
+                  input as JSONStyle,
+                  instance.privates().plugin
+                )
+              )
+            );
             resolve(true);
             return;
           })();
@@ -90,13 +94,13 @@ export async function serveExecute(
         'text/javascript',
         req,
         res,
-        sfm
+        instance.privates().sfm
       );
       return;
     }
     const route = await findRoute(
-      routes,
-      routes[0],
+      instance.privates().routes,
+      instance.privates().routes[0],
       urlParse(getParams(url, ['page']).page ?? '')
     );
 
@@ -106,7 +110,7 @@ export async function serveExecute(
       'text/javascript',
       req,
       res,
-      sfm
+      instance.privates().sfm
     );
     return;
   }
@@ -117,7 +121,7 @@ export async function serveExecute(
     'text/html',
     req,
     res,
-    sfm
+    instance.privates().sfm
   );
   return;
 }

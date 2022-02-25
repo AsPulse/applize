@@ -25,8 +25,8 @@ export class Applize<
       input: JSONStyle,
       plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>,
       cookie: {
-        (key: string): ICookie | null,
-        (data: ISetCookie): void
+        (key: string): ICookie | null;
+        (data: ISetCookie): void;
       }
     ) => Promise<JSONStyle>;
   }[] = [];

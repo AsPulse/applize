@@ -8,7 +8,7 @@ export interface ICookie {
 export interface ISetCookie extends ICookie {
   httpOnly: boolean;
   secure: boolean;
-  sameSite: 'None' | 'Lax' | 'Strict'
+  sameSite: 'None' | 'Lax' | 'Strict';
   maxAge?: second;
   domain?: string;
   path?: string;

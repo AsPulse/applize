@@ -5,6 +5,7 @@ import { serve } from './server';
 import { cwd } from 'process';
 import type { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
 import { StaticFileManager } from './staticfile';
+import { ICookie, ISetCookie } from './cookie';
 
 export interface IApplizeOptions {
   port: number;
@@ -22,7 +23,11 @@ export class Applize<
     name: string;
     executor: (
       input: JSONStyle,
-      plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>
+      plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>,
+      cookie: {
+        (key: string): ICookie | null;
+        (data: ISetCookie): void;
+      }
     ) => Promise<JSONStyle>;
   }[] = [];
   private sfm = new StaticFileManager();

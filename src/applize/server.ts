@@ -2,6 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { resolve } from 'path';
 import { Applize, findRoute, IApplizeOptions } from '.';
 import { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
+import { ICookie, ISetCookie } from './cookie';
 import { StaticFileManager } from './staticfile';
 import { equalsEndPoint, getParams, urlParse } from './url';
 
@@ -57,15 +58,45 @@ export async function serveExecute<
               resolve(true);
               return;
             }
-            res.writeHead(200, {
-              'Content-Type': '	application/json',
-            });
+
+            const setCookie: ISetCookie[] = [];
+            let parsedCookie: ICookie[] | null = null;
+            function cookie(key: string): ICookie | null;
+            function cookie(data: ISetCookie): void;
+            function cookie(data: string | ISetCookie): (ICookie | null) | void{
+              if ( typeof data === 'string' ) {
+                if ( parsedCookie === null ) {
+                  parsedCookie = (req.headers.cookie?.split('; ') ?? []).map(v => v.split('=')).map(v => ({
+                    key: v[0],
+                    value: v[1]
+                  }));
+                }
+                return parsedCookie.find(v => v.key === data) ?? null;
+              } else {
+                setCookie.push(data);
+                return;
+              }
+            };
+            const apiResult = await impl.executor(
+              input as JSONStyle,
+              instance.privates().plugin,
+              cookie
+            );
+            res.writeHead(200, [
+              ['Content-Type', '	application/json'],
+              ...(setCookie.map(v => ['Set-Cookie', [
+                `${v.key}=${v.value}`,
+                ...(v.maxAge ? [`Max-Age=${v.maxAge}`] : []),
+                `SameSite=${v.sameSite}`,
+                ...(v.domain ? [`Domain=${v.domain}`] : []),
+                ...(v.path ? [`Path=${v.path}`] : []),
+                ...(v.httpOnly ? `HttpOnly` : []),
+                ...(v.secure ? `Secure` : []),
+              ].join('; ')]))
+            ]);
             res.end(
               JSON.stringify(
-                await impl.executor(
-                  input as JSONStyle,
-                  instance.privates().plugin
-                )
+                apiResult
               )
             );
             resolve(true);

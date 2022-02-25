@@ -90,8 +90,8 @@ export async function serveExecute<
                 `SameSite=${v.sameSite}`,
                 ...(v.domain ? [`Domain=${v.domain}`] : []),
                 ...(v.path ? [`Path=${v.path}`] : []),
-                ...(v.httpOnly ? `HttpOnly` : []),
-                ...(v.secure ? `Secure` : []),
+                ...(v.httpOnly ? [`HttpOnly`] : []),
+                ...(v.secure ? [`Secure`] : []),
               ].join('; ')]))
             ]);
             res.end(

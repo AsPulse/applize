@@ -5,7 +5,7 @@ import { serve } from './server';
 import { cwd } from 'process';
 import type { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
 import { StaticFileManager } from './staticfile';
-import { ICookie, ISetCookie } from './cokkie';
+import { ICookie, ISetCookie } from './cookie';
 
 export interface IApplizeOptions {
   port: number;

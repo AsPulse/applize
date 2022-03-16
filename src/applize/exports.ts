@@ -1,2 +1,3 @@
 export { Applize } from './';
-export { urlParse, equalsEndPoint, IEndPoint } from './url';
+export { equalsEndPoint, IEndPoint } from './url';
+export { urlParse } from './urlParse';

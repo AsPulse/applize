@@ -1,5 +1,6 @@
 import { timeTest } from '../util/timeTest';
-import { equalsEndPoint, getParams, urlParse } from './url';
+import { equalsEndPoint, getParams } from './url';
+import { urlParse } from './urlParse';
 
 describe('urlParser', () => {
   it('without-parameters', () => {

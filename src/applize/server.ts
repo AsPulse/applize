@@ -4,7 +4,8 @@ import { Applize, findRoute, IApplizeOptions } from '.';
 import { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
 import { ICookie, ISetCookie } from './cookie';
 import { StaticFileManager } from './staticfile';
-import { equalsEndPoint, getParams, urlParse } from './url';
+import { equalsEndPoint, getParams } from './url';
+import { urlParse } from './urlParse';
 
 export async function serve<
   T extends ServerAPIGeneralSchema,

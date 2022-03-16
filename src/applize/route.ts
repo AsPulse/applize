@@ -1,7 +1,8 @@
 import { ServerAPIGeneralSchema } from '../api/schema';
 import { ApplizePage } from '../page/index';
 import { ApplizePageWithFile } from '../page/index';
-import { equalsEndPoint, IEndPoint, urlParse } from './url';
+import { equalsEndPoint, IEndPoint } from './url';
+import { urlParse } from './urlParse';
 
 export type TApplizeRouter = (url: IEndPoint) => Promise<boolean>;
 

@@ -31,7 +31,9 @@ export class PageRoute {
   }
 
   variableUrlRoute(url: string) {
-    return this.route(v => Promise.resolve(equalsEndPoint(v, urlParse(url), true)));
+    return this.route(v =>
+      Promise.resolve(equalsEndPoint(v, urlParse(url), true))
+    );
   }
 
   code(code: number) {

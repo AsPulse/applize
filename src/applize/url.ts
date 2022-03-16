@@ -13,7 +13,7 @@ export function urlParse(url: string): IEndPoint {
   return { url: cutEnd.split('/') };
 }
 
-export function equalsEndPoint(a: IEndPoint, b: IEndPoint): boolean {
+export function equalsEndPoint(a: IEndPoint, b: IEndPoint, variable = false): boolean {
   if (a.url.length !== b.url.length) return false;
   for (let i = 0; i < a.url.length; i++) {
     if (a.url[i] !== b.url[i]) return false;

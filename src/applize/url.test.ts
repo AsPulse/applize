@@ -20,6 +20,44 @@ describe('urlParser', () => {
   });
 });
 
+describe('equalsVariableEndPoint', () => {
+  it('true', () => {
+    expect(equalsEndPoint(urlParse('/a'), urlParse('a'), true)).toBe(true);
+    expect(equalsEndPoint(urlParse('a'), urlParse('a'), true)).toBe(true);
+    expect(equalsEndPoint(urlParse('/a/'), urlParse('a/'), true)).toBe(true);
+    expect(equalsEndPoint(urlParse('/a/'), urlParse('/a/'), true)).toBe(true);
+    expect(equalsEndPoint(urlParse('/a/b'), urlParse('a/b'), true)).toBe(true);
+    expect(equalsEndPoint(urlParse('/a/b'), urlParse('a/b/'), true)).toBe(true);
+    expect(
+      equalsEndPoint(urlParse('/a/b?params=none&some=equal'), urlParse('a/b/'))
+    ).toBe(true);
+  });
+  it('variableTrue', () => {
+    expect(equalsEndPoint(urlParse('/profile/:userId'), urlParse('/profile/358267a'))).toBe(true);
+    expect(equalsEndPoint(urlParse('/profile/:userId/:authUser'), urlParse('/profile/358267a/5'))).toBe(true);
+    expect(equalsEndPoint(urlParse('/profile/:userId/:authUser'), urlParse('/profile/358267a/5/'))).toBe(true);
+    expect(equalsEndPoint(urlParse('/photos/:userId/number/:photoId'), urlParse('/photos/8ak/number/556'))).toBe(true);
+    expect(equalsEndPoint(urlParse('/photos/:userId/number/:photoId'), urlParse('/photos/8ak/number/556'))).toBe(true);
+    expect(equalsEndPoint(urlParse('/:dataId'), urlParse('/559'))).toBe(true);
+  });
+  it('false', () => {
+    expect(equalsEndPoint(urlParse('/a'), urlParse('b'), true)).toBe(false);
+    expect(equalsEndPoint(urlParse('/a'), urlParse('a/b'), true)).toBe(false);
+    expect(equalsEndPoint(urlParse('a'), urlParse('/b'), true)).toBe(false);
+    expect(equalsEndPoint(urlParse('/normal'), urlParse('/dashboard'), true)).toBe(
+      false
+    );
+  });
+  it('variableFalse', () => {
+    expect(equalsEndPoint(urlParse('/profile/:userId'), urlParse('/profile/358267a/test'))).toBe(false);
+    expect(equalsEndPoint(urlParse('/profile/:userId'), urlParse('/358267a'))).toBe(false);
+    expect(equalsEndPoint(urlParse('/profile/:userId/:authUser'), urlParse('/358267a/5'))).toBe(false);
+    expect(equalsEndPoint(urlParse('/photos/:userId/number/:photoId'), urlParse('/photos/number/556'))).toBe(false);
+    expect(equalsEndPoint(urlParse('/photos/:userId/number/:photoId'), urlParse('/photos/8ak/556'))).toBe(false);
+    expect(equalsEndPoint(urlParse('/:dataId'), urlParse('/dataId/559'))).toBe(false);
+  });
+});
+
 describe('equalsEndPoint', () => {
   it('true', () => {
     expect(equalsEndPoint(urlParse('/a'), urlParse('a'))).toBe(true);

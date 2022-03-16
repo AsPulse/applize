@@ -33,9 +33,9 @@ export function ClientInitialize(applizeRoot: string) {
       const targetFile = `${applizeRoot}?page=${pathname}`
       const progress = progressOriginal?.cloneNode();
       const progressUseable = progress !== undefined && progress instanceof HTMLElement
-      if (progressUseable) progressOriginal?.after(progress);
-      if (progressUseable) progress.style.width = '0%';
-      if (progressUseable) progress.style.opacity = '1';
+      if (progressUseable){ progressOriginal?.after(progress);
+      progress.style.width = '0%';
+      progress.style.opacity = '1';}
       const xhr = new XMLHttpRequest();
       xhr.open('GET', targetFile);
       xhr.send();
@@ -45,15 +45,11 @@ export function ClientInitialize(applizeRoot: string) {
         }
       });
       xhr.addEventListener('load', () => {
-        if (progressUseable) progress.style.width = '100%';
+        if (progressUseable) {progress.style.width = '100%';
 
-        setTimeout(() => {
-          if (progressUseable) progress.style.opacity = '0';
-        }, 300);
-        setTimeout(() => {
-          if (progressUseable) progress.remove();
-        }, 800);
-
+        setTimeout(() => progress.style.opacity = '0', 300);
+        setTimeout(() => progress.remove(), 800);
+      }
         const renderedTarget =
           targetElement === 'root' ? content() : targetElement;
         if (!renderedTarget) return;

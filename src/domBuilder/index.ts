@@ -55,6 +55,8 @@ export interface IDOMRenderer<APISchema extends ServerAPIGeneralSchema> {
     newAPISchema extends ServerAPIGeneralSchema
   >(): IDOMRenderer<newAPISchema>;
 
+  url(): string[];
+
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,
     input: APISchema[CallingAPIName]['input']

@@ -1,7 +1,8 @@
 import { ServerAPIGeneralSchema } from '../api/schema';
 import { ApplizePage } from '../page/index';
 import { ApplizePageWithFile } from '../page/index';
-import { equalsEndPoint, IEndPoint, urlParse } from './url';
+import { equalsEndPoint, IEndPoint } from './url';
+import { urlParse } from './urlParse';
 
 export type TApplizeRouter = (url: IEndPoint) => Promise<boolean>;
 
@@ -27,7 +28,13 @@ export class PageRoute {
   }
 
   urlRoute(url: string) {
-    return this.route(v => Promise.resolve(equalsEndPoint(v, urlParse(url))));
+    return this.route(v => Promise.resolve(equalsEndPoint(urlParse(url), v)));
+  }
+
+  variableUrlRoute(url: string) {
+    return this.route(v =>
+      Promise.resolve(equalsEndPoint(urlParse(url), v, true))
+    );
   }
 
   code(code: number) {

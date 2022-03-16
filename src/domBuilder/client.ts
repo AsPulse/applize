@@ -9,6 +9,7 @@ import {
   ElementGeneratorRoot,
 } from '.';
 import { ServerAPIGeneralSchema } from '../api/schema';
+import { urlParse } from '../applize/urlParse';
 
 export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   implements IApplizeDOM<K, ExposeType>
@@ -132,6 +133,9 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     this.appendStyle([
       `.style-page-${this.pageUnique} ${selector}{${style.join(';')}}`,
     ]);
+  }
+  url(): string[] {
+    return urlParse(location.pathname).url.reverse();
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,

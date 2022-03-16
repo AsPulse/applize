@@ -28,12 +28,12 @@ export class PageRoute {
   }
 
   urlRoute(url: string) {
-    return this.route(v => Promise.resolve(equalsEndPoint(v, urlParse(url))));
+    return this.route(v => Promise.resolve(equalsEndPoint(urlParse(url), v)));
   }
 
   variableUrlRoute(url: string) {
     return this.route(v =>
-      Promise.resolve(equalsEndPoint(v, urlParse(url), true))
+      Promise.resolve(equalsEndPoint(urlParse(url), v, true))
     );
   }
 

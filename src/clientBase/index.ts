@@ -21,7 +21,7 @@ let pageLoadings: IPageLoading[] = [];
 let pageUnique = -1;
 export function ClientInitialize(applizeRoot: string) {
   const content = () => document.getElementById('applize_content');
-  const progress = document.getElementById('applize_spa_progress');
+  const progressOriginal = document.getElementById('applize_spa_progress');
   if (content()) {
     window.__applize = {};
 
@@ -30,25 +30,28 @@ export function ClientInitialize(applizeRoot: string) {
       targetElement: HTMLElement | 'root' = 'root',
       stateStyle: 'none' | 'replace' | 'push' = 'push'
     ) => {
-      const targetFile = `${applizeRoot}?page=${pathname}`;
-      if (progress) progress.style.width = '0%';
-      if (progress) progress.style.opacity = '1';
+      const targetFile = `${applizeRoot}?page=${pathname}`
+      const progress = progressOriginal?.cloneNode();
+      const progressUseable = progress !== undefined && progress instanceof HTMLElement
+      if (progressUseable) progressOriginal?.after(progress);
+      if (progressUseable) progress.style.width = '0%';
+      if (progressUseable) progress.style.opacity = '1';
       const xhr = new XMLHttpRequest();
       xhr.open('GET', targetFile);
       xhr.send();
       xhr.addEventListener('progress', e => {
         if (e.lengthComputable) {
-          if (progress) progress.style.width = `${(e.loaded / e.total) * 100}%`;
+          if (progressUseable) progress.style.width = `${(e.loaded / e.total) * 100}%`;
         }
       });
       xhr.addEventListener('load', () => {
-        if (progress) progress.style.width = '100%';
+        if (progressUseable) progress.style.width = '100%';
 
         setTimeout(() => {
-          if (progress) progress.style.opacity = '0';
+          if (progressUseable) progress.style.opacity = '0';
         }, 300);
         setTimeout(() => {
-          if (progress) progress.style.width = '0%';
+          if (progressUseable) progress.remove();
         }, 800);
 
         const renderedTarget =

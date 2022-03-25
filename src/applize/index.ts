@@ -91,7 +91,11 @@ export class Applize<
     name: ImplementingAPI,
     executor: (
       input: APIType[ImplementingAPI]['input'],
-      plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>
+      plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>,
+      cookie: {
+        (key: string): ICookie | null;
+        (data: ISetCookie): void;
+      }
     ) => Promise<APIType[ImplementingAPI]['output']>
   ) {
     this.apiImplementation.push({ name: name.toString(), executor });

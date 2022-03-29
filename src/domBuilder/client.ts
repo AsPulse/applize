@@ -98,6 +98,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   private styleUnique: number;
   private styleComponenets: IComponentStyle[];
   constructor(
+    private pathname: string,
     public targetElement: HTMLElement | DocumentFragment,
     private applizeRoot: string,
     private pageUnique: string,
@@ -135,7 +136,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     ]);
   }
   url(): string[] {
-    return urlParse(location.pathname).url.reverse();
+    return urlParse(this.pathname).url.reverse();
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,
@@ -161,6 +162,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
     newAPISchema extends ServerAPIGeneralSchema
   >(): IDOMRenderer<newAPISchema> {
     return new DOMRendererClient<newAPISchema>(
+      this.pathname,
       this.targetElement,
       this.applizeRoot,
       this.pageUnique,

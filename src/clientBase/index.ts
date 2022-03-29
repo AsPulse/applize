@@ -72,6 +72,7 @@ export function ClientInitialize(applizeRoot: string) {
         const pageUniqueTurn = ++pageUnique;
         if (window.__applize)
           window.__applize.render = new DOMRendererClient<Record<never, never>>(
+            pathname,
             fragment,
             applizeRoot,
             `${pageUniqueTurn}`,

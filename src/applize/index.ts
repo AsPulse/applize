@@ -3,7 +3,7 @@ import http from 'http';
 import { IEndPoint } from './url';
 import { serve } from './server';
 import { cwd } from 'process';
-import type { JSONStyle } from '../api/schema';
+import type { APITypesGeneral, JSONStyle } from '../api/schema';
 import { StaticFileManager } from './staticfile';
 import { ICookie, ISetCookie } from './cookie';
 import * as T from 'io-ts';
@@ -16,9 +16,7 @@ export interface IApplizeOptions {
 }
 
 export class Applize<
-  APITypes extends {
-    [key: string]: { input: T.Type<any>; output: T.Type<any> };
-  },
+  APITypes extends APITypesGeneral,
   PluginType extends Record<string, unknown> = Record<string, never>
 > {
   constructor(public apiSchema: APITypes) {}

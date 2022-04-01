@@ -1,7 +1,7 @@
-import type { ServerAPIGeneralSchema } from '../api/schema';
+import type { APITypesGeneral } from '../api/schema';
 import { IDOMRenderer } from '../domBuilder';
 
-export type render<K extends ServerAPIGeneralSchema> = (
+export type render<K extends APITypesGeneral> = (
   adb: IDOMRenderer<K>
 ) => void;
 
@@ -10,7 +10,7 @@ declare const window: {
   __applize?: { render?: IDOMRenderer<Record<never, never>> };
 };
 
-export class ApplizePage<K extends ServerAPIGeneralSchema> {
+export class ApplizePage<K extends APITypesGeneral> {
   fileName: string | null = null;
   constructor(public render: render<K>) {
     const windowA = typeof window === 'object' ? window : undefined;

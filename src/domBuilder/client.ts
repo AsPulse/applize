@@ -8,9 +8,9 @@ import {
   IDOMRendererFinishedInput,
   ElementGeneratorRoot,
 } from '.';
-import { ServerAPIGeneralSchema } from '../api/schema';
+import { APITypesGeneral } from '../api/schema';
 import { urlParse } from '../applize/urlParse';
-
+import type * as T from 'io-ts';
 export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   implements IApplizeDOM<K, ExposeType>
 {
@@ -91,7 +91,7 @@ interface IComponentStyle {
   style: (selector: string) => string[];
 }
 
-export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
+export class DOMRendererClient<APISchema extends APITypesGeneral>
   implements IDOMRenderer<APISchema>
 {
   private styleElement: HTMLStyleElement | null;
@@ -140,8 +140,8 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,
-    input: APISchema[CallingAPIName]['input']
-  ): Promise<APISchema[CallingAPIName]['output']> {
+    input: T.TypeOf<APISchema[CallingAPIName]['input']>
+  ): Promise<T.TypeOf<APISchema[CallingAPIName]['output']>> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', `${this.applizeRoot}?api=${name.toString()}`);
@@ -159,7 +159,7 @@ export class DOMRendererClient<APISchema extends ServerAPIGeneralSchema>
   }
 
   clone<
-    newAPISchema extends ServerAPIGeneralSchema
+    newAPISchema extends APITypesGeneral
   >(): IDOMRenderer<newAPISchema> {
     return new DOMRendererClient<newAPISchema>(
       this.pathname,

@@ -1,14 +1,14 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { resolve } from 'path';
 import { Applize, findRoute, IApplizeOptions } from '.';
-import { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
+import { APITypesGeneral, JSONStyle } from '../api/schema';
 import { ICookie, ISetCookie } from './cookie';
 import { StaticFileManager } from './staticfile';
 import { equalsEndPoint, getParams } from './url';
 import { urlParse } from './urlParse';
 
 export async function serve<
-  T extends ServerAPIGeneralSchema,
+  T extends APITypesGeneral,
   U extends Record<string, unknown>
 >(
   req: IncomingMessage,
@@ -23,7 +23,7 @@ export async function serve<
 }
 
 export async function serveExecute<
-  T extends ServerAPIGeneralSchema,
+  T extends APITypesGeneral,
   U extends Record<string, unknown>
 >(
   req: IncomingMessage,

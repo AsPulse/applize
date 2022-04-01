@@ -1,14 +1,6 @@
+import * as T from 'io-ts';
+
 type JSONSerializable = string | number | null | boolean | JSONSerializable[];
 export type JSONStyle = {
   [key: string]: JSONSerializable | JSONStyle | JSONStyle[];
 };
-
-export interface IAPISchema {
-  input: JSONStyle;
-  output: JSONStyle;
-}
-
-export type ServerAPIGeneralSchema = {
-  [key: string]: { input: JSONStyle; output: JSONStyle };
-};
-export type ServerAPISchema<T extends ServerAPIGeneralSchema> = T;

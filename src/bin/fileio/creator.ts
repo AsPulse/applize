@@ -1,10 +1,8 @@
 import { cwd } from 'process';
 import { mkdir, unlink, writeFile } from 'fs/promises';
 import { dirname, resolve } from 'path';
-import {
-  FileSystemError,
-  FileSystemErrorSerialize,
-} from '../../util/error/fileSystemError';
+import type { FileSystemError } from '../../util/error/fileSystemError';
+import { FileSystemErrorSerialize } from '../../util/error/fileSystemError';
 import { colors, decorate, say } from '../../util/console/consoleCommunicater';
 
 //上書きするかの確認を取るラムダ関数 ( trueを返すと上書きする )

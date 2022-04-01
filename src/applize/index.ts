@@ -1,11 +1,12 @@
-import { PageRoute } from './route';
+import type { PageRoute } from './route';
 import http from 'http';
-import { IEndPoint } from './url';
+import type { IEndPoint } from './url';
 import { serve } from './server';
 import { cwd } from 'process';
-import type { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
+import type { APITypesGeneral, JSONStyle } from '../api/schema';
 import { StaticFileManager } from './staticfile';
-import { ICookie, ISetCookie } from './cookie';
+import type { ICookie, ISetCookie } from './cookie';
+import type * as T from 'io-ts';
 
 export interface IApplizeOptions {
   port: number;
@@ -15,9 +16,10 @@ export interface IApplizeOptions {
 }
 
 export class Applize<
-  APIType extends ServerAPIGeneralSchema,
+  APITypes extends APITypesGeneral,
   PluginType extends Record<string, unknown> = Record<string, never>
 > {
+  constructor(public apiSchema: APITypes) {}
   private routes: PageRoute[] = [];
   private apiImplementation: {
     name: string;
@@ -87,16 +89,16 @@ export class Applize<
     this.routes.push(route);
   }
 
-  implementAPI<ImplementingAPI extends keyof APIType>(
+  implementAPI<ImplementingAPI extends keyof APITypes>(
     name: ImplementingAPI,
     executor: (
-      input: APIType[ImplementingAPI]['input'],
+      input: T.TypeOf<APITypes[ImplementingAPI]['input']>,
       plugin: <T extends keyof PluginType>(name: T) => Promise<PluginType[T]>,
       cookie: {
         (key: string): ICookie | null;
         (data: ISetCookie): void;
       }
-    ) => Promise<APIType[ImplementingAPI]['output']>
+    ) => Promise<T.TypeOf<APITypes[ImplementingAPI]['output']>>
   ) {
     this.apiImplementation.push({ name: name.toString(), executor });
   }

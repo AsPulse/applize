@@ -1,4 +1,5 @@
-import { ServerAPIGeneralSchema } from '../api/schema';
+import type { APITypesGeneral } from '../api/schema';
+import type * as T from 'io-ts';
 
 export type HTMLTags = keyof HTMLElementTagNameMap;
 
@@ -45,22 +46,20 @@ export type IDOMRendererFinishedInput = Partial<
 > &
   Omit<IDomRenderFinished, 'onLeave'>;
 
-export interface IDOMRenderer<APISchema extends ServerAPIGeneralSchema> {
+export interface IDOMRenderer<APISchema extends APITypesGeneral> {
   targetElement: HTMLElement | DocumentFragment;
   finish: (finished: IDOMRendererFinishedInput) => void;
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
-  clone<
-    newAPISchema extends ServerAPIGeneralSchema
-  >(): IDOMRenderer<newAPISchema>;
+  clone<newAPISchema extends APITypesGeneral>(): IDOMRenderer<newAPISchema>;
 
   url(): string[];
 
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,
-    input: APISchema[CallingAPIName]['input']
-  ): Promise<APISchema[CallingAPIName]['output']>;
+    input: T.TypeOf<APISchema[CallingAPIName]['input']>
+  ): Promise<T.TypeOf<APISchema[CallingAPIName]['output']>>;
   style(selector: string, ...style: string[]): void;
   pageMove(pathname: string, targetElement?: HTMLElement): void;
 }

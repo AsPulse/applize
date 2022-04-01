@@ -9,7 +9,7 @@ import {
   writeFile,
 } from 'fs/promises';
 import { extname, join, resolve } from 'path';
-import { ApplizeBuilder } from '.';
+import type { ApplizeBuilder } from '.';
 import { say } from '../util/console/consoleCommunicater';
 import { FileSystemErrorSerialize } from '../util/error/fileSystemError';
 
@@ -138,7 +138,7 @@ export function ApplizeProjectMakeUp(
       bundle: true,
       sourcemap: true,
       platform: 'node',
-      external: ['estrella', ...(options.additionExternals ?? [])],
+      external: ['estrella', 'fp-ts', ...(options.additionExternals ?? [])],
     });
     await copyResclusive(
       resolve(options.distDirectory, 'pages', 'tmp'),

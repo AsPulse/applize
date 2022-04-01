@@ -1,14 +1,11 @@
+import type * as T from 'io-ts';
+
 type JSONSerializable = string | number | null | boolean | JSONSerializable[];
 export type JSONStyle = {
   [key: string]: JSONSerializable | JSONStyle | JSONStyle[];
 };
 
-export interface IAPISchema {
-  input: JSONStyle;
-  output: JSONStyle;
-}
-
-export type ServerAPIGeneralSchema = {
-  [key: string]: { input: JSONStyle; output: JSONStyle };
+export type APITypesGeneral = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: { input: T.Type<any>; output: T.Type<any> };
 };
-export type ServerAPISchema<T extends ServerAPIGeneralSchema> = T;

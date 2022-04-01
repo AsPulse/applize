@@ -1,14 +1,16 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import type { IncomingMessage, ServerResponse } from 'http';
 import { resolve } from 'path';
-import { Applize, findRoute, IApplizeOptions } from '.';
-import { JSONStyle, ServerAPIGeneralSchema } from '../api/schema';
-import { ICookie, ISetCookie } from './cookie';
-import { StaticFileManager } from './staticfile';
+import type { Applize, IApplizeOptions } from '.';
+import { findRoute } from '.';
+import type { APITypesGeneral, JSONStyle } from '../api/schema';
+import type { ICookie, ISetCookie } from './cookie';
+import type { StaticFileManager } from './staticfile';
 import { equalsEndPoint, getParams } from './url';
 import { urlParse } from './urlParse';
+import type * as T from 'io-ts';
 
 export async function serve<
-  T extends ServerAPIGeneralSchema,
+  T extends APITypesGeneral,
   U extends Record<string, unknown>
 >(
   req: IncomingMessage,
@@ -21,9 +23,23 @@ export async function serve<
   const finish = performance.now();
   console.log(`Served! ${finish - start}ms: ${req.url ?? ''}`);
 }
-
+function JSONParse<A, B, C>(
+  data: string,
+  type: T.Type<A, B, C>
+): unknown | null {
+  try {
+    const object: unknown = JSON.parse(data);
+    if (type.is(object)) {
+      return object;
+    } else {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+}
 export async function serveExecute<
-  T extends ServerAPIGeneralSchema,
+  T extends APITypesGeneral,
   U extends Record<string, unknown>
 >(
   req: IncomingMessage,
@@ -44,14 +60,15 @@ export async function serveExecute<
         })
         .on('end', () => {
           void (async () => {
-            //TODO: type check need!
-            const input = JSON.parse(data) as unknown;
             const api = getParams(url, ['api']).api;
             if (!api) resolve(true);
             const impl = instance
               .privates()
               .apiImplementation.find(v => v.name === api);
-            if (!impl) {
+            const type = Object.entries(instance.apiSchema).find(
+              v => v[0] === api
+            );
+            if (!impl || !type) {
               res.writeHead(501, {
                 'Content-Type': '	application/json',
               });
@@ -59,7 +76,15 @@ export async function serveExecute<
               resolve(true);
               return;
             }
-
+            const input = JSONParse(data, type[1].input);
+            if (input === null) {
+              res.writeHead(400, {
+                'Content-Type': '	application/json',
+              });
+              res.end();
+              resolve(true);
+              return;
+            }
             const setCookie: ISetCookie[] = [];
             let parsedCookie: ICookie[] | null = null;
             function cookie(key: string): ICookie | null;

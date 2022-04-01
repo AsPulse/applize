@@ -158,9 +158,7 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
     });
   }
 
-  clone<
-    newAPISchema extends APITypesGeneral
-  >(): IDOMRenderer<newAPISchema> {
+  clone<newAPISchema extends APITypesGeneral>(): IDOMRenderer<newAPISchema> {
     return new DOMRendererClient<newAPISchema>(
       this.pathname,
       this.targetElement,

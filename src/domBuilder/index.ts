@@ -52,9 +52,7 @@ export interface IDOMRenderer<APISchema extends APITypesGeneral> {
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
-  clone<
-    newAPISchema extends APITypesGeneral
-  >(): IDOMRenderer<newAPISchema>;
+  clone<newAPISchema extends APITypesGeneral>(): IDOMRenderer<newAPISchema>;
 
   url(): string[];
 

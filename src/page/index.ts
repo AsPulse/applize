@@ -1,9 +1,7 @@
 import type { APITypesGeneral } from '../api/schema';
 import { IDOMRenderer } from '../domBuilder';
 
-export type render<K extends APITypesGeneral> = (
-  adb: IDOMRenderer<K>
-) => void;
+export type render<K extends APITypesGeneral> = (adb: IDOMRenderer<K>) => void;
 
 declare const global: { fileName?: string };
 declare const window: {

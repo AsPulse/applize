@@ -5,7 +5,7 @@ import { exit } from 'process';
 export function applizeWatch(
   directory: string,
   target: string,
-  builder: string
+  builder: string,
 ) {
   const watcher = watch(directory, {
     persistent: true,

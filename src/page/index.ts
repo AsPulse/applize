@@ -1,5 +1,5 @@
 import type { APITypesGeneral } from '../api/schema';
-import { IDOMRenderer } from '../domBuilder';
+import type { IDOMRenderer } from '../domBuilder';
 
 export type render<K extends APITypesGeneral> = (adb: IDOMRenderer<K>) => void;
 

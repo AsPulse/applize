@@ -1,4 +1,4 @@
-import * as T from 'io-ts';
+import type * as T from 'io-ts';
 
 type JSONSerializable = string | number | null | boolean | JSONSerializable[];
 export type JSONStyle = {

@@ -1,4 +1,4 @@
-import {
+import type {
   IApplizeDOM,
   HTMLTags,
   ElementGeneratorGeneric,
@@ -8,7 +8,7 @@ import {
   IDOMRendererFinishedInput,
   ElementGeneratorRoot,
 } from '.';
-import { APITypesGeneral } from '../api/schema';
+import type { APITypesGeneral } from '../api/schema';
 import { urlParse } from '../applize/urlParse';
 import type * as T from 'io-ts';
 export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
@@ -17,7 +17,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   constructor(
     public element: K,
     public expose: ExposeType,
-    public root: ElementGeneratorRoot
+    public root: ElementGeneratorRoot,
   ) {}
 
   static generate<K extends HTMLTags, U>(
@@ -28,7 +28,7 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
   }
 
   in<NewExpose>(
-    inner: (elementGenerator: ElementGenerator) => NewExpose
+    inner: (elementGenerator: ElementGenerator) => NewExpose,
   ): IApplizeDOMClient<K, NewExpose> {
     return this.setExpose(
       inner(
@@ -42,8 +42,8 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
           const dom = IApplizeDOMClient.generate(this.root, ...args);
           this.element.appendChild(dom.element);
           return dom as never;
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -102,7 +102,7 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
     public targetElement: HTMLElement | DocumentFragment,
     private applizeRoot: string,
     private pageUnique: string,
-    private onFinish: (finished: IDomRenderFinished) => void
+    private onFinish: (finished: IDomRenderFinished) => void,
   ) {
     this.styleElement = null;
     this.styleUnique = -1;
@@ -140,7 +140,7 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
   }
   api<CallingAPIName extends keyof APISchema>(
     name: CallingAPIName,
-    input: T.TypeOf<APISchema[CallingAPIName]['input']>
+    input: T.TypeOf<APISchema[CallingAPIName]['input']>,
   ): Promise<T.TypeOf<APISchema[CallingAPIName]['output']>> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -149,7 +149,7 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
       xhr.onload = () => {
         if (xhr.status == 200 || xhr.status == 304) {
           resolve(
-            JSON.parse(xhr.responseText) as APISchema[CallingAPIName]['output']
+            JSON.parse(xhr.responseText) as APISchema[CallingAPIName]['output'],
           );
         } else {
           reject(xhr.status);
@@ -164,7 +164,7 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
       this.targetElement,
       this.applizeRoot,
       this.pageUnique,
-      this.onFinish
+      this.onFinish,
     );
   }
   build<K extends HTMLTags, U>(
@@ -176,10 +176,10 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
           const style = (unique: string) =>
             Object.entries(v).map(
               ([key, value]) =>
-                `${key.replace(/&/g, unique)}{${value.join(';')}}`
+                `${key.replace(/&/g, unique)}{${value.join(';')}}`,
             );
           const component = this.styleComponenets.find(
-            v => v.style('&').join('') === style('&').join('')
+            v => v.style('&').join('') === style('&').join(''),
           );
           if (component) {
             return component.unique;
@@ -190,13 +190,13 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
               style,
             });
             this.appendStyle(
-              style(`.style-page-${this.pageUnique} .${unique}`)
+              style(`.style-page-${this.pageUnique} .${unique}`),
             );
             return unique;
           }
         },
       },
-      ...args
+      ...args,
     );
     this.targetElement.appendChild(dom.element);
     return dom;

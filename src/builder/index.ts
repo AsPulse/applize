@@ -34,8 +34,8 @@ export class ApplizeBuilder {
         ],
         4,
         1,
-        decorate(colors.white, colors.pink, true)
-      )
+        decorate(colors.white, colors.pink, true),
+      ),
     );
     say();
     const success = await this.phases
@@ -52,14 +52,14 @@ export class ApplizeBuilder {
           ' ',
           decorate(colors.pink, undefined, true),
           ' ',
-          v.name
+          v.name,
         );
         const result = await v.execute();
         say(
           decorate(result ? colors.gray : colors.pink, undefined, !result),
           `( ${result ? 'Done' : 'Failed'} in `,
           `${new Date().getTime() - start}ms`,
-          ' )'
+          ' )',
         );
         say();
         return result;
@@ -67,7 +67,7 @@ export class ApplizeBuilder {
       .reduce(
         (a, b) => () =>
           a().then(async v => (v ? await b() : Promise.resolve(false))),
-        () => Promise.resolve(true)
+        () => Promise.resolve(true),
       )();
     if (success) {
       say(
@@ -76,7 +76,7 @@ export class ApplizeBuilder {
         decorate(),
         ' ',
         'Total time: ',
-        `${new Date().getTime() - phaseStart}ms`
+        `${new Date().getTime() - phaseStart}ms`,
       );
     } else {
       say(
@@ -85,7 +85,7 @@ export class ApplizeBuilder {
         decorate(),
         ' ',
         'Total time: ',
-        `${new Date().getTime() - phaseStart}ms`
+        `${new Date().getTime() - phaseStart}ms`,
       );
     }
   }

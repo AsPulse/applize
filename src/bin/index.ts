@@ -29,8 +29,8 @@ say(
     ],
     3,
     1,
-    decorate(colors.white, colors.pink, true)
-  )
+    decorate(colors.white, colors.pink, true),
+  ),
 );
 say();
 
@@ -38,7 +38,7 @@ void (async () => {
   say('Your current-directory: ', cwd());
   const root = await input(
     ['Root directory ( default is current-directory ): '],
-    () => Promise.resolve(true)
+    () => Promise.resolve(true),
   );
 
   const fc = new FileCreator(
@@ -49,7 +49,7 @@ void (async () => {
         path,
         ' is already exists. Override?',
       ]),
-    root
+    root,
   );
   await fc.createDirectory('./src');
   await fc.createDirectory('./pages');

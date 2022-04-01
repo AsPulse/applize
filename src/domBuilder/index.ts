@@ -1,5 +1,5 @@
-import { APITypesGeneral } from '../api/schema';
-import * as T from 'io-ts';
+import type { APITypesGeneral } from '../api/schema';
+import type * as T from 'io-ts';
 
 export type HTMLTags = keyof HTMLElementTagNameMap;
 

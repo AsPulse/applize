@@ -1,9 +1,10 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import type { IncomingMessage, ServerResponse } from 'http';
 import { resolve } from 'path';
-import { Applize, findRoute, IApplizeOptions } from '.';
-import { APITypesGeneral, JSONStyle } from '../api/schema';
-import { ICookie, ISetCookie } from './cookie';
-import { StaticFileManager } from './staticfile';
+import type { Applize, IApplizeOptions } from '.';
+import { findRoute } from '.';
+import type { APITypesGeneral, JSONStyle } from '../api/schema';
+import type { ICookie, ISetCookie } from './cookie';
+import type { StaticFileManager } from './staticfile';
 import { equalsEndPoint, getParams } from './url';
 import { urlParse } from './urlParse';
 
@@ -14,7 +15,7 @@ export async function serve<
   req: IncomingMessage,
   res: ServerResponse,
   option: IApplizeOptions,
-  instance: Applize<T, U>
+  instance: Applize<T, U>,
 ) {
   const start = performance.now();
   await serveExecute(req, res, option, instance);
@@ -29,7 +30,7 @@ export async function serveExecute<
   req: IncomingMessage,
   res: ServerResponse,
   option: IApplizeOptions,
-  instance: Applize<T, U>
+  instance: Applize<T, U>,
 ) {
   if (!req.url) return;
   const url = req.url;
@@ -65,7 +66,7 @@ export async function serveExecute<
             function cookie(key: string): ICookie | null;
             function cookie(data: ISetCookie): void;
             function cookie(
-              data: string | ISetCookie
+              data: string | ISetCookie,
             ): (ICookie | null) | void {
               if (typeof data === 'string') {
                 if (parsedCookie === null) {
@@ -85,7 +86,7 @@ export async function serveExecute<
             const apiResult = await impl.executor(
               input as JSONStyle,
               instance.privates().plugin,
-              cookie
+              cookie,
             );
             res.writeHead(200, [
               ['Content-Type', '	application/json'],
@@ -129,14 +130,14 @@ export async function serveExecute<
         'text/javascript',
         req,
         res,
-        instance.privates().sfm
+        instance.privates().sfm,
       );
       return;
     }
     const route = await findRoute(
       instance.privates().routes,
       instance.privates().routes[0],
-      urlParse(getParams(url, ['page']).page ?? '')
+      urlParse(getParams(url, ['page']).page ?? ''),
     );
 
     await endWithStaticFile(
@@ -145,7 +146,7 @@ export async function serveExecute<
       'text/javascript',
       req,
       res,
-      instance.privates().sfm
+      instance.privates().sfm,
     );
     return;
   }
@@ -156,7 +157,7 @@ export async function serveExecute<
     'text/html',
     req,
     res,
-    instance.privates().sfm
+    instance.privates().sfm,
   );
   return;
 }
@@ -167,7 +168,7 @@ export async function endWithStaticFile(
   contentType: string,
   req: IncomingMessage,
   res: ServerResponse,
-  sfm: StaticFileManager
+  sfm: StaticFileManager,
 ): Promise<void> {
   const etag = req.headers['if-none-match'];
   const acceptEncodingRaw = req.headers['accept-encoding'];

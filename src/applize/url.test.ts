@@ -30,7 +30,7 @@ describe('equalsVariableEndPoint', () => {
     expect(equalsEndPoint(urlParse('/a/b'), urlParse('a/b'), true)).toBe(true);
     expect(equalsEndPoint(urlParse('/a/b'), urlParse('a/b/'), true)).toBe(true);
     expect(
-      equalsEndPoint(urlParse('/a/b?params=none&some=equal'), urlParse('a/b/'))
+      equalsEndPoint(urlParse('/a/b?params=none&some=equal'), urlParse('a/b/')),
     ).toBe(true);
   });
   it('variableTrue', () => {
@@ -38,39 +38,39 @@ describe('equalsVariableEndPoint', () => {
       equalsEndPoint(
         urlParse('/profile/:userId'),
         urlParse('/profile/358267a'),
-        true
-      )
+        true,
+      ),
     ).toBe(true);
     expect(
       equalsEndPoint(
         urlParse('/profile/:userId/:authUser'),
         urlParse('/profile/358267a/5'),
-        true
-      )
+        true,
+      ),
     ).toBe(true);
     expect(
       equalsEndPoint(
         urlParse('/profile/:userId/:authUser'),
         urlParse('/profile/358267a/5/'),
-        true
-      )
+        true,
+      ),
     ).toBe(true);
     expect(
       equalsEndPoint(
         urlParse('/photos/:userId/number/:photoId'),
         urlParse('/photos/8ak/number/556'),
-        true
-      )
+        true,
+      ),
     ).toBe(true);
     expect(
       equalsEndPoint(
         urlParse('/photos/:userId/number/:photoId'),
         urlParse('/photos/8ak/number/556'),
-        true
-      )
+        true,
+      ),
     ).toBe(true);
     expect(equalsEndPoint(urlParse('/:dataId'), urlParse('/559'), true)).toBe(
-      true
+      true,
     );
   });
   it('false', () => {
@@ -78,7 +78,7 @@ describe('equalsVariableEndPoint', () => {
     expect(equalsEndPoint(urlParse('/a'), urlParse('a/b'), true)).toBe(false);
     expect(equalsEndPoint(urlParse('a'), urlParse('/b'), true)).toBe(false);
     expect(
-      equalsEndPoint(urlParse('/normal'), urlParse('/dashboard'), true)
+      equalsEndPoint(urlParse('/normal'), urlParse('/dashboard'), true),
     ).toBe(false);
   });
   it('variableFalse', () => {
@@ -86,41 +86,41 @@ describe('equalsVariableEndPoint', () => {
       equalsEndPoint(
         urlParse('/profile/:userId'),
         urlParse('/profile/358267a/test'),
-        true
-      )
+        true,
+      ),
     ).toBe(false);
     expect(
-      equalsEndPoint(urlParse('/profile/:userId'), urlParse('/358267a'), true)
+      equalsEndPoint(urlParse('/profile/:userId'), urlParse('/358267a'), true),
     ).toBe(false);
     expect(
-      equalsEndPoint(urlParse('/profile/:userId'), urlParse('/profile/'), true)
+      equalsEndPoint(urlParse('/profile/:userId'), urlParse('/profile/'), true),
     ).toBe(false);
     expect(
       equalsEndPoint(
         urlParse('/profile/:userId/:authUser'),
         urlParse('/358267a/5'),
-        true
-      )
+        true,
+      ),
     ).toBe(false);
     expect(
       equalsEndPoint(
         urlParse('/photos/:userId/number/:photoId'),
         urlParse('/photos/number/556'),
-        true
-      )
+        true,
+      ),
     ).toBe(false);
     expect(
       equalsEndPoint(
         urlParse('/photos/:userId/number/:photoId'),
         urlParse('/photos/8ak/556'),
-        true
-      )
+        true,
+      ),
     ).toBe(false);
     expect(
-      equalsEndPoint(urlParse('/:dataId'), urlParse('/dataId/559'), true)
+      equalsEndPoint(urlParse('/:dataId'), urlParse('/dataId/559'), true),
     ).toBe(false);
     expect(equalsEndPoint(urlParse('/:dataId'), urlParse('/'), true)).toBe(
-      false
+      false,
     );
   });
 });
@@ -134,7 +134,7 @@ describe('equalsEndPoint', () => {
     expect(equalsEndPoint(urlParse('/a/b'), urlParse('a/b'))).toBe(true);
     expect(equalsEndPoint(urlParse('/a/b'), urlParse('a/b/'))).toBe(true);
     expect(
-      equalsEndPoint(urlParse('/a/b?params=none&some=equal'), urlParse('a/b/'))
+      equalsEndPoint(urlParse('/a/b?params=none&some=equal'), urlParse('a/b/')),
     ).toBe(true);
   });
   it('false', () => {
@@ -142,7 +142,7 @@ describe('equalsEndPoint', () => {
     expect(equalsEndPoint(urlParse('/a'), urlParse('a/b'))).toBe(false);
     expect(equalsEndPoint(urlParse('a'), urlParse('/b'))).toBe(false);
     expect(equalsEndPoint(urlParse('/normal'), urlParse('/dashboard'))).toBe(
-      false
+      false,
     );
   });
 });
@@ -150,7 +150,7 @@ describe('equalsEndPoint', () => {
 describe('getParams', () => {
   it('single parameter', () => {
     expect(
-      getParams('https://example.com/?src=https%3A%2F%2Faaa.com', ['src'])
+      getParams('https://example.com/?src=https%3A%2F%2Faaa.com', ['src']),
     ).toStrictEqual({ src: 'https://aaa.com' });
   });
 });
@@ -159,7 +159,7 @@ describe('urlParseTime', () => {
   expect(
     timeTest('urlParseTime', 500000, () => {
       urlParse('/article/some-test-article');
-    })
+    }),
   ).toBeLessThan(0.001);
 });
 
@@ -168,9 +168,9 @@ describe('urlEqualsTime', () => {
     timeTest('urlEqualsTime', 500000, () => {
       equalsEndPoint(
         { url: ['article', 'some-test-article'] },
-        { url: ['article', 'different-test-article'] }
+        { url: ['article', 'different-test-article'] },
       );
-    })
+    }),
   ).toBeLessThan(0.0001);
 });
 
@@ -178,14 +178,14 @@ describe('getParamsTime', () => {
   expect(
     timeTest('getParamsTime', 200000, () => {
       getParams('https://example.com/?src=https%3A%2F%2Faaa.com', ['src']);
-    })
+    }),
   ).toBeLessThan(0.01);
   expect(
     timeTest('getParamsURITime', 200000, () => {
       //expect(new URLSearchParams(new URL('https://example.com/?src=https%3A%2F%2Faaa.com').search).get('src')).toBe('https://aaa.com');
       new URLSearchParams(
-        new URL('https://example.com/?src=https%3A%2F%2Faaa.com').search
+        new URL('https://example.com/?src=https%3A%2F%2Faaa.com').search,
       ).get('src');
-    })
+    }),
   ).toBeLessThan(0.1);
 });

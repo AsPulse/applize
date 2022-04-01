@@ -1,7 +1,8 @@
-import { APITypesGeneral } from '../api/schema';
-import { ApplizePage } from '../page/index';
+import type { APITypesGeneral } from '../api/schema';
+import type { ApplizePage } from '../page/index';
 import { ApplizePageWithFile } from '../page/index';
-import { equalsEndPoint, IEndPoint } from './url';
+import type { IEndPoint } from './url';
+import { equalsEndPoint } from './url';
 import { urlParse } from './urlParse';
 
 export type TApplizeRouter = (url: IEndPoint) => Promise<boolean>;
@@ -13,7 +14,7 @@ export class PageRoute {
   private constructor(public page: ApplizePageWithFile) {}
 
   static fromPage<K extends APITypesGeneral>(
-    page: ApplizePage<K>
+    page: ApplizePage<K>,
   ): PageRoute | undefined {
     if (!page.fileName) {
       //TODO: warning about no filename
@@ -33,7 +34,7 @@ export class PageRoute {
 
   variableUrlRoute(url: string) {
     return this.route(v =>
-      Promise.resolve(equalsEndPoint(urlParse(url), v, true))
+      Promise.resolve(equalsEndPoint(urlParse(url), v, true)),
     );
   }
 

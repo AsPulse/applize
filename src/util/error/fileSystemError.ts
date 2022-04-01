@@ -10,7 +10,7 @@ interface ISerializableError {
 }
 
 const isErrorSerializable = (
-  errorObject: unknown
+  errorObject: unknown,
 ): errorObject is ISerializableError => {
   const error = errorObject as ISerializableError;
   if (!('errno' in error)) return false;
@@ -44,14 +44,14 @@ export class FileSystemError {
   }
 }
 export function FileSystemErrorSerialize(
-  errorObject: unknown
+  errorObject: unknown,
 ): FileSystemError {
   if (isErrorSerializable(errorObject)) {
     return new FileSystemError(
       errorObject.code,
       errorObject.errno,
       errorObject.syscall,
-      errorObject.path
+      errorObject.path,
     );
   } else {
     return new FileSystemError('');

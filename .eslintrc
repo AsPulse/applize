@@ -17,6 +17,13 @@
     "prettier"
   ],
   "rules": {
-    "quotes": ["error", "single", { "avoidEscape": false, "allowTemplateLiterals": true }]
+    "quotes": ["error", "single", { "avoidEscape": false, "allowTemplateLiterals": true }],
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports"
+      }
+    ],
+    "comma-dangle": ["error", "always-multiline"]
   }
 }

@@ -23,10 +23,13 @@ export async function serve<
   const finish = performance.now();
   console.log(`Served! ${finish - start}ms: ${req.url ?? ''}`);
 }
-function JSONParse<A, B, C>(data: string, type: T.Type<A, B, C>): unknown | null {
+function JSONParse<A, B, C>(
+  data: string,
+  type: T.Type<A, B, C>
+): unknown | null {
   try {
     const object: unknown = JSON.parse(data);
-    if(type.is(object)) {
+    if (type.is(object)) {
       return object;
     } else {
       return null;
@@ -62,7 +65,9 @@ export async function serveExecute<
             const impl = instance
               .privates()
               .apiImplementation.find(v => v.name === api);
-            const type = Object.entries(instance.apiSchema).find(v => v[0] === api)
+            const type = Object.entries(instance.apiSchema).find(
+              v => v[0] === api
+            );
             if (!impl || !type) {
               res.writeHead(501, {
                 'Content-Type': '	application/json',
@@ -72,7 +77,7 @@ export async function serveExecute<
               return;
             }
             const input = JSONParse(data, type[1].input);
-            if ( input === null ) {
+            if (input === null) {
               res.writeHead(400, {
                 'Content-Type': '	application/json',
               });

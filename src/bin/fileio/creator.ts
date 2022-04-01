@@ -1,11 +1,8 @@
 import { cwd } from 'process';
 import { mkdir, unlink, writeFile } from 'fs/promises';
 import { dirname, resolve } from 'path';
-import type {
-  FileSystemError} from '../../util/error/fileSystemError';
-import {
-  FileSystemErrorSerialize,
-} from '../../util/error/fileSystemError';
+import type { FileSystemError } from '../../util/error/fileSystemError';
+import { FileSystemErrorSerialize } from '../../util/error/fileSystemError';
 import { colors, decorate, say } from '../../util/console/consoleCommunicater';
 
 //上書きするかの確認を取るラムダ関数 ( trueを返すと上書きする )
@@ -26,7 +23,7 @@ export class FileCreator {
   async createFile(
     path: string,
     content = '',
-    triedMakedir = false,
+    triedMakedir = false
   ): Promise<boolean> {
     // flag: wx ... 既にパスが存在すれば失敗する
     try {
@@ -46,7 +43,7 @@ export class FileCreator {
           decorate(colors.white, colors.pink, true),
           ' FATAL ',
           decorate(),
-          ' Unknown problem with file writing...',
+          ' Unknown problem with file writing...'
         );
         say('   ', path);
         return false;
@@ -73,7 +70,7 @@ export class FileCreator {
             decorate(colors.white, colors.pink, true),
             ' FATAL ',
             decorate(),
-            ' Unknown problem with file writing...',
+            ' Unknown problem with file writing...'
           );
           console.log(err);
           return false;
@@ -91,7 +88,7 @@ export class FileCreator {
           decorate(colors.white, colors.pink, true),
           ' ERROR ',
           decorate(),
-          ' Directory cannot be created',
+          ' Directory cannot be created'
         );
         return false;
       });

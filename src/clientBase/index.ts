@@ -28,7 +28,7 @@ export function ClientInitialize(applizeRoot: string) {
     window.__applize.pageMove = (
       pathname: string,
       targetElement: HTMLElement | 'root' = 'root',
-      stateStyle: 'none' | 'replace' | 'push' = 'push',
+      stateStyle: 'none' | 'replace' | 'push' = 'push'
     ) => {
       const targetFile = `${applizeRoot}?page=${pathname}`;
       const progress = progressOriginal?.cloneNode();
@@ -102,7 +102,7 @@ export function ClientInitialize(applizeRoot: string) {
                 targetElement: cloned,
                 onLeave: finish.onLeave,
               });
-            },
+            }
           );
         pageScript.src = targetFile;
         document.head.appendChild(pageScript);

@@ -23,7 +23,6 @@
       {
         "prefer": "type-imports"
       }
-    ],
-    "comma-dangle": ["error", "always-multiline"]
+    ]
   }
 }

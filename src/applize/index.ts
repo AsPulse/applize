@@ -43,12 +43,12 @@ export class Applize<
   }> = {};
   pluginReady<T extends keyof PluginType>(
     name: T,
-    func: () => Promise<PluginType[T]>,
+    func: () => Promise<PluginType[T]>
   ) {
     if (!(name in this.plugins)) {
       let resolver: (data: PluginType[T]) => void = () => undefined;
       const promise = new Promise<PluginType[T]>(
-        resolve => (resolver = resolve),
+        resolve => (resolver = resolve)
       );
       this.plugins[name] = {
         promise,
@@ -60,7 +60,7 @@ export class Applize<
     })();
   }
   private plugin = <T extends keyof PluginType>(
-    name: T,
+    name: T
   ): Promise<PluginType[T]> => {
     const d = this.plugins[name];
     if (d !== undefined) {
@@ -98,7 +98,7 @@ export class Applize<
         (key: string): ICookie | null;
         (data: ISetCookie): void;
       }
-    ) => Promise<T.TypeOf<APITypes[ImplementingAPI]['output']>>,
+    ) => Promise<T.TypeOf<APITypes[ImplementingAPI]['output']>>
   ) {
     this.apiImplementation.push({ name: name.toString(), executor });
   }
@@ -126,14 +126,14 @@ export class Applize<
 export async function findRoute(
   routes: PageRoute[],
   defaultValue: PageRoute,
-  ep: IEndPoint,
+  ep: IEndPoint
 ): Promise<PageRoute> {
   const routeDetectors = routes.map(async v => ({
     pageRoute: v,
     isExpected: await Promise.any(
       v.routers.map(async e =>
-        (await e(ep)) ? Promise.resolve(true) : Promise.reject(false),
-      ),
+        (await e(ep)) ? Promise.resolve(true) : Promise.reject(false)
+      )
     ).catch(() => false),
   }));
   try {
@@ -143,8 +143,8 @@ export async function findRoute(
           await v_1
         ).isExpected
           ? Promise.resolve((await v_1).pageRoute)
-          : Promise.reject(),
-      ),
+          : Promise.reject()
+      )
     );
   } catch {
     return defaultValue;

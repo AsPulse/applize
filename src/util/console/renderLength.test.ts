@@ -29,7 +29,7 @@ describe('renderLength', () => {
   it('controlletter', () => {
     expect(renderLength(decorate(colors.white, colors.pink, true))).toBe(0);
     expect(
-      renderLength(decorate(colors.white, colors.pink, true) + 'あいうAbc'),
+      renderLength(decorate(colors.white, colors.pink, true) + 'あいうAbc')
     ).toBe(9);
   });
   it('cross', () => {
@@ -39,8 +39,8 @@ describe('renderLength', () => {
         decorate(colors.pink, undefined, true) +
           symbols.hexagon +
           ' ApplizeBuilder' +
-          decorate(),
-      ),
+          decorate()
+      )
     ).toBe(16);
   });
 });

@@ -14,7 +14,7 @@ export class PageRoute {
   private constructor(public page: ApplizePageWithFile) {}
 
   static fromPage<K extends APITypesGeneral>(
-    page: ApplizePage<K>,
+    page: ApplizePage<K>
   ): PageRoute | undefined {
     if (!page.fileName) {
       //TODO: warning about no filename
@@ -34,7 +34,7 @@ export class PageRoute {
 
   variableUrlRoute(url: string) {
     return this.route(v =>
-      Promise.resolve(equalsEndPoint(urlParse(url), v, true)),
+      Promise.resolve(equalsEndPoint(urlParse(url), v, true))
     );
   }
 

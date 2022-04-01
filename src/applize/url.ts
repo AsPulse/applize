@@ -9,7 +9,7 @@ export interface IEndPoint {
 export function equalsEndPoint(
   a: IEndPoint,
   b: IEndPoint,
-  variable = false,
+  variable = false
 ): boolean {
   if (a.url.length !== b.url.length) return false;
   for (let i = 0; i < a.url.length; i++) {
@@ -21,7 +21,7 @@ export function equalsEndPoint(
 
 export function getParams<U extends string>(
   url: string,
-  paramSchema: U[],
+  paramSchema: U[]
 ): { [P in U]: string | undefined } {
   const splitted = url.split('?');
   if (splitted.length < 2) {
@@ -32,7 +32,7 @@ export function getParams<U extends string>(
     paramSchema.map<[U, string | undefined]>(v => [
       v,
       decodeGetParam(params.find(e => v === e[0])?.at(1)),
-    ]),
+    ])
   );
 }
 

@@ -31,7 +31,7 @@ export interface IApplizeBuildOptions {
 
 export function ApplizeProjectMakeUp(
   builder: ApplizeBuilder,
-  options: IApplizeBuildOptions,
+  options: IApplizeBuildOptions
 ): void {
   builder.addPhaseAsync('Reset Dist Directory', async () => {
     try {
@@ -52,7 +52,7 @@ export function ApplizeProjectMakeUp(
   builder.addPhaseAsync('Build Entry', async () => {
     await copyFile(
       options.entryHTML,
-      resolve(options.distDirectory, 'entry', 'index.html'),
+      resolve(options.distDirectory, 'entry', 'index.html')
     );
     await build({
       entryPoints: [options.entryTS],
@@ -73,7 +73,7 @@ export function ApplizeProjectMakeUp(
       await copyResclusive(
         options.pagesDirectory,
         resolve(options.distDirectory, 'pages', 'tmp'),
-        ['.ts', '.js'],
+        ['.ts', '.js']
       );
       const success = (
         await Promise.all(
@@ -83,12 +83,12 @@ export function ApplizeProjectMakeUp(
               try {
                 const originalPath = resolve(
                   v.path.directory,
-                  v.path.dirent.name,
+                  v.path.dirent.name
                 );
                 const distPath = resolve(
                   options.distDirectory,
                   'pages',
-                  `${v.deployFileName}.js`,
+                  `${v.deployFileName}.js`
                 );
                 const result = await build({
                   entryPoints: [originalPath],
@@ -104,14 +104,14 @@ export function ApplizeProjectMakeUp(
                   originalPath,
                   getFilenameTyper(
                     v.deployFileName,
-                    (await readFile(originalPath)).toString(),
-                  ),
+                    (await readFile(originalPath)).toString()
+                  )
                 );
                 return true;
               } catch (e) {
                 return e;
               }
-            }),
+            })
         )
       ).filter(v => v !== true);
       if (success.length > 0) {
@@ -121,7 +121,7 @@ export function ApplizeProjectMakeUp(
       await copyResclusive(
         resolve(options.distDirectory, 'pages', 'tmp'),
         options.pagesDirectory,
-        ['.ts', '.js'],
+        ['.ts', '.js']
       );
       await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
         recursive: true,
@@ -143,7 +143,7 @@ export function ApplizeProjectMakeUp(
     await copyResclusive(
       resolve(options.distDirectory, 'pages', 'tmp'),
       options.pagesDirectory,
-      ['.ts', '.js'],
+      ['.ts', '.js']
     );
     await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
       recursive: true,
@@ -170,10 +170,10 @@ export function ApplizeProjectMakeUp(
             `${beforeSize}byte -> ${afterSize}byte ${
               Math.round((afterSize / beforeSize) * 1000) / 10
             }%`,
-            ' )',
+            ' )'
           );
           return successPost;
-        }),
+        })
       );
       return success.every(v => v);
     });
@@ -191,7 +191,7 @@ export function ApplizeProjectMakeUp(
         `${beforeSize}byte -> ${afterSize}byte ${
           Math.round((afterSize / beforeSize) * 1000) / 10
         }%`,
-        ' )',
+        ' )'
       );
       return successPost;
     });
@@ -202,7 +202,7 @@ export async function copyResclusive(
   original: string,
   dist: string,
   extensions: string[],
-  extensionExcludes?: string[],
+  extensionExcludes?: string[]
 ) {
   return Promise.all(
     (await getAllFilesInJoin(original, extensions, extensionExcludes)).map(
@@ -210,10 +210,10 @@ export async function copyResclusive(
         await mkdir(resolve(dist, v.directory), { recursive: true });
         return copyFile(
           resolve(v.basePath, v.directory, v.dirent.name),
-          resolve(dist, v.directory, v.dirent.name),
+          resolve(dist, v.directory, v.dirent.name)
         );
-      },
-    ),
+      }
+    )
   );
 }
 
@@ -226,7 +226,7 @@ export function getFilenameTyper(fileName: string, original: string) {
 export async function getAllFilesInJoin(
   path: string,
   extension: string[],
-  extensionsExclude?: string[],
+  extensionsExclude?: string[]
 ) {
   let files = (await readdir(path, { withFileTypes: true })).map(v => ({
     directory: '',
@@ -247,19 +247,19 @@ export async function getAllFilesInJoin(
                 directory: join(v.directory, v.dirent.name),
                 dirent: e,
               }))
-            : [v],
-        ),
+            : [v]
+        )
       )
     ).flat();
   }
   return files
     .filter(v =>
-      extension.length > 0 ? extension.includes(extname(v.dirent.name)) : true,
+      extension.length > 0 ? extension.includes(extname(v.dirent.name)) : true
     )
     .filter(v =>
       extensionsExclude
         ? !extensionsExclude.includes(extname(v.dirent.name))
-        : true,
+        : true
     );
 }
 export async function getAllFilesInDir(path: string, extension: string[]) {

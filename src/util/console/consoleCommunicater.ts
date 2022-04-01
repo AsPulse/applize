@@ -41,7 +41,7 @@ export function decorate(
   foreground?: IRGBColor,
   background?: IRGBColor,
   bold = false,
-  underlined = false,
+  underlined = false
 ): string {
   return (
     resetColor +
@@ -71,7 +71,7 @@ export function filledBySpace(
   content: string[],
   letterMargin: number,
   lineMargin: number,
-  decorator = '',
+  decorator = ''
 ): string {
   const maxLength = content
     .map(v => renderLength(v))
@@ -79,7 +79,7 @@ export function filledBySpace(
   const shareMargin = letterLoop(' ', letterMargin);
   const letterMargined = letterLoop(' ', maxLength + letterMargin * 2);
   const linesMargined = [...new Array<void>(lineMargin)].map(
-    () => decorator + letterMargined + resetColor,
+    () => decorator + letterMargined + resetColor
   );
   return [
     linesMargined,
@@ -91,7 +91,7 @@ export function filledBySpace(
         letterLoop(' ', maxLength - renderLength(v)),
         shareMargin,
         resetColor,
-      ].join(''),
+      ].join('')
     ),
     linesMargined,
   ]
@@ -103,7 +103,7 @@ export function outlined(
   content: string[],
   letterMargin: number,
   lineMargin: number,
-  decorator = '',
+  decorator = ''
 ): string {
   const maxLength = content
     .map(v => renderLength(v))
@@ -122,7 +122,7 @@ export function outlined(
           letterLoop(' ', maxLength - renderLength(v)),
           marginSpace,
           '│',
-        ].join(''),
+        ].join('')
       ),
     `╰` + letterLoop('─', maxLength + letterMargin * 2) + `╯`,
   ]
@@ -133,7 +133,7 @@ export function outlined(
 
 export async function input(
   content: string[],
-  validator: (input: string) => Promise<boolean> = () => Promise.resolve(true),
+  validator: (input: string) => Promise<boolean> = () => Promise.resolve(true)
 ) {
   const reader = createInterface({ input: process.stdin });
   print(...content);
@@ -153,14 +153,14 @@ export async function input(
 export async function confirmInput<UnionType extends string>(
   content: string[],
   selections: UnionType[],
-  showSelections: boolean,
+  showSelections: boolean
 ): Promise<UnionType> {
   return <UnionType>(
     await input(
       [...content, showSelections ? ` (${selections.join('/')})` : '', ': '],
       v => {
         return Promise.resolve((<string[]>selections).includes(v));
-      },
+      }
     )
   );
 }

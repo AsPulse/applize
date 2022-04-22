@@ -141,6 +141,23 @@ export async function serveExecute<
     return;
   }
 
+  const staticRouteLookup = instance
+    .privates()
+    .staticRoutes.find(
+      v => v.routers.find(v => v(urlParse(url))) !== undefined
+    );
+  if (staticRouteLookup !== undefined) {
+    await endWithStaticFile(
+      staticRouteLookup.filePath,
+      staticRouteLookup.returnCode,
+      'text/javascript', //TODO: Content-Type
+      req,
+      res,
+      instance.privates().sfm
+    );
+    return;
+  }
+
   if (equalsEndPoint(ep, { url: ['favicon.ico'] })) {
     res.end();
     return;

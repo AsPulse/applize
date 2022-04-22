@@ -1,4 +1,4 @@
-import type { PageRoute } from './route';
+import type { PageRoute, StaticRoute } from './route';
 import http from 'http';
 import type { IEndPoint } from './url';
 import { serve } from './server';
@@ -21,6 +21,7 @@ export class Applize<
 > {
   constructor(public apiSchema: APITypes) {}
   private routes: PageRoute[] = [];
+  private staticRoutes: StaticRoute[] = [];
   private apiImplementation: {
     name: string;
     executor: (
@@ -79,6 +80,7 @@ export class Applize<
     return {
       apiImplementation: this.apiImplementation,
       routes: this.routes,
+      staticRoutes: this.staticRoutes,
       sfm: this.sfm,
       plugin: this.plugin,
     };
@@ -87,6 +89,11 @@ export class Applize<
   addPageRoute(route: PageRoute | undefined) {
     if (!route) return;
     this.routes.push(route);
+  }
+
+  addStaticRoute(route: StaticRoute | undefined) {
+    if (!route) return;
+    this.staticRoutes.push(route);
   }
 
   implementAPI<ImplementingAPI extends keyof APITypes>(

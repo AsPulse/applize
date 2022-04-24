@@ -150,7 +150,7 @@ export async function serveExecute<
     await endWithStaticFile(
       staticRouteLookup.filePath,
       staticRouteLookup.returnCode,
-      'text/javascript', //TODO: Content-Type
+      staticRouteLookup.contentTypeValue,
       req,
       res,
       instance.privates().sfm

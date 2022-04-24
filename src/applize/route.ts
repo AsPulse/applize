@@ -48,6 +48,7 @@ export class PageRoute {
 export class StaticRoute {
   routers: TApplizeNonPromiseRouter[] = [];
   returnCode = 200;
+  contentTypeValue = 'text/plain';
 
   private constructor(public filePath: string) {}
 
@@ -66,6 +67,11 @@ export class StaticRoute {
 
   variableUrlRoute(url: string) {
     return this.route(v => equalsEndPoint(urlParse(url), v, true));
+  }
+
+  contentType(contentType: string): StaticRoute {
+    this.contentTypeValue = contentType;
+    return this;
   }
 
   code(code: number) {

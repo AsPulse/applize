@@ -20,6 +20,7 @@ export type ApplizePostBuilder = {
 export interface IApplizeBuildOptions {
   serverEntryPoint: string;
   pagesDirectory: string;
+  publicDirectory: string;
   entryHTML: string;
   entryTS: string;
   distDirectory: string;
@@ -195,6 +196,14 @@ export function ApplizeProjectMakeUp(
       );
       return successPost;
     });
+  });
+  builder.addPhaseAsync('Copy Public', async () => {
+    await copyResclusive(
+      options.publicDirectory,
+      resolve(options.distDirectory, 'public'),
+      []
+    );
+    return true;
   });
 }
 

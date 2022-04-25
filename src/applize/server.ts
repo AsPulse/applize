@@ -148,7 +148,7 @@ export async function serveExecute<
     );
   if (staticRouteLookup !== undefined) {
     await endWithStaticFile(
-      staticRouteLookup.filePath,
+      resolve(__dirname, 'public', staticRouteLookup.filePath),
       staticRouteLookup.returnCode,
       staticRouteLookup.contentTypeValue,
       req,

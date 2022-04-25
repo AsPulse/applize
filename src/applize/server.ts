@@ -143,9 +143,7 @@ export async function serveExecute<
 
   const staticRouteLookup = instance
     .privates()
-    .staticRoutes.find(
-      v => v.routers.find(v => v(ep)) !== undefined
-    );
+    .staticRoutes.find(v => v.routers.find(v => v(ep)) !== undefined);
   if (staticRouteLookup !== undefined) {
     await endWithStaticFile(
       resolve(__dirname, 'public', staticRouteLookup.filePath),

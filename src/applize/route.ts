@@ -6,6 +6,7 @@ import { equalsEndPoint } from './url';
 import { urlParse } from './urlParse';
 
 export type TApplizeRouter = (url: IEndPoint) => Promise<boolean>;
+export type TApplizeNonPromiseRouter = (url: IEndPoint) => boolean;
 
 export class PageRoute {
   routers: TApplizeRouter[] = [];
@@ -23,7 +24,7 @@ export class PageRoute {
     return new PageRoute(new ApplizePageWithFile(page.fileName));
   }
 
-  route(router: TApplizeRouter) {
+  private route(router: TApplizeRouter) {
     this.routers.push(router);
     return this;
   }
@@ -36,6 +37,41 @@ export class PageRoute {
     return this.route(v =>
       Promise.resolve(equalsEndPoint(urlParse(url), v, true))
     );
+  }
+
+  code(code: number) {
+    this.returnCode = code;
+    return this;
+  }
+}
+
+export class StaticRoute {
+  routers: TApplizeNonPromiseRouter[] = [];
+  returnCode = 200;
+  contentTypeValue = 'text/plain';
+
+  private constructor(public filePath: string) {}
+
+  static fromFilePath(filePath: string): StaticRoute {
+    return new StaticRoute(filePath);
+  }
+
+  private route(router: TApplizeNonPromiseRouter) {
+    this.routers.push(router);
+    return this;
+  }
+
+  urlRoute(url: string) {
+    return this.route(v => equalsEndPoint(urlParse(url), v));
+  }
+
+  variableUrlRoute(url: string) {
+    return this.route(v => equalsEndPoint(urlParse(url), v, true));
+  }
+
+  contentType(contentType: string): StaticRoute {
+    this.contentTypeValue = contentType;
+    return this;
   }
 
   code(code: number) {

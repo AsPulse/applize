@@ -55,6 +55,7 @@ void (async () => {
   await fc.createDirectory('./pages');
   await fc.createDirectory('./dist');
   await fc.createDirectory('./entry');
+  await fc.createDirectory('./public');
 
   await fc.createFile('./build.js', fileBuildjs);
   await fc.createFile('./src/index.ts', fileIndexts);

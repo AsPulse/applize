@@ -180,6 +180,7 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
       );
       if (component) {
         return component.unique;
+      } else {
         const unique = `component-${++this.styleUnique}`;
         this.styleComponenets.push({
           unique,

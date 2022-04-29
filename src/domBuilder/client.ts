@@ -169,29 +169,26 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
   }
 
   styleDefine = (v: { [key: string]: string[] } | string[]) => {
-      const data = Array.isArray(v) ? { '&': v } : v;
-      const style = (unique: string) =>
-        Object.entries(data).map(
-          ([key, value]) =>
-            `${key.replace(/&/g, unique)}{${value.join(';')}}`
-        );
-      const component = this.styleComponenets.find(
-        v => v.style('&').join('') === style('&').join('')
+    const data = Array.isArray(v) ? { '&': v } : v;
+    const style = (unique: string) =>
+      Object.entries(data).map(
+        ([key, value]) => `${key.replace(/&/g, unique)}{${value.join(';')}}`
       );
-      if (component) {
-        return component.unique;
-      } else {
-        const unique = `component-${++this.styleUnique}`;
-        this.styleComponenets.push({
-          unique,
-          style,
-        });
-        this.appendStyle(
-          style(`.style-page-${this.pageUnique} .${unique}`)
-        );
-        return unique;
-      }
+    const component = this.styleComponenets.find(
+      v => v.style('&').join('') === style('&').join('')
+    );
+    if (component) {
+      return component.unique;
+    } else {
+      const unique = `component-${++this.styleUnique}`;
+      this.styleComponenets.push({
+        unique,
+        style,
+      });
+      this.appendStyle(style(`.style-page-${this.pageUnique} .${unique}`));
+      return unique;
     }
+  };
 
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>

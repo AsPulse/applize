@@ -167,34 +167,37 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
       this.onFinish
     );
   }
+
+  styleDefine = (v: { [key: string]: string[] } | string[]) => {
+      const data = Array.isArray(v) ? { '&': v } : v;
+      const style = (unique: string) =>
+        Object.entries(data).map(
+          ([key, value]) =>
+            `${key.replace(/&/g, unique)}{${value.join(';')}}`
+        );
+      const component = this.styleComponenets.find(
+        v => v.style('&').join('') === style('&').join('')
+      );
+      if (component) {
+        return component.unique;
+        const unique = `component-${++this.styleUnique}`;
+        this.styleComponenets.push({
+          unique,
+          style,
+        });
+        this.appendStyle(
+          style(`.style-page-${this.pageUnique} .${unique}`)
+        );
+        return unique;
+      }
+    }
+
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>
   ) {
     const dom = IApplizeDOMClient.generate(
       {
-        styleDefine: (v: { [key: string]: string[] }) => {
-          const style = (unique: string) =>
-            Object.entries(v).map(
-              ([key, value]) =>
-                `${key.replace(/&/g, unique)}{${value.join(';')}}`
-            );
-          const component = this.styleComponenets.find(
-            v => v.style('&').join('') === style('&').join('')
-          );
-          if (component) {
-            return component.unique;
-          } else {
-            const unique = `component-${++this.styleUnique}`;
-            this.styleComponenets.push({
-              unique,
-              style,
-            });
-            this.appendStyle(
-              style(`.style-page-${this.pageUnique} .${unique}`)
-            );
-            return unique;
-          }
-        },
+        styleDefine: this.styleDefine,
       },
       ...args
     );

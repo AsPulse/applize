@@ -48,6 +48,7 @@ export type IDOMRendererFinishedInput = Partial<
 
 export interface IDOMRenderer<APISchema extends APITypesGeneral> {
   targetElement: HTMLElement | DocumentFragment;
+  styleDefine: (v: { [key: string]: string[] } | string[]) => string;
   finish: (finished: IDOMRendererFinishedInput) => void;
   build<K extends HTMLTags, U>(
     ...args: Parameters<ElementGeneratorGeneric<K, U>>

@@ -66,5 +66,5 @@ export interface IDOMRenderer<APISchema extends APITypesGeneral> {
 }
 
 export interface ElementGeneratorRoot {
-  styleDefine: (style: { [key: string]: string[] }) => string;
+  styleDefine: (style: { [key: string]: string[] } | string[]) => string;
 }

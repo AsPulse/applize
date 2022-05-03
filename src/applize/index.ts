@@ -2,6 +2,7 @@ import type { PageRoute, StaticRoute } from './route';
 import type { IncomingMessage } from 'http';
 import http from 'http';
 import type { IEndPoint } from './url';
+import type { ILog } from './server';
 import { serve } from './server';
 import { cwd } from 'process';
 import type { APITypesGeneral, JSONStyle } from '../api/schema';
@@ -14,6 +15,7 @@ export interface IApplizeOptions {
   trailingSlash: 'RedirectWithSlash' | 'RedirectWithoutSlash' | 'NoChange';
   rootEndPoint: IEndPoint;
   distRoot: string;
+  logger: (data: ILog) => void;
 }
 
 export class Applize<
@@ -120,6 +122,7 @@ export class Applize<
       trailingSlash: options.trailingSlash ?? 'NoChange',
       rootEndPoint: options.rootEndPoint ?? { url: ['applize'] },
       distRoot: options.distRoot ?? cwd(),
+      logger: data => console.log(`${data.url}(${data.time}ms) ${data.code} ${data.remoteAddress} ${data.userAgent}`)
     };
 
     server.on('request', (req, res) => {

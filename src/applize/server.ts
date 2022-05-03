@@ -9,6 +9,14 @@ import { equalsEndPoint, getParams } from './url';
 import { urlParse } from './urlParse';
 import type * as T from 'io-ts';
 
+export interface ILog {
+  url: string;
+  time: number;
+  userAgent: string;
+  remoteAddress: string | undefined;
+  code: number;
+}
+
 export async function serve<
   T extends APITypesGeneral,
   U extends Record<string, unknown>
@@ -19,9 +27,18 @@ export async function serve<
   instance: Applize<T, U>
 ) {
   const start = performance.now();
-  await serveExecute(req, res, option, instance);
+  const serve = await serveExecute(req, res, option, instance);
   const finish = performance.now();
-  console.log(`Served! ${finish - start}ms: ${req.url ?? ''}`);
+  option.logger({
+    url: req.url ?? '',
+    time: finish - start,
+    userAgent: req.headers['user-agent'] ?? 'unknown',
+    remoteAddress:
+      (v => (Array.isArray(v) ? v.join(', ') : v))(
+        req.headers['x-forwarded-for']
+      ) ?? req.socket?.remoteAddress,
+    code: serve.code,
+  });
 }
 function JSONParse<A, B, C>(
   data: string,
@@ -46,12 +63,22 @@ export async function serveExecute<
   res: ServerResponse,
   option: IApplizeOptions,
   instance: Applize<T, U>
-) {
-  if (!req.url) return;
+): Promise<{
+  code: number;
+}> {
+  if (!req.url) throw 'Request didnt have url!';
   const url = req.url;
   const ep = urlParse(url ?? '/');
 
-  const processPost = new Promise(resolve => {
+  const processPost = new Promise<
+    | {
+        processed: true;
+        code: number;
+      }
+    | {
+        processed: false;
+      }
+  >(resolve => {
     if (req.method === 'POST') {
       let data = '';
       req
@@ -61,7 +88,16 @@ export async function serveExecute<
         .on('end', () => {
           void (async () => {
             const api = getParams(url, ['api']).api;
-            if (!api) resolve(true);
+            if (!api) {
+              res.writeHead(404, {
+                'Content-Type': '	application/json',
+              });
+              res.end('404 Not Found');
+              resolve({
+                processed: true,
+                code: 404,
+              });
+            }
             const impl = instance
               .privates()
               .apiImplementation.find(v => v.name === api);
@@ -73,7 +109,10 @@ export async function serveExecute<
                 'Content-Type': '	application/json',
               });
               res.end('{}');
-              resolve(true);
+              resolve({
+                processed: true,
+                code: 501,
+              });
               return;
             }
             const input = JSONParse(data, type[1].input);
@@ -82,7 +121,10 @@ export async function serveExecute<
                 'Content-Type': '	application/json',
               });
               res.end();
-              resolve(true);
+              resolve({
+                processed: true,
+                code: 400,
+              });
               return;
             }
             const setCookie: ISetCookie[] = [];
@@ -110,7 +152,8 @@ export async function serveExecute<
             const apiResult = await impl.executor(
               input as JSONStyle,
               instance.privates().plugin,
-              cookie
+              cookie,
+              req
             );
             res.writeHead(200, [
               ['Content-Type', '	application/json'],
@@ -128,24 +171,32 @@ export async function serveExecute<
               ]),
             ]);
             res.end(JSON.stringify(apiResult));
-            resolve(true);
+            resolve({
+              processed: true,
+              code: 200,
+            });
             return;
           })();
         });
     } else {
-      resolve(false);
+      resolve({
+        processed: false,
+      });
     }
   });
 
-  if (await processPost) {
-    return;
+  const post = await processPost;
+  if (post.processed) {
+    return {
+      code: post.code,
+    };
   }
 
   const staticRouteLookup = instance
     .privates()
     .staticRoutes.find(v => v.routers.find(v => v(ep)) !== undefined);
   if (staticRouteLookup !== undefined) {
-    await endWithStaticFile(
+    const code = await endWithStaticFile(
       resolve(__dirname, 'public', staticRouteLookup.filePath),
       staticRouteLookup.returnCode,
       staticRouteLookup.contentTypeValue,
@@ -153,17 +204,18 @@ export async function serveExecute<
       res,
       instance.privates().sfm
     );
-    return;
+    return { code };
   }
 
   if (equalsEndPoint(ep, { url: ['favicon.ico'] })) {
+    res.writeHead(404);
     res.end();
-    return;
+    return { code: 404 };
   }
 
   if (equalsEndPoint(ep, option.rootEndPoint)) {
     if (getParams(url, ['entry']).entry) {
-      await endWithStaticFile(
+      const code = await endWithStaticFile(
         resolve(__dirname, 'entry', 'index.js'),
         200,
         'text/javascript',
@@ -171,7 +223,7 @@ export async function serveExecute<
         res,
         instance.privates().sfm
       );
-      return;
+      return { code };
     }
     const route = await findRoute(
       instance.privates().routes,
@@ -179,7 +231,7 @@ export async function serveExecute<
       urlParse(getParams(url, ['page']).page ?? '')
     );
 
-    await endWithStaticFile(
+    const code = await endWithStaticFile(
       resolve(__dirname, 'pages', `${route.page.fileName}.js`),
       route.returnCode,
       'text/javascript',
@@ -187,10 +239,10 @@ export async function serveExecute<
       res,
       instance.privates().sfm
     );
-    return;
+    return { code };
   }
 
-  await endWithStaticFile(
+  const code = await endWithStaticFile(
     resolve(__dirname, 'entry', `index.html`),
     200,
     'text/html',
@@ -198,7 +250,7 @@ export async function serveExecute<
     res,
     instance.privates().sfm
   );
-  return;
+  return { code };
 }
 
 export async function endWithStaticFile(
@@ -208,7 +260,7 @@ export async function endWithStaticFile(
   req: IncomingMessage,
   res: ServerResponse,
   sfm: StaticFileManager
-): Promise<void> {
+): Promise<number> {
   const etag = req.headers['if-none-match'];
   const acceptEncodingRaw = req.headers['accept-encoding'];
   const acceptEncoding =
@@ -217,35 +269,38 @@ export async function endWithStaticFile(
       : [];
   const file = await sfm.readFile(path);
   const cached = etag === file.hash;
+  const code = cached ? 304 : returnCode;
   if (cached) {
-    res.writeHead(cached ? 304 : returnCode, {
+    res.writeHead(code, {
       'Content-Type': contentType,
       ETag: file.hash,
     });
     res.end();
+    return code;
   } else {
     if (acceptEncoding.includes('br')) {
-      res.writeHead(cached ? 304 : returnCode, {
+      res.writeHead(code, {
         'Content-Type': contentType,
         'Content-Encoding': 'br',
         ETag: file.hash,
       });
       res.end(file.data.brotli);
-      return;
+      return code;
     }
     if (acceptEncoding.includes('gzip')) {
-      res.writeHead(cached ? 304 : returnCode, {
+      res.writeHead(code, {
         'Content-Type': contentType,
         'Content-Encoding': 'gzip',
         ETag: file.hash,
       });
       res.end(file.data.gzip);
-      return;
+      return code;
     }
-    res.writeHead(cached ? 304 : returnCode, {
+    res.writeHead(code, {
       'Content-Type': contentType,
       ETag: file.hash,
     });
     res.end(file.data.original);
+    return code;
   }
 }

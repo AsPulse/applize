@@ -1,6 +1,8 @@
 import type { PageRoute, StaticRoute } from './route';
+import type { IncomingMessage } from 'http';
 import http from 'http';
 import type { IEndPoint } from './url';
+import type { ILog } from './server';
 import { serve } from './server';
 import { cwd } from 'process';
 import type { APITypesGeneral, JSONStyle } from '../api/schema';
@@ -13,6 +15,7 @@ export interface IApplizeOptions {
   trailingSlash: 'RedirectWithSlash' | 'RedirectWithoutSlash' | 'NoChange';
   rootEndPoint: IEndPoint;
   distRoot: string;
+  logger: (data: ILog) => void;
 }
 
 export class Applize<
@@ -30,7 +33,8 @@ export class Applize<
       cookie: {
         (key: string): ICookie | null;
         (data: ISetCookie): void;
-      }
+      },
+      req: IncomingMessage
     ) => Promise<JSONStyle>;
   }[] = [];
   private sfm = new StaticFileManager();
@@ -104,7 +108,8 @@ export class Applize<
       cookie: {
         (key: string): ICookie | null;
         (data: ISetCookie): void;
-      }
+      },
+      req: IncomingMessage
     ) => Promise<T.TypeOf<APITypes[ImplementingAPI]['output']>>
   ) {
     this.apiImplementation.push({ name: name.toString(), executor });
@@ -117,6 +122,12 @@ export class Applize<
       trailingSlash: options.trailingSlash ?? 'NoChange',
       rootEndPoint: options.rootEndPoint ?? { url: ['applize'] },
       distRoot: options.distRoot ?? cwd(),
+      logger: data =>
+        console.log(
+          `(${Math.round(data.time * 100) / 100}ms) ${data.code} ${data.url} ${
+            data.remoteAddress ?? ''
+          }`
+        ),
     };
 
     server.on('request', (req, res) => {

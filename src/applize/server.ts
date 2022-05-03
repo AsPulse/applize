@@ -33,8 +33,11 @@ export async function serve<
     url: req.url ?? '',
     time: finish - start,
     userAgent: req.headers['user-agent'] ?? 'unknown',
-    remoteAddress: (v => Array.isArray(v) ? v.join(', ') : v)(req.headers['x-forwarded-for']) ?? req.socket?.remoteAddress,
-    code: serve.code
+    remoteAddress:
+      (v => (Array.isArray(v) ? v.join(', ') : v))(
+        req.headers['x-forwarded-for']
+      ) ?? req.socket?.remoteAddress,
+    code: serve.code,
   });
 }
 function JSONParse<A, B, C>(
@@ -61,18 +64,21 @@ export async function serveExecute<
   option: IApplizeOptions,
   instance: Applize<T, U>
 ): Promise<{
-  code: number
+  code: number;
 }> {
   if (!req.url) throw 'Request didnt have url!';
   const url = req.url;
   const ep = urlParse(url ?? '/');
 
-  const processPost = new Promise<{
-    processed: true,
-    code: number,
-  } | {
-    processed: false
-  }>(resolve => {
+  const processPost = new Promise<
+    | {
+        processed: true;
+        code: number;
+      }
+    | {
+        processed: false;
+      }
+  >(resolve => {
     if (req.method === 'POST') {
       let data = '';
       req
@@ -167,14 +173,14 @@ export async function serveExecute<
             res.end(JSON.stringify(apiResult));
             resolve({
               processed: true,
-              code: 200
+              code: 200,
             });
             return;
           })();
         });
     } else {
       resolve({
-        processed: false
+        processed: false,
       });
     }
   });
@@ -182,7 +188,7 @@ export async function serveExecute<
   const post = await processPost;
   if (post.processed) {
     return {
-      code: post.code
+      code: post.code,
     };
   }
 

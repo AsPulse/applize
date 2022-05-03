@@ -34,9 +34,8 @@ export async function serve<
     time: finish - start,
     userAgent: req.headers['user-agent'] ?? 'unknown',
     remoteAddress:
-      (v => (Array.isArray(v) ? v.join(', ') : v))(
-        req.headers['x-forwarded-for']
-      ) ?? req.socket?.remoteAddress,
+      (v => (Array.isArray(v) ? v[0] : v))(req.headers['x-forwarded-for']) ??
+      req.socket?.remoteAddress,
     code: serve.code,
   });
 }

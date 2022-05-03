@@ -1,4 +1,5 @@
 import type { PageRoute, StaticRoute } from './route';
+import type { IncomingMessage } from 'http';
 import http from 'http';
 import type { IEndPoint } from './url';
 import { serve } from './server';
@@ -30,7 +31,8 @@ export class Applize<
       cookie: {
         (key: string): ICookie | null;
         (data: ISetCookie): void;
-      }
+      },
+      req: IncomingMessage,
     ) => Promise<JSONStyle>;
   }[] = [];
   private sfm = new StaticFileManager();
@@ -104,7 +106,8 @@ export class Applize<
       cookie: {
         (key: string): ICookie | null;
         (data: ISetCookie): void;
-      }
+      },
+      req: IncomingMessage
     ) => Promise<T.TypeOf<APITypes[ImplementingAPI]['output']>>
   ) {
     this.apiImplementation.push({ name: name.toString(), executor });

@@ -110,7 +110,8 @@ export async function serveExecute<
             const apiResult = await impl.executor(
               input as JSONStyle,
               instance.privates().plugin,
-              cookie
+              cookie,
+              req
             );
             res.writeHead(200, [
               ['Content-Type', '	application/json'],

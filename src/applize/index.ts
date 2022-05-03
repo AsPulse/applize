@@ -122,7 +122,7 @@ export class Applize<
       trailingSlash: options.trailingSlash ?? 'NoChange',
       rootEndPoint: options.rootEndPoint ?? { url: ['applize'] },
       distRoot: options.distRoot ?? cwd(),
-      logger: data => console.log(`${data.url}(${data.time}ms) ${data.code} ${data.remoteAddress} ${data.userAgent}`)
+      logger: data => console.log(`(${Math.round(data.time * 100 ) / 100}ms) ${data.code} ${data.url} ${data.remoteAddress ?? ''}`)
     };
 
     server.on('request', (req, res) => {

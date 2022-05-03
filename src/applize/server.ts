@@ -36,8 +36,6 @@ export async function serve<
     remoteAddress: (v => Array.isArray(v) ? v.join(', ') : v)(req.headers['x-forwarded-for']) ?? req.socket?.remoteAddress,
     code: serve.code
   });
-  console.log(`Served! ${finish - start}ms: ${req.url ?? ''}`);
-
 }
 function JSONParse<A, B, C>(
   data: string,

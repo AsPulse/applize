@@ -1,4 +1,4 @@
-import { build } from 'estrella';
+import { build } from 'esbuild';
 import {
   copyFile,
   mkdir,

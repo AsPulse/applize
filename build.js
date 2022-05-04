@@ -1,4 +1,4 @@
-const { build } = require('estrella');
+const { build } = require('esbuild');
 const { resolve } = require('path');
 const { dtsPlugin } = require('esbuild-plugin-d.ts');
 const { nodeExternalsPlugin } = require('esbuild-node-externals');
@@ -10,9 +10,7 @@ build({
   bundle: true,
   minify: true,
   sourcemap: true,
-  format: "cjs",
-  tslint: true,
-  platform: 'node',
+  format: "cjs",  platform: 'node',
   plugins: [nodeExternalsPlugin(), dtsPlugin()],
 }).catch(() => {});
 
@@ -27,5 +25,4 @@ build({
   sourcemap: true,
   platform: 'node',
   external: ['esbuild', 'estrella'],
-  tslint: true,
 }).catch(() => {});

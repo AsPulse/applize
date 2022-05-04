@@ -42,6 +42,7 @@
     "build": "node ./build.js",
     "dev": "node ./build.js && node bin/index.js",
     "dev-adm": "node ./src/client/dombuilder/develop/devLaunch.js",
-    "sandbox": "node sandbox/build.js && node sandbox/dist/index.js"
+    "sandbox": "node sandbox/build.js && node sandbox/dist/index.js",
+    "sandbox:watch": "node sandbox/watch.js"
   }
 }

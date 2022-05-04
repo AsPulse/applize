@@ -24,5 +24,5 @@ build({
   minify: true,
   sourcemap: true,
   platform: 'node',
-  external: ['esbuild', 'estrella'],
+  external: ['esbuild'],
 }).catch(() => {});

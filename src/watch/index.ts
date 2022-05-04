@@ -2,9 +2,9 @@ import type { ChildProcessWithoutNullStreams } from 'child_process';
 import { spawn } from 'child_process';
 import { watch } from 'chokidar';
 import { createHash } from 'crypto';
-import { createReadStream } from 'graceful-fs';
 import { dirname, resolve } from 'path';
 import { getAllFilesInDir } from '../builder/applize';
+import { readFileSync } from 'fs';
 
 export function applizeWatch(
   directory: string,
@@ -114,28 +114,23 @@ export async function getSnapShot(
   directory: string,
   target: string
 ): Promise<Snapshot[]> {
+  console.log('Hash Creating...');
   const basedir = dirname(target);
   const hashes = (await getAllFilesInDir(directory, []))
     .filter(v => {
       if (v.directory.startsWith(basedir)) return false;
       return true;
     })
-    .map(
-      v =>
-        new Promise<Snapshot>(promiseResolve => {
-          const shasum = createHash('sha1');
-          const path = resolve(v.directory, v.dirent.name);
-          const stream = createReadStream(path);
-          stream.on('data', chunk => shasum.update(chunk));
-          stream.on('close', () =>
-            promiseResolve({
-              digest: shasum.digest('hex'),
-              path,
-            })
-          );
-        })
-    );
-  return Promise.all(hashes);
+    .map(v => {
+      const path = resolve(v.directory, v.dirent.name);
+      const file = readFileSync(path);
+      return {
+        digest: createHash('sha1').update(file).digest('hex'),
+        path,
+      };
+    });
+  console.log('Done!');
+  return hashes;
 }
 
 export function equalSnapshot(a: Snapshot[], b: Snapshot[]) {

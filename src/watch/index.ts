@@ -2,7 +2,7 @@ import type { ChildProcessWithoutNullStreams } from 'child_process';
 import { spawn } from 'child_process';
 import { watch } from 'chokidar';
 import { createHash } from 'crypto';
-import { createReadStream } from 'fs';
+import { createReadStream } from 'graceful-fs';
 import { dirname, resolve } from 'path';
 import { getAllFilesInDir } from '../builder/applize';
 

@@ -121,15 +121,14 @@ export async function getSnapShot(
       if (v.directory.startsWith(basedir)) return false;
       return true;
     })
-    .map(
-      v => {
-        const path = resolve(v.directory, v.dirent.name);
-        const file = readFileSync(path);
-        return {
-          digest: createHash('sha1').update(file).digest('hex'),
-          path,
-        };
-      });
+    .map(v => {
+      const path = resolve(v.directory, v.dirent.name);
+      const file = readFileSync(path);
+      return {
+        digest: createHash('sha1').update(file).digest('hex'),
+        path,
+      };
+    });
   console.log('Done!');
   return hashes;
 }

@@ -108,7 +108,7 @@ export function ApplizeProjectMakeUp(
                   basename(distPath),
                   ' ( ',
                   `${Math.round((await stat(distPath)).size / 10) / 100}`,
-                  'k )',
+                  'k )'
                 );
                 await writeFile(
                   originalPath,

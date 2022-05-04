@@ -10,7 +10,7 @@ import {
 } from 'fs/promises';
 import { basename, extname, join, resolve } from 'path';
 import type { ApplizeBuilder } from '.';
-import { colors, decorate, say } from '../util/console/consoleCommunicater';
+import { decorate, say } from '../util/console/consoleCommunicater';
 import { FileSystemErrorSerialize } from '../util/error/fileSystemError';
 
 export type ApplizePostBuilder = {

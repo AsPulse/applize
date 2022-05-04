@@ -1,4 +1,4 @@
-import { build } from 'estrella';
+import { build } from 'esbuild';
 import {
   copyFile,
   mkdir,
@@ -8,9 +8,9 @@ import {
   stat,
   writeFile,
 } from 'fs/promises';
-import { extname, join, resolve } from 'path';
+import { basename, extname, join, resolve } from 'path';
 import type { ApplizeBuilder } from '.';
-import { say } from '../util/console/consoleCommunicater';
+import { decorate, say } from '../util/console/consoleCommunicater';
 import { FileSystemErrorSerialize } from '../util/error/fileSystemError';
 
 export type ApplizePostBuilder = {
@@ -101,6 +101,15 @@ export function ApplizeProjectMakeUp(
                   treeShaking: options.treeShaking === true ? true : undefined,
                 });
                 if (!result) throw false;
+                say(
+                  decorate(),
+                  basename(originalPath),
+                  ' --> ',
+                  basename(distPath),
+                  ' ( ',
+                  `${Math.round((await stat(distPath)).size / 10) / 100}`,
+                  'k )'
+                );
                 await writeFile(
                   originalPath,
                   getFilenameTyper(
@@ -139,7 +148,7 @@ export function ApplizeProjectMakeUp(
       bundle: true,
       sourcemap: true,
       platform: 'node',
-      external: ['estrella', 'fp-ts', ...(options.additionExternals ?? [])],
+      external: ['fp-ts', ...(options.additionExternals ?? [])],
     });
     await copyResclusive(
       resolve(options.distDirectory, 'pages', 'tmp'),

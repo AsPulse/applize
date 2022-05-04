@@ -31,7 +31,6 @@
     "esbuild-plugin-d.ts": "^1.1.0",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
-    "graceful-fs": "^4.2.10",
     "jest": "^27.4.7",
     "prettier": "^2.5.1",
     "ts-jest": "^27.1.2"
@@ -39,8 +38,7 @@
   "peerDependencies": {
     "chokidar": "^3.5.3",
     "esbuild": "0.12",
-    "esbuild-node-externals": "^1.4.1",
-    "graceful-fs": "^4.2.10"
+    "esbuild-node-externals": "^1.4.1"
   },
   "scripts": {
     "lint": "prettier --write src/** && eslint --fix --max-warnings 0 src/**",

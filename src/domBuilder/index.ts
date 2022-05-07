@@ -35,6 +35,8 @@ export interface IApplizeDOM<K extends HTMLElement, ExposeType> {
   classAdd(...name: string[]): IApplizeDOM<K, ExposeType>;
 
   classRemove(...name: string[]): IApplizeDOM<K, ExposeType>;
+
+  asElement(func: (element: K) => void): IApplizeDOM<K, ExposeType>;
 }
 
 export interface IDomRenderFinished {

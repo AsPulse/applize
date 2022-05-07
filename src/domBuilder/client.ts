@@ -77,6 +77,11 @@ export class IApplizeDOMClient<K extends HTMLElement, ExposeType>
     this.element.classList.remove(...name);
     return this;
   }
+
+  asElement(func: (instance: K) => void) {
+    func(this.element);
+    return this;
+  }
 }
 
 declare const window: {

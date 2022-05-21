@@ -12,6 +12,7 @@ import { basename, extname, join, resolve } from 'path';
 import type { ApplizeBuilder } from '.';
 import { decorate, say } from '../util/console/consoleCommunicater';
 import { FileSystemErrorSerialize } from '../util/error/fileSystemError';
+import { sleep } from '../util/sleep';
 
 export type ApplizePostBuilder = {
   name: string;
@@ -155,9 +156,15 @@ export function ApplizeProjectMakeUp(
       options.pagesDirectory,
       ['.ts', '.js']
     );
+
+    //FIXME: これを消すと動かない 理由不明
+    await sleep(500);
+
     await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
+      force: true,
       recursive: true,
     });
+
     if (!result) return false;
     return true;
   });
@@ -226,10 +233,11 @@ export async function copyResclusive(
     (await getAllFilesInJoin(original, extensions, extensionExcludes)).map(
       async v => {
         await mkdir(resolve(dist, v.directory), { recursive: true });
-        return copyFile(
+        await copyFile(
           resolve(v.basePath, v.directory, v.dirent.name),
           resolve(dist, v.directory, v.dirent.name)
         );
+        return;
       }
     )
   );

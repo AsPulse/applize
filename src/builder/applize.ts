@@ -138,6 +138,14 @@ export function ApplizeProjectMakeUp(
       });
       return false;
     }
+    await copyResclusive(
+      resolve(options.distDirectory, 'pages', 'tmp'),
+      options.pagesDirectory,
+      ['.ts', '.js']
+    );
+    await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
+      recursive: true,
+    });
     return true;
   });
   builder.addPhaseAsync('Build Server', async () => {

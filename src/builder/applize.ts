@@ -161,7 +161,8 @@ export function ApplizeProjectMakeUp(
     await sleep(500);
 
     await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
-      force: true, recursive: true,
+      force: true,
+      recursive: true,
     });
 
     if (!result) return false;

@@ -12,7 +12,6 @@ import { basename, extname, join, resolve } from 'path';
 import type { ApplizeBuilder } from '.';
 import { decorate, say } from '../util/console/consoleCommunicater';
 import { FileSystemErrorSerialize } from '../util/error/fileSystemError';
-import { sleep } from '../util/sleep';
 
 export type ApplizePostBuilder = {
   name: string;
@@ -151,20 +150,6 @@ export function ApplizeProjectMakeUp(
       platform: 'node',
       external: ['fp-ts', ...(options.additionExternals ?? [])],
     });
-    await copyResclusive(
-      resolve(options.distDirectory, 'pages', 'tmp'),
-      options.pagesDirectory,
-      ['.ts', '.js']
-    );
-
-    //FIXME: これを消すと動かない 理由不明
-    await sleep(500);
-
-    await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
-      force: true,
-      recursive: true,
-    });
-
     if (!result) return false;
     return true;
   });

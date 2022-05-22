@@ -130,6 +130,34 @@ export function ApplizeProjectMakeUp(
       });
       return false;
     }
+    return true;
+  });
+  builder.addPhaseAsync('Build Server', async () => {
+    try {
+      const result = await build({
+        entryPoints: [options.serverEntryPoint],
+        outfile: resolve(options.distDirectory, 'index.js'),
+        minify: true,
+        bundle: true,
+        sourcemap: true,
+        platform: 'node',
+        external: ['fp-ts', ...(options.additionExternals ?? [])],
+      });
+      if (!result) return false;
+    } catch {
+      await copyResclusive(
+        resolve(options.distDirectory, 'tmp'),
+        options.pagesDirectory,
+        ['.ts', '.js']
+      );
+      await rm(resolve(options.distDirectory, 'tmp'), {
+        recursive: true,
+        force: true,
+        maxRetries: 10,
+        retryDelay: 100,
+      });
+      return false;
+    }
     await copyResclusive(
       resolve(options.distDirectory, 'tmp'),
       options.pagesDirectory,
@@ -141,20 +169,6 @@ export function ApplizeProjectMakeUp(
       maxRetries: 10,
       retryDelay: 100,
     });
-
-    return true;
-  });
-  builder.addPhaseAsync('Build Server', async () => {
-    const result = await build({
-      entryPoints: [options.serverEntryPoint],
-      outfile: resolve(options.distDirectory, 'index.js'),
-      minify: true,
-      bundle: true,
-      sourcemap: true,
-      platform: 'node',
-      external: ['fp-ts', ...(options.additionExternals ?? [])],
-    });
-    if (!result) return false;
     return true;
   });
   (options.pagesPostBuilder ?? []).forEach(v => {

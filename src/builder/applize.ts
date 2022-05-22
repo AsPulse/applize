@@ -11,7 +11,6 @@ import {
 import { basename, extname, join, resolve } from 'path';
 import type { ApplizeBuilder } from '.';
 import { decorate, say } from '../util/console/consoleCommunicater';
-import { FileSystemErrorSerialize } from '../util/error/fileSystemError';
 
 export type ApplizePostBuilder = {
   name: string;
@@ -35,17 +34,10 @@ export function ApplizeProjectMakeUp(
   options: IApplizeBuildOptions
 ): void {
   builder.addPhaseAsync('Reset Dist Directory', async () => {
-    try {
-      await rm(options.distDirectory, { recursive: true });
-    } catch (e) {
-      if (FileSystemErrorSerialize(e).code.type !== 'NoEntityError') {
-        console.error(e);
-        return false;
-      }
-    }
+    await rm(options.distDirectory, { recursive: true, force: true });
     await mkdir(resolve(options.distDirectory, 'pages'), { recursive: true });
     await mkdir(resolve(options.distDirectory, 'entry'), { recursive: true });
-    await mkdir(resolve(options.distDirectory, 'pages', 'tmp'), {
+    await mkdir(resolve(options.distDirectory, 'tmp'), {
       recursive: true,
     });
     return true;
@@ -73,7 +65,7 @@ export function ApplizeProjectMakeUp(
       ]);
       await copyResclusive(
         options.pagesDirectory,
-        resolve(options.distDirectory, 'pages', 'tmp'),
+        resolve(options.distDirectory, 'tmp'),
         ['.ts', '.js']
       );
       const success = (
@@ -129,23 +121,27 @@ export function ApplizeProjectMakeUp(
       }
     } catch {
       await copyResclusive(
-        resolve(options.distDirectory, 'pages', 'tmp'),
+        resolve(options.distDirectory, 'tmp'),
         options.pagesDirectory,
         ['.ts', '.js']
       );
-      await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
+      await rm(resolve(options.distDirectory, 'tmp'), {
         recursive: true,
       });
       return false;
     }
     await copyResclusive(
-      resolve(options.distDirectory, 'pages', 'tmp'),
+      resolve(options.distDirectory, 'tmp'),
       options.pagesDirectory,
       ['.ts', '.js']
     );
-    await rm(resolve(options.distDirectory, 'pages', 'tmp'), {
+    await rm(resolve(options.distDirectory, 'tmp'), {
       recursive: true,
+      force: true,
+      maxRetries: 10,
+      retryDelay: 100,
     });
+
     return true;
   });
   builder.addPhaseAsync('Build Server', async () => {

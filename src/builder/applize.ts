@@ -10,8 +10,7 @@ import {
 } from 'fs/promises';
 import { basename, extname, join, resolve } from 'path';
 import type { ApplizeBuilder } from '.';
-import { decorate, input, say } from '../util/console/consoleCommunicater';
-import { sleep } from '../util/sleep';
+import { decorate, say } from '../util/console/consoleCommunicater';
 
 export type ApplizePostBuilder = {
   name: string;

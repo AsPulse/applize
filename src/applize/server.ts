@@ -235,7 +235,6 @@ export async function serveExecute<
       urlParse(getParams(url, ['page']).page ?? '')
     );
 
-
     const code = await endWithStaticFile(
       resolve(__dirname, 'pages', `${route.page.fileName}.js`),
       route.returnCode,

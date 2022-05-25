@@ -8,7 +8,6 @@ import type { StaticFileManager } from './staticfile';
 import { equalsEndPoint, getParams } from './url';
 import { urlParse } from './urlParse';
 import type * as T from 'io-ts';
-import { sleep } from '../util/sleep';
 
 export interface ILog {
   url: string;
@@ -71,7 +70,6 @@ export async function serveExecute<
 ): Promise<{
   code: number;
 }> {
-  await sleep(1000);
   if (!req.url) throw 'Request didnt have url!';
   const url = req.url;
   const ep = urlParse(url ?? '/');

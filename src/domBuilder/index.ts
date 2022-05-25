@@ -50,11 +50,12 @@ export type IDOMRendererFinishedInput = Partial<
 
 export interface IDOMRenderer<APISchema extends APITypesGeneral> {
   targetElement: HTMLElement | DocumentFragment;
+  build: ElementGenerator
   styleDefine: (v: { [key: string]: string[] } | string[]) => string;
   finish: (finished: IDOMRendererFinishedInput) => void;
-  build<K extends HTMLTags, U>(
-    ...args: Parameters<ElementGeneratorGeneric<K, U>>
-  ): IApplizeDOM<HTMLElementTagNameMap[K], null>;
+  //build<K extends HTMLTags, U>(
+  //  ...args: Parameters<ElementGeneratorGeneric<K, U>>
+  //): IApplizeDOM<HTMLElementTagNameMap[K], null>;
   clone<newAPISchema extends APITypesGeneral>(): IDOMRenderer<newAPISchema>;
 
   url(): string[];

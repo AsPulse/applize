@@ -195,18 +195,16 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
     }
   };
 
-  build =
-  <NewK extends HTMLTags>(
+  build = <NewK extends HTMLTags>(
     ...args: Parameters<ElementGeneratorGeneric<NewK, null>> | []
-  ): ReturnType<ElementGeneratorGeneric<NewK, null>> &
-    ElementGeneratorRoot => {
+  ): ReturnType<ElementGeneratorGeneric<NewK, null>> & ElementGeneratorRoot => {
     if (args.length === 0) {
       return this.root as never;
     }
     const dom = IApplizeDOMClient.generate(this.root, ...args);
     this.targetElement.appendChild(dom.element);
     return dom as never;
-  }
+  };
 
   root = {
     styleDefine: this.styleDefine,

@@ -237,7 +237,7 @@ export async function serveExecute<
 
     const code = await endWithStaticFile(
       resolve(__dirname, 'pages', `${route.page.fileName}.js`),
-      route.returnCode,
+      200,
       'text/javascript',
       req,
       res,
@@ -246,9 +246,15 @@ export async function serveExecute<
     return { code };
   }
 
+  const indexRoute = await findRoute(
+    instance.privates().routes,
+    instance.privates().routes[0],
+    urlParse(url)
+  );
+
   const code = await endWithStaticFile(
     resolve(__dirname, 'entry', `index.html`),
-    200,
+    indexRoute.returnCode,
     'text/html',
     req,
     res,

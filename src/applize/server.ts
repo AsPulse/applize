@@ -252,7 +252,6 @@ export async function serveExecute<
     urlParse(url)
   );
 
-
   const code = await endWithStaticFile(
     resolve(__dirname, 'entry', `index.html`),
     indexRoute.returnCode,

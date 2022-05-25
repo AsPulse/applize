@@ -19,6 +19,9 @@ interface IPageLoading {
 }
 let pageLoadings: IPageLoading[] = [];
 let pageUnique = -1;
+
+let loadingStatus: XMLHttpRequest | 'rendering' | null = null;
+
 export function ClientInitialize(applizeRoot: string) {
   const content = () => document.getElementById('applize_content');
   const progressOriginal = document.getElementById('applize_spa_progress');
@@ -30,6 +33,12 @@ export function ClientInitialize(applizeRoot: string) {
       targetElement: HTMLElement | 'root' = 'root',
       stateStyle: 'none' | 'replace' | 'push' = 'push'
     ) => {
+      if (loadingStatus === 'rendering') return;
+      if (loadingStatus !== null) {
+        loadingStatus.abort();
+        loadingStatus = null;
+      }
+
       const targetFile = `${applizeRoot}?page=${pathname}`;
       const progress = progressOriginal?.cloneNode();
       const progressUseable =
@@ -40,6 +49,7 @@ export function ClientInitialize(applizeRoot: string) {
         progress.style.opacity = '1';
       }
       const xhr = new XMLHttpRequest();
+      loadingStatus = xhr;
       xhr.open('GET', targetFile);
       xhr.send();
       xhr.addEventListener('progress', e => {
@@ -49,6 +59,7 @@ export function ClientInitialize(applizeRoot: string) {
         }
       });
       xhr.addEventListener('load', () => {
+        loadingStatus = 'rendering';
         if (progressUseable) {
           progress.style.width = '100%';
 
@@ -102,6 +113,7 @@ export function ClientInitialize(applizeRoot: string) {
                 targetElement: cloned,
                 onLeave: finish.onLeave,
               });
+              loadingStatus = null;
             }
           );
         pageScript.src = targetFile;

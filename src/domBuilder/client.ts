@@ -209,16 +209,4 @@ export class DOMRendererClient<APISchema extends APITypesGeneral>
   root = {
     styleDefine: this.styleDefine,
   };
-  /*build<K extends HTMLTags, U>(
-    ...args: Parameters<ElementGeneratorGeneric<K, U>>
-  ) {
-    const dom = IApplizeDOMClient.generate(
-      {
-        styleDefine: this.styleDefine,
-      },
-      ...args
-    );
-    this.targetElement.appendChild(dom.element);
-    return dom;
-  }*/
 }

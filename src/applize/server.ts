@@ -252,6 +252,7 @@ export async function serveExecute<
     urlParse(url)
   );
 
+
   const code = await endWithStaticFile(
     resolve(__dirname, 'entry', `index.html`),
     indexRoute.returnCode,
@@ -279,38 +280,37 @@ export async function endWithStaticFile(
       : [];
   const file = await sfm.readFile(path);
   const cached = etag === file.hash;
-  const code = cached ? 304 : returnCode;
-  if (cached) {
-    res.writeHead(code, {
+  if (cached && returnCode === 200) {
+    res.writeHead(304, {
       'Content-Type': contentType,
       ETag: file.hash,
     });
     res.end();
-    return code;
+    return returnCode;
   } else {
     if (acceptEncoding.includes('br')) {
-      res.writeHead(code, {
+      res.writeHead(returnCode, {
         'Content-Type': contentType,
         'Content-Encoding': 'br',
         ETag: file.hash,
       });
       res.end(file.data.brotli);
-      return code;
+      return returnCode;
     }
     if (acceptEncoding.includes('gzip')) {
-      res.writeHead(code, {
+      res.writeHead(returnCode, {
         'Content-Type': contentType,
         'Content-Encoding': 'gzip',
         ETag: file.hash,
       });
       res.end(file.data.gzip);
-      return code;
+      return returnCode;
     }
-    res.writeHead(code, {
+    res.writeHead(returnCode, {
       'Content-Type': contentType,
       ETag: file.hash,
     });
     res.end(file.data.original);
-    return code;
+    return returnCode;
   }
 }

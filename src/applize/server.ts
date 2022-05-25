@@ -237,7 +237,7 @@ export async function serveExecute<
 
     const code = await endWithStaticFile(
       resolve(__dirname, 'pages', `${route.page.fileName}.js`),
-      route.returnCode,
+      200,
       'text/javascript',
       req,
       res,
@@ -246,9 +246,15 @@ export async function serveExecute<
     return { code };
   }
 
+  const indexRoute = await findRoute(
+    instance.privates().routes,
+    instance.privates().routes[0],
+    urlParse(url)
+  );
+
   const code = await endWithStaticFile(
     resolve(__dirname, 'entry', `index.html`),
-    200,
+    indexRoute.returnCode,
     'text/html',
     req,
     res,
@@ -273,38 +279,37 @@ export async function endWithStaticFile(
       : [];
   const file = await sfm.readFile(path);
   const cached = etag === file.hash;
-  const code = cached ? 304 : returnCode;
-  if (cached) {
-    res.writeHead(code, {
+  if (cached && returnCode === 200) {
+    res.writeHead(304, {
       'Content-Type': contentType,
       ETag: file.hash,
     });
     res.end();
-    return code;
+    return returnCode;
   } else {
     if (acceptEncoding.includes('br')) {
-      res.writeHead(code, {
+      res.writeHead(returnCode, {
         'Content-Type': contentType,
         'Content-Encoding': 'br',
         ETag: file.hash,
       });
       res.end(file.data.brotli);
-      return code;
+      return returnCode;
     }
     if (acceptEncoding.includes('gzip')) {
-      res.writeHead(code, {
+      res.writeHead(returnCode, {
         'Content-Type': contentType,
         'Content-Encoding': 'gzip',
         ETag: file.hash,
       });
       res.end(file.data.gzip);
-      return code;
+      return returnCode;
     }
-    res.writeHead(code, {
+    res.writeHead(returnCode, {
       'Content-Type': contentType,
       ETag: file.hash,
     });
     res.end(file.data.original);
-    return code;
+    return returnCode;
   }
 }

@@ -62,9 +62,6 @@ export function ClientInitialize(applizeRoot: string) {
         loadingStatus = 'rendering';
         if (progressUseable) {
           progress.style.width = '100%';
-
-          setTimeout(() => (progress.style.opacity = '0'), 300);
-          setTimeout(() => progress.remove(), 800);
         }
         const renderedTarget =
           targetElement === 'root' ? content() : targetElement;
@@ -113,6 +110,10 @@ export function ClientInitialize(applizeRoot: string) {
                 targetElement: cloned,
                 onLeave: finish.onLeave,
               });
+              if (progressUseable) {
+                setTimeout(() => (progress.style.opacity = '0'), 300);
+                setTimeout(() => progress.remove(), 800);
+              }
               loadingStatus = null;
             }
           );

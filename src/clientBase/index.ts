@@ -110,7 +110,7 @@ export function ClientInitialize(applizeRoot: string) {
                 targetElement: cloned,
                 onLeave: finish.onLeave,
               });
-              if(progressUseable) {
+              if (progressUseable) {
                 setTimeout(() => (progress.style.opacity = '0'), 300);
                 setTimeout(() => progress.remove(), 800);
               }
